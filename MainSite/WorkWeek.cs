@@ -16,15 +16,17 @@ namespace MainSite
 	public class WorkWeek : Table
 	{
 		public TableHeaderRow DaysHeader { get; set; }
-		public DateTime FirstDay { get; set;}
-
-		public WorkWeek(DateTime firstDay)
+		public DateTime FirstDay { get; set; }
+		public event Action<DateTime> AddNewDateButtonPressed;
+		List<NailDate> WeekDates { get; set; }
+		public WorkWeek(DateTime firstDay, List<NailDate> weekDates)
 		{
-			FirstDay = firstDay;			
+			FirstDay = firstDay;
+			WeekDates = weekDates;
 			CellSpacing = 0;
 			BorderWidth = 1;
 			BorderColor = Color.Gray;
-			DaysHeader = new TableHeaderRow();			
+			DaysHeader = new TableHeaderRow();
 			DaysHeader.BorderColor = Color.Gray;
 
 			var headerCell = new TableHeaderCell() { ForeColor = Color.White, BackColor = Color.Black };
@@ -33,18 +35,42 @@ namespace MainSite
 			DaysHeader.Cells.Add(headerCell);
 			for (int i = 0; i < 7; i++)
 			{
-				DaysHeader.Cells.Add(new TableHeaderCell() { ForeColor = Color.White, BackColor = Color.FromArgb(1,104,105,117), BorderColor= Color.Gray, BorderWidth = 1 });
-				if (firstDay.Date == DateTime.UtcNow.Date)
-					DaysHeader.Cells[i+1].BackColor = Color.FromArgb(1, 159, 197, 121);
-				DaysHeader.Cells[i+1].Text = firstDay.ToString("ddd dd MMM").ToLower();
+				DaysHeader.Cells.Add(new TableHeaderCell() { ForeColor = Color.White, BackColor = Color.FromArgb(1, 104, 105, 117), BorderColor = Color.Gray, BorderWidth = 1 });
+				if (firstDay.Date == nowDateTime.Date)
+					DaysHeader.Cells[i + 1].BackColor = Color.FromArgb(1, 159, 197, 121);
+				DaysHeader.Cells[i + 1].Text = firstDay.ToString("ddd dd MMM").ToLower();
 				firstDay = firstDay.AddDays(1);
 			}
 			this.Rows.Add(DaysHeader);
 			drawWeek();
 		}
 
+		/*private DateTime firstDayOfCurrentWeek
+		{
+			get
+			{
+				DateTime nowDateTime = DateTime.UtcNow;
+				DateTime newDateTime = TimeZoneInfo.ConvertTime(
+					nowDateTime,
+					TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+				return newDateTime.AddDays(-1 * (int)(newDateTime.DayOfWeek - 1));
+			}
+		}
+		*/
+		private DateTime nowDateTime
+		{
+			get
+			{
+				DateTime nowDateTime = DateTime.UtcNow;
+				DateTime newDateTime = TimeZoneInfo.ConvertTime(
+					nowDateTime,
+					TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+				return newDateTime;
+			}
+		}
+
 		public void drawWeek()
-		{			
+		{
 			int odd = 0;
 			foreach (string time in master.timeList)
 			{
@@ -58,12 +84,18 @@ namespace MainSite
 				timeCell.BorderColor = Color.Gray;
 				row.Cells.Add(timeCell);
 				Color backColor;
-				
+
 				odd++;
 				for (int i = 1; i < 8; i++)
 				{
-					var dateCell = new TableCell() {Width = 100, Height=30 };
-					if (currentDay.Date == DateTime.UtcNow.Date)
+					var dateCell = new TableCell() { Width = 100, Height = 30 };
+
+					var certainTime = currentDay.Date.Add(nailTime);
+					NailDate existsNailDate = WeekDates.FirstOrDefault(a => a.StartTime == certainTime);
+					if (existsNailDate != null)
+						backColor = Color.FromArgb(1, 228, 83, 131);
+					else
+					if (currentDay.Date == nowDateTime.Date)
 						backColor = Color.FromArgb(1, 217, 232, 202);
 					else
 						backColor = odd % 2 == 0 ? Color.FromArgb(1, 233, 231, 241) : Color.FromArgb(1, 241, 239, 237);
@@ -71,26 +103,27 @@ namespace MainSite
 					dateCell.BackColor = backColor;
 					dateCell.BorderWidth = 1;
 					dateCell.BorderColor = Color.Gray;
-					var certainTime = currentDay.Add(nailTime);
-					if (certainTime > DateTime.UtcNow)
+					dateCell.HorizontalAlign = HorizontalAlign.Center;
+					dateCell.VerticalAlign = VerticalAlign.Middle;
+
+					if (existsNailDate == null && certainTime > nowDateTime)
 					{
-						var b = new TagButton();
-						b.Tag = certainTime;
-						b.Text = "Записаться";
-						b.BackColor = backColor;
-						b.Width = 100;
-						b.Height = 30;
-						//b.Click += onCreateNailDateClick;
+						var b = new TagButton() { Tag = certainTime, Text = "Записаться", BackColor = backColor, Width = 100, Height = 30 };
+						b.Click += onAddDateButtonClick;
 						dateCell.Controls.Add(b);
-					}
+					}					
+					if (existsNailDate != null)
+						dateCell.Controls.Add(new Literal() {Text = existsNailDate.ClientName });
 					row.Cells.Add(dateCell);
 					currentDay = currentDay.AddDays(1);
 				}
-				//row.BorderWidth = 1;
-				//row.BorderColor = Color.Gray;
-
 				Rows.Add(row);
 			}
+		}
+
+		private void onAddDateButtonClick(object sender, EventArgs e)
+		{
+			AddNewDateButtonPressed?.Invoke((DateTime)(sender as TagButton).Tag);
 		}
 	}
 }

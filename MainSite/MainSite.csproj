@@ -148,6 +148,7 @@
     <Compile Include="mmaster.aspx.designer.cs">
       <DependentUpon>mmaster.aspx</DependentUpon>
     </Compile>
+    <Compile Include="NailDate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagButton.cs" />
     <Compile Include="NailScheduler.cs" />

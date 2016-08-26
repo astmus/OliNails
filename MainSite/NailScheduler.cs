@@ -12,7 +12,6 @@ using System.Web.UI.WebControls;
 
 namespace MainSite
 {
-	[DefaultProperty("Text")]
 	[ToolboxData("<{0}:WebCustomControl1 runat=server></{0}:WebCustomControl1>")]
 	public class NailScheduler : Table
 	{
@@ -20,10 +19,10 @@ namespace MainSite
 		public int CountOfNextWeeks { get; set; } = 5;
 
 		private List<string> _timeList;
-		public delegate void AddDateRecordCallback(DateTime startTime, string client, string phone);
+		public delegate void AddDateRecordCallback(DateTime startTime);
 		public event AddDateRecordCallback CreateNailDate;
 
-		public NailScheduler(List<string> timeList)
+		public NailScheduler(List<string> timeList, List<NailDate> nailDates)
 		{
 			CreateHeader();			
 			_timeList = timeList;
@@ -37,13 +36,20 @@ namespace MainSite
 			{
 				var row = new TableRow();
 				var dateCell = new TableCell();
-				var week = new WorkWeek(startDay);
+				var endDay = startDay.AddDays(7);
+				var week = new WorkWeek(startDay, nailDates.Where(w=>w.StartTime.Date >= startDay.Date && w.StartTime.Date <= endDay.Date).ToList());
+				week.AddNewDateButtonPressed += OnAddNewDateButtonPressed;
 				dateCell.Controls.Add(week);				
 				row.Cells.Add(dateCell);
 				row.BorderColor = Color.Gray;
 				Rows.Add(row);
-				startDay = startDay.AddDays(7);
+				startDay = endDay;
 			}		
+		}
+
+		private void OnAddNewDateButtonPressed(DateTime obj)
+		{
+			CreateNailDate?.Invoke(obj);
 		}
 
 		private void CreateHeader()
@@ -51,30 +57,19 @@ namespace MainSite
 			TableHeaderRow mainTitle = new TableHeaderRow();
 			mainTitle.BackColor = Color.Gray;
 			TableHeaderCell cell = new TableHeaderCell();
-			cell.ColumnSpan = 8;
-			
-			cell.Text = "Расписаине" + getStartOfCurrentWeek().ToLongTimeString();
-
+			cell.ColumnSpan = 8;			
+			cell.Text = "Расписаине";
 			mainTitle.Cells.Add(cell);
 			Rows.Add(mainTitle);
-		}	
+		}
 
-		private DateTime getStartOfCurrentWeek()
+		public static DateTime getStartOfCurrentWeek()
 		{
 			DateTime nowDateTime = DateTime.UtcNow;
 			DateTime newDateTime = TimeZoneInfo.ConvertTime(
 				nowDateTime,
 				TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
 			return newDateTime.AddDays(-1 * (int)(newDateTime.DayOfWeek - 1));
-		}
-
-		private void onCreateNailDateClick(object sender, EventArgs e)
-		{
-			if (CreateNailDate != null)
-			{
-				var date = (DateTime)(sender as TagButton).Tag;
-				CreateNailDate(date,"asdasd","sdfsdfsd");
-			}
 		}
 	}
 }

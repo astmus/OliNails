@@ -27,7 +27,7 @@
             
         </asp:Panel>
         <asp:Panel BackColor="Wheat" ID="Panl1" runat="server" CssClass="Popup" Style="display: none">
-            <table>
+            <table >
                 <tr>
                     <td style="text-align: center" colspan="2">
                         <asp:Label Text="Дата" ID="nailDateLabel" runat="server" />
@@ -35,7 +35,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <asp:Label Text="Имя" runat="server" />
+                        <asp:Label Text="Имя" runat="server" />                        
                     </td>
                     <td>
                         <asp:TextBox ID="clientName" ValidationGroup="Group1" onkeyup="validateNailsData(); return false;" runat="server" />

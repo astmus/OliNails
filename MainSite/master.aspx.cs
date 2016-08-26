@@ -15,7 +15,7 @@ namespace MainSite
 	public partial class master : System.Web.UI.Page
 	{
 		public static List<string> timeList = new List<string>(){"10:00","14:00","16:00","18:00"};
-
+		public NailScheduler scheduler;
 		protected override void OnPreInit(EventArgs e)
 		{
 			base.OnPreInit(e);
@@ -27,21 +27,19 @@ namespace MainSite
 		{
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
 			//GetFutureNailDates();	
-			mainPanel.Controls.Add(new NailScheduler(timeList));	
+			scheduler = new NailScheduler(timeList, GetFutureNailDates());
+			scheduler.CreateNailDate += OnCreateNailDate;
+			mainPanel.Controls.Add(scheduler);
+			if (Request.Browser.IsMobileDevice)
+				Panl1.Style.Add("transform", "scale(3,3)");
 		}
 
-		
-
-		private void CreateNewNailDate(DateTime startTime, string client, string phone)
+		private void OnCreateNailDate(DateTime startTime)
 		{
-			//MsgBox(((DateTime)(sender as TagButton).Tag).ToString(), this, sender);
-			
 			nailDateLabel.Text = startTime.ToString("Дата dd MMMM yyyy HH:mm");
-			Session["nailDate"] = startTime;			
-			mp1.Show();			
+			Session["nailDate"] = startTime;
+			mp1.Show();
 		}
-
-		
 
 		public void MsgBox(String ex, Page pg, Object obj)
 		{
@@ -60,23 +58,25 @@ namespace MainSite
 				Session["nailDate"] = null;
 				InsertNailDate(date.Value, TimeSpan.FromHours(2), clientName.Text, phone.Text);
 			}
-			MsgBox("Completed", this, sender);
+			Response.Redirect(Request.RawUrl);
 		}
 
-		private void GetFutureNailDates()
+		private List<NailDate> GetFutureNailDates()
 		{
-			string query = "select * from NailDates";
-
+			string query = "select * from NailDates where StartTime >= @DateFrom";
+			var dates = new List<NailDate>();
 			// create connection and command
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
 			using (SqlCommand cmd = new SqlCommand(query, cn))
 			{
+				cmd.Parameters.Add("@DateFrom", SqlDbType.DateTime).Value = NailScheduler.getStartOfCurrentWeek();
 				cn.Open();
 				SqlDataReader dr = cmd.ExecuteReader();
-				dr.Read();
-				// open connection, execute INSERT, close connection
+				while (dr.Read())
+					dates.Add(NailDate.Parse(dr));
 				cn.Close();
 			}
+			return dates;
 		}
 
 		private void InsertNailDate(DateTime startDate, TimeSpan duration, string userName, string userPhone)
