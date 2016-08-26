@@ -14,7 +14,7 @@ namespace MainSite
 {
 	public partial class master : System.Web.UI.Page
 	{
-		private static List<string> timeList = new List<string>(){"10:00","14:00","16:00","18:00"};
+		public static List<string> timeList = new List<string>(){"10:00","14:00","16:00","18:00"};
 
 		protected override void OnPreInit(EventArgs e)
 		{
@@ -26,79 +26,22 @@ namespace MainSite
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
-			GetFutureNailDates();
-			DateTime start = getStartOfCurrentWeek();
-			for (int i = 0; i < 1; i++)
-			{
-				drawWeek(start);
-				start = start.AddDays(7);
-			}						
+			//GetFutureNailDates();	
+			mainPanel.Controls.Add(new NailScheduler(timeList));	
 		}
 
-		private void drawWeek(DateTime firstDay)
-		{
-			DateTime startOfWeek = firstDay;
-			/*var daysHeader = new TableHeaderRow();
-			daysHeader.BorderStyle = BorderStyle.Outset;
-			daysHeader.BorderColor = Color.Gray;
-			daysHeader.BorderWidth = 1;*/
-			for (int i = 1; i < 8; i++)
-			{
-				if (startOfWeek.Date == DateTime.Now.Date)
-					daysHeader.Cells[i].BackColor = Color.LightGreen;
-				daysHeader.Cells[i].Text = startOfWeek.ToString("ddd dd MMM").ToLower();
-				startOfWeek = startOfWeek.AddDays(1);
-			}
+		
 
-			int odd = 0;
-			foreach (string time in master.timeList)
-			{
-				startOfWeek = firstDay;
-				var row = new TableRow();
-				var nailTime = TimeSpan.Parse(time);
-				var timeCell = new TableCell();
-				timeCell.Text = time;
-				timeCell.HorizontalAlign = HorizontalAlign.Center;
-				row.Cells.Add(timeCell);
-				var backColor = odd % 2 == 0 ? Color.Wheat : Color.AliceBlue;
-				odd++;
-				for (int i = 1; i < 8; i++)
-				{
-					var dateCell = new TableCell();
-					dateCell.BackColor = backColor;
-					dateCell.BorderWidth = 1;
-					var certainTime = startOfWeek.Add(nailTime);
-					if (certainTime > DateTime.Now)
-					{
-						var b = new TagButton();
-						b.Tag = certainTime;
-						b.Text = "Записаться";
-						b.BackColor = backColor;
-						b.Click += CreateNewNailDate;
-						dateCell.Controls.Add(b);
-					}
-					row.Cells.Add(dateCell);
-					startOfWeek = startOfWeek.AddDays(1);
-				}
-				row.BorderWidth = 1;
-				row.BorderColor = Color.Gray;
-				mainTable.Rows.Add(row);
-			}
-		}
-
-		private void CreateNewNailDate(object sender, EventArgs e)
+		private void CreateNewNailDate(DateTime startTime, string client, string phone)
 		{
 			//MsgBox(((DateTime)(sender as TagButton).Tag).ToString(), this, sender);
-			var date = (DateTime)(sender as TagButton).Tag;
-			nailDateLabel.Text = date.ToString("Дата dd MMMM yyyy HH:mm");
-			Session["nailDate"] = date;			
+			
+			nailDateLabel.Text = startTime.ToString("Дата dd MMMM yyyy HH:mm");
+			Session["nailDate"] = startTime;			
 			mp1.Show();			
 		}
 
-		DateTime getStartOfCurrentWeek()
-		{
-			return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek - 1));
-		}
+		
 
 		public void MsgBox(String ex, Page pg, Object obj)
 		{
