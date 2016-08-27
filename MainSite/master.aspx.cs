@@ -33,7 +33,7 @@ namespace MainSite
 			scheduler.CreateNailDate += OnCreateNailDate;
 			mainPanel.Controls.Add(scheduler);
 			if (Request.Browser.IsMobileDevice)
-				Panl1.Style.Add("transform", "scale(3,3)");
+				Panl1.Style.Add("transform", "scale(2,2)");
 		}
 
 		private void OnCreateNailDate(DateTime startTime)

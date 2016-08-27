@@ -5,11 +5,28 @@
 
 <!DOCTYPE html>
 <script type="text/javascript">
-    function validateNailsData()
-    {   
-        var result = <%=clientName.ClientID%>.value.search(/[a-zA-Zа-яА-Я].{2,10}/) != -1;
-        result = <%=phone.ClientID%>.value.search(/^[(]?[0-9]{3}[)]?[-]?[0-9]{3}[-]?[0-9]{4}$/im) != -1 && result;
-        document.getElementById("OkButton").disabled = !result
+
+    function applyMask()
+    {
+        
+    }
+
+    function validatePhone(event)
+    {
+        var keyCode = ('which' in event) ? event.which : event.keyCode; 
+        if (keyCode != 8)
+        switch (<%=phone.ClientID%>.value.length) {
+            case 0:
+                <%=phone.ClientID%>.value = "("+<%=phone.ClientID%>.value
+                break;
+            case 4:
+                 <%=phone.ClientID%>.value = <%=phone.ClientID%>.value+")"
+                break;
+            case 8:
+                <%=phone.ClientID%>.value = <%=phone.ClientID%>.value + "-"
+                break;            
+        }
+        return <%=phone.ClientID%>.value.length <= 12 || keyCode == 8;
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -37,9 +54,11 @@
                     <td>
                         <asp:Label Text="Имя" runat="server" />                        
                     </td>
-                    <td>
-                        <asp:TextBox ID="clientName" ValidationGroup="Group1" onkeyup="validateNailsData(); return false;" runat="server" />
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите имя" ControlToValidate="clientName" ValidationGroup="Group1" />
+                    <td>                     
+                        <asp:TextBox ID="clientName" ValidationGroup="nailValid" runat="server" /> 
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите имя" ControlToValidate="clientName" ValidationGroup="nailValid" />
+                        <asp:RegularExpressionValidator ID="RegularExpressionValidator1" Display="Dynamic" runat="server" ForeColor="Red"
+                            ControlToValidate="clientName" IsValidEmpty="False" ValidationExpression="^[a-zA-Zа-яА-Я ]{3,20}$" ErrorMessage="Введите имя (3 - 20 букв)" ValidationGroup="nailValid" />
                     </td>
                 </tr>
                 <tr>
@@ -47,30 +66,17 @@
                         <asp:Label Text="Телефон" runat="server" />
                     </td>
                     <td>
-                        <asp:TextBox ID="phone" onkeyup="validateNailsData(); return false;" runat="server" ValidationGroup="MKE" />
-                        <%--<ajax:MaskedEditExtender ID="MaskedEditExtender2" runat="server"
-                            TargetControlID="phone"
-                            Mask="(999)999-9999" AutoComplete="false"
-                            ClearMaskOnLostFocus="false"                            
-                            MaskType="None"
-                            InputDirection="LeftToRight"
-                            AcceptNegative="None"
-                            DisplayMoney="None" Filtered="-"
-                            ErrorTooltipEnabled="True" />
-                        <ajax:MaskedEditValidator ID="MaskedEditValidator2" Display="Dynamic" runat="server" ForeColor="Red"
-                            ControlExtender="MaskedEditExtender2"
+                        <asp:TextBox ID="phone" onkeyup="applyMask()" onkeydown="return validatePhone(event)" runat="server" ValidationGroup="nailValid" />
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите телефон" ControlToValidate="phone" ValidationGroup="nailValid" />
+                        <asp:RegularExpressionValidator ID="MaskedEditValidator2" Display="Dynamic" runat="server" ForeColor="Red"
                             ControlToValidate="phone"
-                            IsValidEmpty="False" ValidationExpression="\([0-9]{3}\)[0-9]{3}\-[0-9]{4}"
-                            EmptyValueMessage="Введите телефон"
-                            InvalidValueMessage="Введите телефон"
-                            EmptyValueBlurredText="Введите телефон"
-                            InvalidValueBlurredMessage="Введите телефон"
-                            ValidationGroup="MKE" />--%>
+                            IsValidEmpty="False" ValidationExpression="\([0-9]{3}\)[0-9]{3}\-[0-9]{4}" ErrorMessage="Неверный формат"
+                            ValidationGroup="nailValid" />                        
                     </td>
                 </tr>
                 <tr>
                     <td style="text-align: justify" colspan="2">
-                        <main:TagButton ID="OkButton" Enabled="false" runat="server" Text="Отправить" OnClick="AddNailDate" />
+                        <main:TagButton ID="OkButton" CausesValidation="true" ValidationGroup="nailValid" runat="server" Text="Отправить" OnClick="AddNailDate" />
                         <asp:Button ID="CancelButton" runat="server" Text="Закрыть" />
                     </td>
                 </tr>
