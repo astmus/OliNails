@@ -6,9 +6,11 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Threading.Tasks;
 
 namespace MainSite
 {
@@ -58,7 +60,31 @@ namespace MainSite
 				Session["nailDate"] = null;
 				InsertNailDate(date.Value, TimeSpan.FromHours(2), clientName.Text, phone.Text);
 			}
-			Response.Redirect(Request.RawUrl);
+
+			Task.Run(() => { Response.Redirect(Request.RawUrl); });
+
+			SendMailNotification(date.Value, TimeSpan.FromHours(2), clientName.Text, phone.Text);
+		}
+
+		private void SendMailNotification(DateTime startDate, TimeSpan duration, string userName, string userPhon)
+		{
+			MailMessage mailMsg = new MailMessage();
+			mailMsg.From = new MailAddress("oli_882011@mail.ru");
+			mailMsg.To.Add(new MailAddress("olgas882013@gmail.com"));
+			mailMsg.IsBodyHtml = false;
+			mailMsg.Subject = "Запись на "+startDate.ToString();
+			mailMsg.Body = userName + " желает запись на " + startDate.ToString() + " тел: " + userPhon;
+			
+			SmtpClient client = new SmtpClient("smtp.mail.ru",25);
+			client.Credentials = new System.Net.NetworkCredential() { UserName = "oli_882011@mail.ru", Password = "rusaya8" };
+			client.EnableSsl = true;
+			
+			client.Send(mailMsg);
+		}
+
+		private void Client_SendCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+		{
+			
 		}
 
 		private List<NailDate> GetFutureNailDates()

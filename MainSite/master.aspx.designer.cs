@@ -103,24 +103,6 @@ namespace MainSite {
         protected global::System.Web.UI.WebControls.TextBox phone;
         
         /// <summary>
-        /// MaskedEditExtender2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.MaskedEditExtender MaskedEditExtender2;
-        
-        /// <summary>
-        /// MaskedEditValidator2 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.MaskedEditValidator MaskedEditValidator2;
-        
-        /// <summary>
         /// OkButton control.
         /// </summary>
         /// <remarks>

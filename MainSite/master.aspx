@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="master.aspx.cs" Inherits="MainSite.master" UICulture="ru" Culture="ru-RU" %>
+﻿<%@ Page Language="C#" Async="true" AutoEventWireup="true" CodeBehind="master.aspx.cs" Inherits="MainSite.master" UICulture="ru" Culture="ru-RU" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <%@ Register Assembly="MainSite" Namespace="MainSite" TagPrefix="main" %>
@@ -48,17 +48,16 @@
                     </td>
                     <td>
                         <asp:TextBox ID="phone" onkeyup="validateNailsData(); return false;" runat="server" ValidationGroup="MKE" />
-                        <ajaxToolkit:MaskedEditExtender ID="MaskedEditExtender2" runat="server"
+                        <%--<ajax:MaskedEditExtender ID="MaskedEditExtender2" runat="server"
                             TargetControlID="phone"
-                            Mask="(999)999-9999"
-                            ClearMaskOnLostFocus="false"
-                            MessageValidatorTip="true"
+                            Mask="(999)999-9999" AutoComplete="false"
+                            ClearMaskOnLostFocus="false"                            
                             MaskType="None"
                             InputDirection="LeftToRight"
-                            AcceptNegative="Left"
-                            DisplayMoney="Left" Filtered="-"
+                            AcceptNegative="None"
+                            DisplayMoney="None" Filtered="-"
                             ErrorTooltipEnabled="True" />
-                        <ajaxToolkit:MaskedEditValidator ID="MaskedEditValidator2" Display="Dynamic" runat="server" ForeColor="Red"
+                        <ajax:MaskedEditValidator ID="MaskedEditValidator2" Display="Dynamic" runat="server" ForeColor="Red"
                             ControlExtender="MaskedEditExtender2"
                             ControlToValidate="phone"
                             IsValidEmpty="False" ValidationExpression="\([0-9]{3}\)[0-9]{3}\-[0-9]{4}"
@@ -66,7 +65,7 @@
                             InvalidValueMessage="Введите телефон"
                             EmptyValueBlurredText="Введите телефон"
                             InvalidValueBlurredMessage="Введите телефон"
-                            ValidationGroup="MKE" />
+                            ValidationGroup="MKE" />--%>
                     </td>
                 </tr>
                 <tr>
