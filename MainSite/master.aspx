@@ -7,25 +7,28 @@
 <script type="text/javascript">
     function applyMask()
     {
-        
-    }
+       var keyCode = ('which' in event) ? event.which : event.keyCode; 
+        if (keyCode == 8 || keyCode == 229) return true;
 
-    function validatePhone(event)
-    {
-        var keyCode = ('which' in event) ? event.which : event.keyCode; 
-        if (keyCode != 8)
         switch (<%=phone.ClientID%>.value.length) {
-            case 0:
+            case 1:
                 <%=phone.ClientID%>.value = "("+<%=phone.ClientID%>.value
                 break;
             case 4:
                  <%=phone.ClientID%>.value = <%=phone.ClientID%>.value+")"
                 break;
             case 8:
+            case 11:
                 <%=phone.ClientID%>.value = <%=phone.ClientID%>.value + "-"
                 break;            
-        }
-        return <%=phone.ClientID%>.value.length <= 12 || keyCode == 8;
+        } 
+    }
+
+    function validatePhone(event)
+    {        
+        var keyCode = ('which' in event) ? event.which : event.keyCode;
+        if (keyCode == 8 || keyCode == 229) return true;
+        return <%=phone.ClientID%>.value.length <= 13;
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -62,7 +65,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <asp:Label Text="Телефон" runat="server" />
+                        <asp:Label ID="phoneText" Text="Телефон" runat="server" />
                     </td>
                     <td>
                         <asp:TextBox ID="phone" onkeyup="applyMask()" onkeydown="return validatePhone(event)" runat="server" ValidationGroup="nailValid" />
