@@ -16,7 +16,6 @@ namespace MainSite
 {
 	public partial class master : System.Web.UI.Page
 	{
-		public static List<string> timeList = new List<string>(){"10:00","14:00","16:00","18:00"};
 		public NailScheduler scheduler;
 		protected override void OnPreInit(EventArgs e)
 		{
@@ -29,7 +28,7 @@ namespace MainSite
 		{
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
 			//GetFutureNailDates();	
-			scheduler = new NailScheduler(timeList, GetFutureNailDates());
+			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DataBaseHandler.Instance.GetFutureNailDates(), Mode.User);
 			scheduler.CreateNailDate += OnCreateNailDate;
 			mainPanel.Controls.Add(scheduler);
 			if (Request.Browser.IsMobileDevice)
@@ -58,7 +57,7 @@ namespace MainSite
 			if (date.HasValue)
 			{
 				Session["nailDate"] = null;
-				InsertNailDate(date.Value, TimeSpan.FromHours(2), clientName.Text, phone.Text);
+				DataBaseHandler.Instance.InsertNailDate(date.Value, TimeSpan.FromHours(2), clientName.Text, phone.Text);
 			}
 
 			Task.Run(() => { Response.Redirect(Request.RawUrl); });
@@ -85,47 +84,6 @@ namespace MainSite
 		private void Client_SendCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
 			
-		}
-
-		private List<NailDate> GetFutureNailDates()
-		{
-			string query = "select * from NailDates where StartTime >= @DateFrom";
-			var dates = new List<NailDate>();
-			// create connection and command
-			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
-			using (SqlCommand cmd = new SqlCommand(query, cn))
-			{
-				cmd.Parameters.Add("@DateFrom", SqlDbType.DateTime).Value = NailScheduler.getStartOfCurrentWeek();
-				cn.Open();
-				SqlDataReader dr = cmd.ExecuteReader();
-				while (dr.Read())
-					dates.Add(NailDate.Parse(dr));
-				cn.Close();
-			}
-			return dates;
-		}
-
-		private void InsertNailDate(DateTime startDate, TimeSpan duration, string userName, string userPhone)
-		{
-			// define INSERT query with parameters
-			string query = "INSERT INTO dbo.NailDates (StartTime, Duration, ClientName, ClientPhone) " +
-						   "VALUES (@StartTime, @Duration, @ClientName, @ClientPhone) ";
-
-			// create connection and command
-			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
-			using (SqlCommand cmd = new SqlCommand(query, cn))
-			{
-				// define parameters and their values
-				cmd.Parameters.Add("@StartTime", SqlDbType.DateTime).Value = startDate;
-				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = duration.Ticks;
-				cmd.Parameters.Add("@ClientName", SqlDbType.NText, 20).Value = userName;
-				cmd.Parameters.Add("@ClientPhone", SqlDbType.VarChar, 15).Value = userPhone;
-
-				// open connection, execute INSERT, close connection
-				cn.Open();
-				cmd.ExecuteNonQuery();
-				cn.Close();
-			}
-		}
+		}		
 	}
 }

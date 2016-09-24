@@ -17,15 +17,16 @@ namespace MainSite
 	{
 		public List<WorkWeek> weeks { get; set; }
 		public int CountOfNextWeeks { get; set; } = 5;
-
+		private Mode _currentMode { get; set; }
 		private List<string> _timeList;
 		public delegate void AddDateRecordCallback(DateTime startTime);
 		public event AddDateRecordCallback CreateNailDate;
 
-		public NailScheduler(List<string> timeList, List<NailDate> nailDates)
+		public NailScheduler(List<string> timeList, List<NailDate> nailDates, Mode workForMode)
 		{
 			CreateHeader();			
 			_timeList = timeList;
+			_currentMode = workForMode;
 			weeks = new List<WorkWeek>();
 			CellSpacing = 1;
 			BorderWidth = 1;
@@ -37,7 +38,7 @@ namespace MainSite
 				var row = new TableRow();
 				var dateCell = new TableCell();
 				var endDay = startDay.AddDays(7);
-				var week = new WorkWeek(startDay, nailDates.Where(w=>w.StartTime.Date >= startDay.Date && w.StartTime.Date <= endDay.Date).ToList());
+				var week = new WorkWeek(startDay, nailDates.Where(w=>w.StartTime.Date >= startDay.Date && w.StartTime.Date <= endDay.Date).ToList(), _currentMode);
 				week.AddNewDateButtonPressed += OnAddNewDateButtonPressed;
 				dateCell.Controls.Add(week);				
 				row.Cells.Add(dateCell);
@@ -69,7 +70,7 @@ namespace MainSite
 			DateTime newDateTime = TimeZoneInfo.ConvertTime(
 				nowDateTime,
 				TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
-			return newDateTime.AddDays(-1 * (int)(newDateTime.DayOfWeek - 1));
+			return newDateTime.AddDays(1 - (newDateTime.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)newDateTime.DayOfWeek));
 		}
 	}
 }

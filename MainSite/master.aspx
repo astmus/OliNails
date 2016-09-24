@@ -5,7 +5,6 @@
 
 <!DOCTYPE html>
 <script type="text/javascript">
-
     function applyMask()
     {
         
