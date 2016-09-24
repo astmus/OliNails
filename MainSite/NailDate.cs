@@ -9,7 +9,7 @@ namespace MainSite
 		public TimeSpan Duration { get; set; }
 		public String ClientPhone { get; set; }
 		public String ClientName { get; set; }
-
+		public int ID { get; set; }
 		public NailDate()
 		{
 
@@ -18,6 +18,7 @@ namespace MainSite
 		public static NailDate Parse(SqlDataReader reader)
 		{
 			var result = new NailDate();
+			result.ID = (int)reader["id"];
 			result.StartTime = (DateTime)reader["StartTime"];
 			result.Duration = TimeSpan.FromTicks((Int64)reader["Duration"]);
 			result.ClientName = reader["ClientName"] as string;

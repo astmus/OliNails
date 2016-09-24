@@ -21,7 +21,8 @@ namespace MainSite
 		private List<string> _timeList;
 		public delegate void AddDateRecordCallback(DateTime startTime);
 		public event AddDateRecordCallback CreateNailDate;
-
+		public event Action<NailDate> NailDateSelected;
+		public event Action<DateTime> ReservDate;
 		public NailScheduler(List<string> timeList, List<NailDate> nailDates, Mode workForMode)
 		{
 			CreateHeader();			
@@ -39,13 +40,34 @@ namespace MainSite
 				var dateCell = new TableCell();
 				var endDay = startDay.AddDays(7);
 				var week = new WorkWeek(startDay, nailDates.Where(w=>w.StartTime.Date >= startDay.Date && w.StartTime.Date <= endDay.Date).ToList(), _currentMode);
-				week.AddNewDateButtonPressed += OnAddNewDateButtonPressed;
+
+				switch (_currentMode)
+				{
+					case Mode.User:
+						week.AddNewDateButtonPressed = OnAddNewDateButtonPressed;
+					break;
+					case Mode.Owner:
+						week.NailDateSelected = OnNailDateSelected;
+						week.ReservDatePressed = OnReservDatePressed;
+					break;
+				}				
+				
 				dateCell.Controls.Add(week);				
 				row.Cells.Add(dateCell);
 				row.BorderColor = Color.Gray;
 				Rows.Add(row);
 				startDay = endDay;
 			}		
+		}
+
+		private void OnReservDatePressed(DateTime certainTime)
+		{
+			ReservDate?.Invoke(certainTime);
+		}
+
+		private void OnNailDateSelected(NailDate date)
+		{
+			NailDateSelected?.Invoke(date);
 		}
 
 		private void OnAddNewDateButtonPressed(DateTime obj)

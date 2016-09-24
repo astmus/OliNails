@@ -17,7 +17,9 @@ namespace MainSite
 	{
 		public TableHeaderRow DaysHeader { get; set; }
 		public DateTime FirstDay { get; set; }
-		public event Action<DateTime> AddNewDateButtonPressed;
+		public Action<DateTime> AddNewDateButtonPressed;
+		public Action<NailDate> NailDateSelected;
+		public Action<DateTime> ReservDatePressed;
 		List<NailDate> WeekDates { get; set; }
 		private Mode _currentMode { get; set; }
 		public WorkWeek(DateTime firstDay, List<NailDate> weekDates, Mode workForMode)
@@ -114,6 +116,7 @@ namespace MainSite
 					ConfigureCell(ref dateCell, backColor);
 
 					Control innerControl = null;
+
 					switch (_currentMode)
 					{
 						case Mode.User:
@@ -123,6 +126,7 @@ namespace MainSite
 							innerControl = GenerateContentForOwnerCell(existsNailDate, certainTime, backColor);
 							break;
 					}
+
 					if (innerControl != null)
 						dateCell.Controls.Add(innerControl);
 					row.Cells.Add(dateCell);
@@ -133,16 +137,29 @@ namespace MainSite
 		}
 
 		private Control GenerateContentForOwnerCell(NailDate existsNailDate, DateTime certainTime, Color backColor)
+		{			
+			var b = new TagButton() { Tag = existsNailDate, BackColor = backColor, Width = 100, Height = 30 };
+			b.Click += onButtonPressedByOwner; ;
+			if (existsNailDate != null)
+				b.Text = existsNailDate.ClientName;				
+			else
+				if (certainTime > nowDateTime)
+				{
+					b.Tag = certainTime;
+					b.Text = "Блокировать";
+				}					
+				else
+					b = null;
+			return b;
+		}
+
+		private void onButtonPressedByOwner(object sender, EventArgs e)
 		{
-			Control result = null;
-			if (certainTime > nowDateTime)
-			{
-				var b = new TagButton() { Tag = certainTime, BackColor = backColor, Width = 100, Height = 30 };
-				b.Click += onAddDateButtonClick;
-				b.Text = existsNailDate == null ? "Блокировать" : existsNailDate.ClientName;
-				result = b;
-			}
-			return result;
+			object data = (sender as TagButton).Tag;
+			if (data is DateTime)
+				ReservDatePressed?.Invoke((DateTime)data);
+			if (data is NailDate)
+				NailDateSelected?.Invoke(data as NailDate);
 		}
 
 		private Control GenerateContentForUserCell(NailDate existsNailDate, DateTime certainTime, Color backColor)
@@ -155,7 +172,7 @@ namespace MainSite
 				result = b;
 			}
 			if (existsNailDate != null)
-				result = new Literal() { Text = existsNailDate.ClientName };
+				result = new Literal() { Text = "Занято" };
 			return result;
 		}
 

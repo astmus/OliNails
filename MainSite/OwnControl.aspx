@@ -8,15 +8,45 @@
 </head>
 <body>
     <form id="ownform" runat="server">
-        <asp:Table runat="server">
+        <asp:Table runat="server" EnableTheming="True">
             <asp:TableRow>
                 <asp:TableCell>
                     <asp:Panel runat="server" ID="mainPanel">
             
                     </asp:Panel>
                 </asp:TableCell>
-                <asp:TableCell>
-
+                <asp:TableCell VerticalAlign="Top">
+                    <asp:Table ID="detailDataTable" Visible="false" runat="server" >
+                        <asp:TableRow>
+                            <asp:TableCell> Дата: </asp:TableCell>
+                            <asp:TableCell> <asp:Literal runat="server" ID="seletedDate"/> </asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>                            
+                            <asp:TableCell ColumnSpan="2"> <asp:Calendar runat="server" ID="dateCalendar" SelectionMode="Day" OnSelectionChanged="DateSelectionChanged" ShowGridLines="False"/>
+                            </asp:TableCell>  
+                            <asp:TableCell VerticalAlign="Top"><asp:ListBox AutoPostBack="True" runat="server" OnSelectedIndexChanged="availableTimes_SelectedIndexChanged" ID="availableTimes"/></asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell> Имя </asp:TableCell>
+                            <asp:TableCell ColumnSpan="2"> <asp:TextBox runat="server" ID="clientName" /> </asp:TableCell>                            
+                            <asp:TableCell> </asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell> Телефон </asp:TableCell>
+                            <asp:TableCell ColumnSpan="2"> <asp:TextBox runat="server" ID="clientPhone" /> </asp:TableCell>                            
+                            <asp:TableCell> </asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell ColumnSpan="2">
+                                <asp:Button runat="server" OnClick="OnUpdateNialDateClick" Text="обновить запись" />                                
+                            </asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell ColumnSpan="2">
+                                <asp:Button runat="server" OnClick="OnDeleteNailDateClick" Text="отменить запись" />                                
+                            </asp:TableCell>
+                        </asp:TableRow>
+                    </asp:Table>
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>

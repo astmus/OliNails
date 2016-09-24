@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 
 namespace MainSite
 {
@@ -36,6 +37,43 @@ namespace MainSite
 				cn.Close();
 			}
 			return dates;
+		}
+
+		public void DropNailDate(NailDate date)
+		{
+			string query = "DELETE from dbo.NailDates where id = @ID";
+
+			// create connection and command
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				// define parameters and their values
+				cmd.Parameters.Add("@ID", SqlDbType.Int).Value = date.ID;				
+				// open connection, execute INSERT, close connection
+				cn.Open();
+				cmd.ExecuteNonQuery();
+				cn.Close();
+			}
+		}
+
+		public List<string> GetAvailableTimesForDate(DateTime date)
+		{
+			string query = "select StartTime from NailDates where StartTime >= @DateFrom and StartTime < @DateTo";
+			var reservedDates = new List<string>();
+			// create connection and command
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@DateFrom", SqlDbType.DateTime).Value = date.Date;
+				cmd.Parameters.Add("@DateTo", SqlDbType.DateTime).Value = date.Date.AddDays(1);
+				cn.Open();
+				SqlDataReader dr = cmd.ExecuteReader();
+				while (dr.Read())
+					reservedDates.Add(((DateTime)dr["StartTime"]).ToString("HH:mm"));
+				cn.Close();
+			}
+
+			return Settings.Instance.AvailableTimes.Except(reservedDates).ToList(); 
 		}
 
 		public void InsertNailDate(DateTime startDate, TimeSpan duration, string userName, string userPhone)
