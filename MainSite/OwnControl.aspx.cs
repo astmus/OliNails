@@ -21,7 +21,9 @@ namespace MainSite
 
 		private void OnReservDatePressed(DateTime obj)
 		{
-			detailDataTable.Visible = false;
+			detailDataTable.Visible = false;			
+			DataBaseHandler.Instance.InsertNailDate(obj, TimeSpan.Zero, "Резерв", "");
+			Response.Redirect(Request.RawUrl);
 		}
 
 		private void OnNailDateSeleted(NailDate obj)
