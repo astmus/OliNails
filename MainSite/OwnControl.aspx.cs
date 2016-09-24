@@ -50,18 +50,27 @@ namespace MainSite
 			seletedDate.Text = dateCalendar.SelectedDate.Add(time).ToString();
 		}
 
-		protected void OnUpdateNialDateClick(object sender, EventArgs e)
-		{
-
-		}
-
-		protected void OnDeleteNailDateClick(object sender, EventArgs e)
+		private void HandleNailDateInSessionAndRefresh(Action<NailDate> handler)
 		{
 			NailDate date = Session["selectedNailDate"] as NailDate;
 			Session["selectedNailDate"] = null;
 			if (date == null) return;
-			DataBaseHandler.Instance.DropNailDate(date);
+			handler(date);
 			Response.Redirect(Request.RawUrl);
+		}
+
+		protected void OnUpdateNialDateClick(object sender, EventArgs e)
+		{
+			NailDate date = Session["selectedNailDate"] as NailDate;
+			date.ClientName = clientName.Text;
+			date.ClientPhone = clientPhone.Text;
+			date.StartTime = DateTime.Parse(seletedDate.Text);
+			HandleNailDateInSessionAndRefresh(DataBaseHandler.Instance.UpdateNailDate);			
+		}
+
+		protected void OnDeleteNailDateClick(object sender, EventArgs e)
+		{
+			HandleNailDateInSessionAndRefresh(DataBaseHandler.Instance.DropNailDate);			
 		}
 	}
 }
