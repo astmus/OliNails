@@ -22,13 +22,13 @@ namespace MainSite {
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
         
         /// <summary>
-        /// btnPopup control.
+        /// hiddenField control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnPopup;
+        protected global::System.Web.UI.WebControls.HiddenField hiddenField;
         
         /// <summary>
         /// ScriptManager1 control.
@@ -38,15 +38,6 @@ namespace MainSite {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.ScriptManager ScriptManager1;
-        
-        /// <summary>
-        /// mp1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::AjaxControlToolkit.ModalPopupExtender mp1;
         
         /// <summary>
         /// mainPanel control.
@@ -64,7 +55,16 @@ namespace MainSite {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel Panl1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Panl1;
+        
+        /// <summary>
+        /// dialogTable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTable dialogTable;
         
         /// <summary>
         /// nailDateLabel control.
@@ -146,14 +146,5 @@ namespace MainSite {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::MainSite.TagButton OkButton;
-        
-        /// <summary>
-        /// CancelButton control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button CancelButton;
     }
 }

@@ -168,7 +168,10 @@ namespace MainSite
 			if (existsNailDate == null && certainTime > nowDateTime)
 			{
 				var b = new TagButton() { Tag = certainTime, Text = "Записаться", BackColor = backColor, Width = 100, Height = 30 };
-				b.Click += onAddDateButtonClick;
+				b.Attributes.Add("time", certainTime.ToString("Дата dd MMMM yyyy HH:mm"));
+				b.UseSubmitBehavior = false;
+				b.OnClientClick = "showModal(event); return false;";
+				b. Click += onAddDateButtonClick;				
 				result = b;
 			}
 			if (existsNailDate != null)

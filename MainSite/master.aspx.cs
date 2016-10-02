@@ -32,37 +32,36 @@ namespace MainSite
 			scheduler.CreateNailDate += OnCreateNailDate;
 			mainPanel.Controls.Add(scheduler);
 			if (Request.Browser.IsMobileDevice)
-				Panl1.Style.Add("transform", "scale(2,2)");
+			{
+				dialogTable.Style.Add("transform", "scale(2,2)");
+				Panl1.Style["padding-top"] = "200px";
+			}
 		}
 
 		private void OnCreateNailDate(DateTime startTime)
 		{
 			nailDateLabel.Text = startTime.ToString("Дата dd MMMM yyyy HH:mm");
 			Session["nailDate"] = startTime;
-			mp1.Show();
+			MsgBox();
 		}
 
-		public void MsgBox(String ex, Page pg, Object obj)
+		public void MsgBox()
 		{
-			string s = "<SCRIPT language='javascript'>alert('" + ex.Replace("\r\n", "\\n").Replace("'", "") + "'); </SCRIPT>";
-			Type cstype = obj.GetType();
-			ClientScriptManager cs = pg.ClientScript;
-			cs.RegisterClientScriptBlock(cstype, s, s.ToString());
+			Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "showModal()", true);			
 		}
 
 		protected void AddNailDate(object sender, EventArgs e)
-		{
-			mp1.Hide();
-			var date = Session["nailDate"] as DateTime?;
-			if (date.HasValue)
-			{
-				Session["nailDate"] = null;
-				DataBaseHandler.Instance.InsertNailDate(date.Value, TimeSpan.FromHours(2), clientName.Text, phone.Text);
-			}
+		{			
+			var dateStr = hiddenField.Value;
+			dateStr = dateStr.Replace("Дата ", "");
+			DateTime result;
+			if (DateTime.TryParse(dateStr, out result) == false) return;
+		
+			DataBaseHandler.Instance.InsertNailDate(result, TimeSpan.FromHours(2), clientName.Text, phone.Text);
 
 			Task.Run(() => { Response.Redirect(Request.RawUrl); });
 
-			SendMailNotification(date.Value, TimeSpan.FromHours(2), clientName.Text, phone.Text);
+			SendMailNotification(result, TimeSpan.FromHours(2), clientName.Text, phone.Text);
 		}
 
 		private void SendMailNotification(DateTime startDate, TimeSpan duration, string userName, string userPhon)

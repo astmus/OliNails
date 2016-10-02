@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="mmaster.aspx" />
+    <Content Include="Modal.css" />
     <Content Include="OwnControl.aspx" />
     <Content Include="packages.config" />
     <Content Include="ApplicationInsights.config">
