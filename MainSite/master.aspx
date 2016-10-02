@@ -72,7 +72,7 @@
                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите телефон" ControlToValidate="phone" ValidationGroup="nailValid" />
                         <asp:RegularExpressionValidator ID="MaskedEditValidator2" Display="Dynamic" runat="server" ForeColor="Red"
                             ControlToValidate="phone"
-                            IsValidEmpty="False" ValidationExpression="\([0-9]{3}\)[0-9]{3}\-[0-9]{4}" ErrorMessage="Неверный формат"
+                            IsValidEmpty="False" ValidationExpression="\([0-9]{3}\)[0-9]{3}\-[0-9]{2}\-[0-9]{2}" ErrorMessage="Неверный формат"
                             ValidationGroup="nailValid" />                        
                     </td>
                 </tr>
