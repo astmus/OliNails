@@ -22,6 +22,15 @@ namespace MainSite {
         protected global::System.Web.UI.HtmlControls.HtmlForm ownform;
         
         /// <summary>
+        /// b2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button b2;
+        
+        /// <summary>
         /// mainPanel control.
         /// </summary>
         /// <remarks>
@@ -83,5 +92,23 @@ namespace MainSite {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox clientPhone;
+        
+        /// <summary>
+        /// servicesRow control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TableRow servicesRow;
+        
+        /// <summary>
+        /// myB control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button myB;
     }
 }

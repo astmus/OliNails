@@ -73,11 +73,12 @@
     
     <form id="form1" runat="server">
         <asp:HiddenField ID="hiddenField" runat="server" />
-    <!-- The Modal -->        
+    <!-- The Modal -->                
         <asp:ScriptManager ID="ScriptManager1" runat="server"/>
         <asp:Panel runat="server" ID="mainPanel">
         </asp:Panel>
         <div runat="server" id="Panl1" class="modal">
+            
             <table id="dialogTable" runat="server" class="modal-content">
                 <tr>
                     <td style="text-align: center" colspan="2">

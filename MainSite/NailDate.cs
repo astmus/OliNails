@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace MainSite
@@ -9,7 +10,7 @@ namespace MainSite
 		public TimeSpan Duration { get; set; }
 		public String ClientPhone { get; set; }
 		public String ClientName { get; set; }
-		public int ID { get; set; }
+		public int ID { get; set; }		
 		public NailDate()
 		{
 

@@ -102,10 +102,8 @@
     <Content Include="Modal.css" />
     <Content Include="OwnControl.aspx" />
     <Content Include="packages.config" />
-    <Content Include="ApplicationInsights.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Properties\PublishProfiles\OliNails.pubxml" />
+    <None Include="Properties\PublishProfiles\SomeeSite.pubxml" />
     <None Include="scripts\jquery-3.1.0.intellisense.js" />
     <Content Include="scripts\jquery-3.1.0.js" />
     <Content Include="scripts\jquery-3.1.0.min.js" />
@@ -138,6 +136,7 @@
       <DependentUpon>addNailDate.aspx</DependentUpon>
     </Compile>
     <Compile Include="DataBaseHandler.cs" />
+    <Compile Include="HtmlCheckBox.cs" />
     <Compile Include="master.aspx.cs">
       <DependentUpon>master.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -154,6 +153,7 @@
     </Compile>
     <Compile Include="Mode.cs" />
     <Compile Include="NailDate.cs" />
+    <Compile Include="NailService.cs" />
     <Compile Include="OwnControl.aspx.cs">
       <DependentUpon>OwnControl.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

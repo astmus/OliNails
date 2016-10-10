@@ -21,6 +21,41 @@ namespace MainSite
 			}
 		}
 
+		public List<NailService> GetSelectedServicesForDate(int nailDateID)
+		{			
+			string query = "select * from Services where Services.id in (SELECT serviceId FROM dbo.NailDateService where nailDateId = @ID)";
+			var services = new List<NailService>();
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@ID", SqlDbType.Int).Value = nailDateID;
+				cn.Open();
+				SqlDataReader dr = cmd.ExecuteReader();
+				while (dr.Read())
+					services.Add(NailService.Parse(dr));
+				cn.Close();
+			}
+			return services;
+		}
+
+		public List<NailService> GetAvailableServices()
+		{
+			string query = "select * from Services where isObsolete = 'False'";
+			var services = new List<NailService>();
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{				
+				cn.Open();
+				SqlDataReader dr = cmd.ExecuteReader();
+				while (dr.Read())
+					services.Add(NailService.Parse(dr));
+				cn.Close();
+			}
+			return services;
+		}
+
 		public List<NailDate> GetFutureNailDates()
 		{
 			string query = "select * from NailDates where StartTime >= @DateFrom";
@@ -41,7 +76,8 @@ namespace MainSite
 
 		public void DropNailDate(NailDate date)
 		{
-			string query = "DELETE from dbo.NailDates where id = @ID";
+			string query = "delete from dbo.NailDates where Id = @ID;";
+			query += "delete from dbo.NailDateService where nailDateId = @ID;";
 
 			// create connection and command
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
@@ -49,7 +85,6 @@ namespace MainSite
 			{
 				// define parameters and their values
 				cmd.Parameters.Add("@ID", SqlDbType.Int).Value = date.ID;				
-				// open connection, execute INSERT, close connection
 				cn.Open();
 				cmd.ExecuteNonQuery();
 				cn.Close();
@@ -76,9 +111,16 @@ namespace MainSite
 			return Settings.Instance.AvailableTimes.Except(reservedDates).ToList(); 
 		}
 
-		public void UpdateNailDate(NailDate date)
+		public void UpdateNailDate(NailDate date,List<int> currentSelServicesIDs, List<int> oldServicesIDs)
 		{
-			string query = "update dbo.NailDates set StartTime = @StartTime, Duration = @Duration, ClientName = @ClientName, ClientPhone = @ClientPhone where id=@ID";
+			string query = "update dbo.NailDates set StartTime = @StartTime, Duration = @Duration, ClientName = @ClientName, ClientPhone = @ClientPhone where id=@ID;";
+			if (currentSelServicesIDs.Count == 0)
+				query += "delete from dbo.NailDateService where nailDateId = @ID;";
+			else
+				query += "delete from dbo.NailDateService where nailDateId = @ID and serviceId not in ("+String.Join(",",currentSelServicesIDs) +");";
+
+			var needToAddServices = currentSelServicesIDs.Except(oldServicesIDs).ToList();			
+			needToAddServices.ForEach(fe => query += String.Format("insert into dbo.NailDateService (nailDateId, serviceId) values (@ID, @serviceId{0});", fe));
 
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
 			using (SqlCommand cmd = new SqlCommand(query, cn))
@@ -88,19 +130,22 @@ namespace MainSite
 				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = date.Duration.Ticks;
 				cmd.Parameters.Add("@ClientName", SqlDbType.NText, 20).Value = date.ClientName;
 				cmd.Parameters.Add("@ClientPhone", SqlDbType.VarChar, 15).Value = date.ClientPhone;
-
+				needToAddServices.ForEach(i=> cmd.Parameters.Add(String.Format("@serviceId{0}", i), SqlDbType.Int).Value = i);
 				cn.Open();
 				cmd.ExecuteNonQuery();
 				cn.Close();
 			}
 		}
 
-		public void InsertNailDate(DateTime startDate, TimeSpan duration, string userName, string userPhone)
+		public void InsertNailDate(DateTime startDate, TimeSpan duration, string userName, string userPhone, List<int> listOFServicesIDs)
 		{
 			// define INSERT query with parameters
 			string query = "INSERT INTO dbo.NailDates (StartTime, Duration, ClientName, ClientPhone) " +
-						   "VALUES (@StartTime, @Duration, @ClientName, @ClientPhone) ";
-
+						   "VALUES (@StartTime, @Duration, @ClientName, @ClientPhone); ";
+			uint pos = 0;
+			foreach (var serviceId in listOFServicesIDs)			
+				query += String.Format("insert into dbo.NailDateService (nailDateId, serviceId) values (IDENT_CURRENT('NailDates'), @serviceId{0});",pos++);
+			
 			// create connection and command
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
 			using (SqlCommand cmd = new SqlCommand(query, cn))
@@ -110,6 +155,8 @@ namespace MainSite
 				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = duration.Ticks;
 				cmd.Parameters.Add("@ClientName", SqlDbType.NText, 20).Value = userName;
 				cmd.Parameters.Add("@ClientPhone", SqlDbType.VarChar, 15).Value = userPhone;
+				for (int i = 0; i < pos; i++)
+					cmd.Parameters.Add(String.Format("@serviceId{0}",i), SqlDbType.Int).Value = listOFServicesIDs[i];
 
 				// open connection, execute INSERT, close connection
 				cn.Open();
