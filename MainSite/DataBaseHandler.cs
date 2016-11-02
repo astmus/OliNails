@@ -64,7 +64,7 @@ namespace MainSite
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
 			using (SqlCommand cmd = new SqlCommand(query, cn))
 			{
-				cmd.Parameters.Add("@DateFrom", SqlDbType.DateTime).Value = NailScheduler.getStartOfCurrentWeek();
+				cmd.Parameters.Add("@DateFrom", SqlDbType.DateTime).Value = DateTimeHelper.getStartOfCurrentWeek();
 				cn.Open();
 				SqlDataReader dr = cmd.ExecuteReader();
 				while (dr.Read())

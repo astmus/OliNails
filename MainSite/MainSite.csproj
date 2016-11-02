@@ -98,6 +98,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EditServices.aspx" />
     <Content Include="mmaster.aspx" />
     <Content Include="Modal.css" />
     <Content Include="OwnControl.aspx" />
@@ -123,6 +124,8 @@
     <Content Include="master.aspx" />
     <Content Include="scripts\ai.0.22.19-build00125.js" />
     <Content Include="scripts\ai.0.22.19-build00125.min.js" />
+    <Content Include="SiteMenu.css" />
+    <Content Include="TableStyle.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -136,6 +139,14 @@
       <DependentUpon>addNailDate.aspx</DependentUpon>
     </Compile>
     <Compile Include="DataBaseHandler.cs" />
+    <Compile Include="DateTimeHelper.cs" />
+    <Compile Include="EditServices.aspx.cs">
+      <DependentUpon>EditServices.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditServices.aspx.designer.cs">
+      <DependentUpon>EditServices.aspx</DependentUpon>
+    </Compile>
     <Compile Include="HtmlCheckBox.cs" />
     <Compile Include="master.aspx.cs">
       <DependentUpon>master.aspx</DependentUpon>

@@ -27,12 +27,13 @@ namespace MainSite
 			FirstDay = firstDay;
 			WeekDates = weekDates;
 			CellSpacing = 0;
+			CellPadding = 0;			
 			BorderWidth = 1;
-			BorderColor = Color.Gray;
+			BorderColor = Color.Black;
+			BorderStyle = BorderStyle.Solid;
 			DaysHeader = new TableHeaderRow();
 			DaysHeader.BorderColor = Color.Gray;
 			_currentMode = workForMode;
-
 			var headerCell = new TableHeaderCell() { ForeColor = Color.White, BackColor = Color.Black };
 			headerCell.Style.Add("padding", "5px");
 			headerCell.Text = "время";
@@ -95,6 +96,7 @@ namespace MainSite
 				timeCell.HorizontalAlign = HorizontalAlign.Center;
 				timeCell.BorderWidth = 1;
 				timeCell.BorderColor = Color.Gray;
+				timeCell.BackColor = Color.White;
 				row.Cells.Add(timeCell);
 				Color backColor;
 

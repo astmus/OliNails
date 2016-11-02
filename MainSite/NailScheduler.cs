@@ -30,13 +30,16 @@ namespace MainSite
 			_currentMode = workForMode;
 			weeks = new List<WorkWeek>();
 			CellSpacing = 1;
-			BorderWidth = 1;
-			BorderColor = Color.Gray;
-
-			var startDay = getStartOfCurrentWeek();
+			CellPadding = 0;
+			//BackColor = Color.Black;
+			BorderColor = Color.Black;
+			BorderStyle = BorderStyle.Solid;
+			BorderWidth = 2;
+			
+			var startDay = DateTimeHelper.getStartOfCurrentWeek();
 			for (int i = 0; i < CountOfNextWeeks; i++)
 			{
-				var row = new TableRow();
+				var row = new TableRow();				
 				var dateCell = new TableCell();
 				var endDay = startDay.AddDays(7);
 				var week = new WorkWeek(startDay, nailDates.Where(w=>w.StartTime.Date >= startDay.Date && w.StartTime.Date <= endDay.Date).ToList(), _currentMode);
@@ -50,9 +53,9 @@ namespace MainSite
 						week.NailDateSelected = OnNailDateSelected;
 						week.ReservDatePressed = OnReservDatePressed;
 					break;
-				}				
-				
-				dateCell.Controls.Add(week);				
+				}
+								
+				dateCell.Controls.Add(week);								
 				row.Cells.Add(dateCell);
 				row.BorderColor = Color.Gray;
 				Rows.Add(row);
@@ -86,13 +89,6 @@ namespace MainSite
 			Rows.Add(mainTitle);
 		}
 
-		public static DateTime getStartOfCurrentWeek()
-		{
-			DateTime nowDateTime = DateTime.UtcNow;
-			DateTime newDateTime = TimeZoneInfo.ConvertTime(
-				nowDateTime,
-				TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
-			return newDateTime.AddDays(1 - (newDateTime.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)newDateTime.DayOfWeek));
-		}
+		
 	}
 }

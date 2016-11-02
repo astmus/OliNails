@@ -37,6 +37,7 @@ namespace MainSite
 			{
 				dialogTable.Style.Add("transform", "scale(2,2)");
 				Panl1.Style["padding-top"] = "200px";
+				//scheduler.Style.Add(HtmlTextWriterStyle.Width,"100%");
 			}
 		}
 
