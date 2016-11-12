@@ -95,8 +95,10 @@
         <asp:HiddenField ID="hiddenField" runat="server" />
         <!-- The Modal -->
         <asp:ScriptManager ID="ScriptManager1" runat="server" />
-        <asp:Panel runat="server" ID="mainPanel">
+        <div style="width:100%;text-align:center">
+        <asp:Panel style="display:inline-block" runat="server" ID="mainPanel">
         </asp:Panel>
+        </div>
         <div runat="server" id="Panl1" class="modal">
             <table id="dialogTable" runat="server" class="modal-content">
                 <tr>

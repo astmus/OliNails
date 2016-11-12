@@ -31,8 +31,10 @@ namespace MainSite
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
 			//GetFutureNailDates();	
 			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DataBaseHandler.Instance.GetFutureNailDates(), Mode.User);
-			scheduler.CreateNailDate += OnCreateNailDate;
+			scheduler.CreateNailDate += OnCreateNailDate;	
+			
 			mainPanel.Controls.Add(scheduler);
+			
 			//AddServicesToDialogTable();
 			if (Request.Browser.IsMobileDevice)
 			{
