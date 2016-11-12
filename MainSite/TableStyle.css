@@ -30,11 +30,11 @@
 }
 .selectedrow
 {
-	background-color: #ff80ff;
+	background-color: #4CAF50;
 	font-family: Arial;
+    font-size: 14px;
 	color: #fff;
-	font-weight: bold;
-	text-align: left;
+	text-align: center;
 }
 /** FOR THE PAGING ICONS  **/
 .mydatagrid a 
