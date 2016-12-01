@@ -124,6 +124,8 @@
     <Content Include="master.aspx" />
     <Content Include="scripts\ai.0.22.19-build00125.js" />
     <Content Include="scripts\ai.0.22.19-build00125.min.js" />
+    <Content Include="SelectSercvices.aspx" />
+    <Content Include="SelectServicesSheet.ascx" />
     <Content Include="SiteMenu.css" />
     <Content Include="TableStyle.css" />
     <Content Include="Web.config">
@@ -173,6 +175,20 @@
       <DependentUpon>OwnControl.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectSercvices.aspx.cs">
+      <DependentUpon>SelectSercvices.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SelectSercvices.aspx.designer.cs">
+      <DependentUpon>SelectSercvices.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SelectServicesSheet.ascx.cs">
+      <DependentUpon>SelectServicesSheet.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SelectServicesSheet.ascx.designer.cs">
+      <DependentUpon>SelectServicesSheet.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Settings.cs" />
     <Compile Include="TagButton.cs" />
     <Compile Include="NailScheduler.cs" />

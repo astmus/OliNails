@@ -12,13 +12,45 @@ namespace MainSite
 		private static DataBaseHandler _instance;
 
 		private DataBaseHandler() { }
-
+		public static string LastErrorMessage = null;
 		public static DataBaseHandler Instance
 		{
 			get
 			{				
 				return _instance ?? (_instance = new DataBaseHandler());
 			}
+		}
+
+		public bool AddNewService(string name, int price, int duration, string abbr)
+		{
+			//IDENT_CURRENT('NailDates')
+			string query = "INSERT INTO Services(name, price, duration, abbreviation) VALUES (@name, @price, @duration, @abbreviation);";
+			query += "INSERT INTO ServicePrice(serviceId, startDate, value) VALUES (IDENT_CURRENT('Services'), @startDate, @price);";
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@name", SqlDbType.NVarChar,35).Value = name;
+				cmd.Parameters.Add("@price", SqlDbType.SmallInt).Value = price;
+				cmd.Parameters.Add("@duration", SqlDbType.SmallInt).Value = duration;
+				cmd.Parameters.Add("@abbreviation", SqlDbType.NVarChar,3).Value = abbr;
+				cmd.Parameters.Add("@startDate", SqlDbType.DateTime).Value = DateTimeHelper.currentLocalDateTime().Date;
+				cn.Open();
+				try
+				{
+					var res = cmd.ExecuteNonQuery();
+					return true;
+				}
+				catch (System.Exception ex)
+				{
+					LastErrorMessage = ex.Message;
+					return false;
+				}
+				finally
+				{
+					cn.Close();
+				}				
+			}			
 		}
 
 		public List<NailService> GetSelectedServicesForDate(int nailDateID)

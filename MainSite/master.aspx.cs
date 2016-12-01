@@ -22,6 +22,7 @@ namespace MainSite
 		protected override void OnPreInit(EventArgs e)
 		{
 			base.OnPreInit(e);
+			OkButton.Style.Add("disabled", "true");
 			/*if (Request.Browser.IsMobileDevice)
 				MasterPageFile = "~/mmaster.aspx";*/
 		}
@@ -36,12 +37,12 @@ namespace MainSite
 			mainPanel.Controls.Add(scheduler);
 			
 			//AddServicesToDialogTable();
-			if (Request.Browser.IsMobileDevice)
+			/*if (Request.Browser.IsMobileDevice)
 			{
 				dialogTable.Style.Add("transform", "scale(2,2)");
 				Panl1.Style["padding-top"] = "200px";
 				//scheduler.Style.Add(HtmlTextWriterStyle.Width,"100%");
-			}
+			}*/
 		}
 
 		private void OnCreateNailDate(DateTime startTime)
@@ -49,7 +50,10 @@ namespace MainSite
 			nailDateLabel.Text = startTime.ToString("Дата dd MMMM yyyy HH:mm");
 			Session["nailDate"] = startTime;
 			GridView1.DataBind();
-			ShowServicesSheet();
+			if (Request.Browser.IsMobileDevice)
+				Response.Redirect("SelectSercvices.aspx");
+			else
+				ShowServicesSheet();
 		}
 
 		public void ShowServicesSheet()

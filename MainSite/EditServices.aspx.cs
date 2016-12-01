@@ -28,9 +28,18 @@ namespace MainSite
 		}
 
 		protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
-		{
-			
-			int i = 0;
+		{			
+			if (e.CommandName == "Insert")
+			{
+				string name = ((TextBox)GridView1.FooterRow.FindControl("addName")).Text;
+				string price = ((TextBox)GridView1.FooterRow.FindControl("addPrice")).Text;
+				string duration = ((TextBox)GridView1.FooterRow.FindControl("addDuration")).Text;
+				string abbrev = ((TextBox)GridView1.FooterRow.FindControl("addAbbreviation")).Text;
+				if (DataBaseHandler.Instance.AddNewService(name, Int16.Parse(price), Int16.Parse(duration), abbrev))
+					GridView1.DataBind();
+				else
+					ShowAlertBox(DataBaseHandler.LastErrorMessage);
+			}
 		}
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
@@ -62,6 +71,6 @@ namespace MainSite
 		public void ShowAlertBox(string message)
 		{
 			Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "alert('" + message + "');", true);
-		}
+		}		
 	}
 }

@@ -4,6 +4,7 @@
 <%@ Register Assembly="MainSite" Namespace="MainSite" TagPrefix="main" %>
 
 <!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript">
 
     function selectRow(row)
@@ -59,6 +60,7 @@
 
     function applyMask()
     {
+        return;
         var keyCode = ('which' in event) ? event.which : event.keyCode; 
         if (keyCode == 8 || keyCode == 229) return true;
 
@@ -77,10 +79,12 @@
     }
 
     function validatePhone(event)
-    {        
+    {   
         var keyCode = ('which' in event) ? event.which : event.keyCode;
-        if (keyCode == 8 || keyCode == 229) return true;
-        return <%=phone.ClientID%>.value.length <= 13;
+        //return ((<%=phone.ClientID%>.value.length > 4 && <%=phone.ClientID%>.value.length <= 13));
+        console.log(keyCode);
+        if (<%=phone.ClientID%>.value.length == 4 && (keyCode == 8 || keyCode == 229)) return false;
+        if (<%=phone.ClientID%>.value.length == 13 && (keyCode != 8 && keyCode != 229)) return false;
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -112,9 +116,9 @@
                     </td>
                     <td>
                         <asp:TextBox ID="clientName" ValidationGroup="nailValid" runat="server" />
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите имя" ControlToValidate="clientName" ValidationGroup="nailValid" />
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите имя" ControlToValidate="clientName" ValidationGroup="valid" />
                         <asp:RegularExpressionValidator ID="RegularExpressionValidator1" Display="Dynamic" runat="server" ForeColor="Red"
-                            ControlToValidate="clientName" IsValidEmpty="False" ValidationExpression="^[a-zA-Zа-яА-Я ]{3,20}$" ErrorMessage="Введите имя (3 - 20 букв)" ValidationGroup="nailValid" />
+                            ControlToValidate="clientName" IsValidEmpty="False" ValidationExpression="^[a-zA-Zа-яА-Я ]{3,20}$" ErrorMessage="Введите имя (3 - 20 букв)" ValidationGroup="valid" />
                     </td>
                 </tr>
                 <tr>
@@ -122,12 +126,12 @@
                         <asp:Label ID="phoneText" Text="Телефон" runat="server" />
                     </td>
                     <td>
-                        <asp:TextBox ID="phone" onkeyup="applyMask()" onkeydown="return validatePhone(event)" runat="server" ValidationGroup="nailValid" />
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите телефон" ControlToValidate="phone" ValidationGroup="nailValid" />
+                        <asp:TextBox ID="phone" onkeyup="applyMask()" onkeydown="return validatePhone(event)" runat="server" Text="+380" ValidationGroup="nailValid" />
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите телефон" ControlToValidate="phone" ValidationGroup="valid" />
                         <asp:RegularExpressionValidator ID="MaskedEditValidator2" Display="Dynamic" runat="server" ForeColor="Red"
                             ControlToValidate="phone"
-                            IsValidEmpty="False" ValidationExpression="\([0-9]{3}\)[0-9]{3}\-[0-9]{2}\-[0-9]{2}" ErrorMessage="Неверный формат"
-                            ValidationGroup="nailValid" />
+                            IsValidEmpty="False" ValidationExpression="\+[0-9]{12}" ErrorMessage="Введите только цифры"
+                            ValidationGroup="valid" />
                     </td>
                 </tr>
                 <tr>
@@ -179,11 +183,10 @@
                 </tr>
                 <tr>
                     <td style="text-align: justify" colspan="2">
-                        <main:TagButton ID="OkButton" Enabled="false" CausesValidation="true" ValidationGroup="nailValid" runat="server" Text="Отправить" OnClick="AddNailDate" />
+                        <main:TagButton ID="OkButton" CausesValidation="true" ValidationGroup="valid" runat="server" Text="Отправить" OnClick="AddNailDate" />
                         <input type="button" class="close" value="Закрыть" />
                     </td>
                 </tr>
-
             </table>
         </div>
     </form>

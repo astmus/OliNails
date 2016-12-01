@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EditServices.aspx.cs" Inherits="MainSite.EditServices" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="EditServices.aspx.cs" Inherits="MainSite.EditServices" UICulture="ru" Culture="ru-RU"%>
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <!DOCTYPE html>
 
@@ -109,7 +109,7 @@
                             &nbsp;<asp:LinkButton ID="LinkButton2" runat="server" CausesValidation="False" CommandName="Delete" Text="Удал."></asp:LinkButton>
                         </ItemTemplate>
                         <FooterTemplate>
-                            <asp:Button runat="server" Text="Добавить" CommandName="Insert" />
+                            <asp:Button runat="server" Text="Добавить" CommandName="Insert" ID="Add" />
                         </FooterTemplate>
                         <FooterStyle HorizontalAlign="Center" />
                         <ControlStyle CssClass="ruleRowButton" />
@@ -119,10 +119,10 @@
                 <PagerStyle CssClass="pager"></PagerStyle>
                 <RowStyle CssClass="rows"></RowStyle>
             </asp:GridView>
-            <asp:SqlDataSource ID="NailDataSource" runat="server" OnUpdating="NailDataSource_Updating"  OnUpdated="NailDataSource_Updated" OnSelecting="NailDataSource_Selecting" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" ProviderName="<%$ ConnectionStrings:dbConnectionSctring.ProviderName %>" SelectCommand="GetServicesForEdit" DeleteCommand="DELETE FROM Services WHERE (id = @id)" InsertCommand="INSERT INTO Services(name, price, duration, abbreviation) VALUES (@name, @price, @duration, @abbreviation)" SelectCommandType="StoredProcedure" UpdateCommand="UpdateServiceProc" UpdateCommandType="StoredProcedure">
-                <%--<DeleteParameters>
+            <asp:SqlDataSource ID="NailDataSource" runat="server" DeleteCommand="update Services set isObsolete = 1 where id = @id" OnUpdating="NailDataSource_Updating"  OnUpdated="NailDataSource_Updated" OnSelecting="NailDataSource_Selecting" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" ProviderName="<%$ ConnectionStrings:dbConnectionSctring.ProviderName %>" SelectCommand="GetServicesForEdit" InsertCommand="INSERT INTO Services(name, price, duration, abbreviation) VALUES (@name, @price, @duration, @abbreviation)" SelectCommandType="StoredProcedure" UpdateCommand="UpdateServiceProc" UpdateCommandType="StoredProcedure">
+                <DeleteParameters>
                     <asp:Parameter Name="id" />
-                </DeleteParameters>--%>
+                </DeleteParameters>
                 <InsertParameters>
                     <asp:Parameter Name="name" />
                     <asp:Parameter Name="price" DefaultValue="0" />
