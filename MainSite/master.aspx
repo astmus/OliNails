@@ -2,7 +2,7 @@
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajax" %>
 <%@ Register Assembly="MainSite" Namespace="MainSite" TagPrefix="main" %>
-
+<%@ Register TagPrefix="MainSite" TagName="SelectServices" Src="~/SelectServicesSheet.ascx" %>
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script type="text/javascript">
@@ -55,10 +55,10 @@
        
         var modal = document.getElementById('Panl1');
         modal.style.display = "block";
-        <%=clientName.ClientID%>.focus();
+        <%--<%=clientName.ClientID%>.focus();--%>
     }
 
-    function applyMask()
+    <%--function applyMask()
     {
         return;
         var keyCode = ('which' in event) ? event.which : event.keyCode; 
@@ -85,7 +85,7 @@
         console.log(keyCode);
         if (<%=phone.ClientID%>.value.length == 4 && (keyCode == 8 || keyCode == 229)) return false;
         if (<%=phone.ClientID%>.value.length == 13 && (keyCode != 8 && keyCode != 229)) return false;
-    }
+    }--%>
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
@@ -94,7 +94,6 @@
     <link rel="stylesheet" type="text/css" href="TableStyle.css" />
 </head>
 <body onload="applyHandlers();">
-
     <form id="form1" runat="server">
         <asp:HiddenField ID="hiddenField" runat="server" />
         <!-- The Modal -->
@@ -104,7 +103,8 @@
         </asp:Panel>
         </div>
         <div runat="server" id="Panl1" class="modal">
-            <table id="dialogTable" runat="server" class="modal-content">
+            <MainSite:SelectServices ID="srvTable" runat="server" class="modal-content"/>
+           <%-- <table id="dialogTable" runat="server" class="modal-content">
                 <tr>
                     <td style="text-align: center" colspan="2">
                         <asp:Label Text="Дата" ID="nailDateLabel" runat="server" />
@@ -163,7 +163,7 @@
                                         <asp:TextBox ID="addDuration" Width="40" runat="server"></asp:TextBox>
                                     </FooterTemplate>
                                     <FooterStyle HorizontalAlign="Center" />
-                                </asp:TemplateField> --%>                                                              
+                                </asp:TemplateField>                                                              
                             </Columns>
                             <HeaderStyle CssClass="header"></HeaderStyle>
                             <PagerStyle CssClass="pager"></PagerStyle>
@@ -187,7 +187,7 @@
                         <input type="button" class="close" value="Закрыть" />
                     </td>
                 </tr>
-            </table>
+            </table>--%>--%> 
         </div>
     </form>
 </body>

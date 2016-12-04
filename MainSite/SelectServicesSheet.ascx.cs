@@ -11,14 +11,29 @@ namespace MainSite
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;			
-			nailDateLabel.Text = ((DateTime)Session["nailDate"]).ToString("Дата dd MMMM yyyy HH:mm");			
+			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
+			if (Session["nailDate"] != null)
+				nailDateLabel.Text = ((DateTime)Session["nailDate"]).ToString("Дата dd MMMM yyyy HH:mm");			
 			//this.Style.Add("transform", "scale(2,2)");
-		}		
+		}
+
+#region Properties
+		public string Phone
+		{
+			get { return phone.Text; }
+		}
+#endregion
 
 		public void ShowServicesSheet()
 		{
 			Page.ClientScript.RegisterStartupScript(this.GetType(), "CallFunc", "showModal(event)", true);
+		}
+
+		public void ReloadServices()
+		{
+			if (Session["nailDate"] != null)
+				nailDateLabel.Text = ((DateTime)Session["nailDate"]).ToString("Дата dd MMMM yyyy HH:mm");
+			GridView1.DataBind();
 		}
 
 		protected void GoBack(object sender, EventArgs e)
@@ -76,7 +91,10 @@ namespace MainSite
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
 		{
-			e.Command.Parameters["@localTime"].Value = Session["nailDate"] ?? DateTimeHelper.currentLocalDateTime();
+			if (Session["nailDate"] != null)
+				e.Command.Parameters["@localTime"].Value = Session["nailDate"];
+			else
+				e.Cancel = true;
 		}
 
 		private void SendMailNotification(DateTime startDate, TimeSpan duration, string userName, string userPhon, List<string> selectedServicesName)

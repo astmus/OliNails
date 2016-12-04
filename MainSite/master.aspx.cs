@@ -22,9 +22,7 @@ namespace MainSite
 		protected override void OnPreInit(EventArgs e)
 		{
 			base.OnPreInit(e);
-			OkButton.Style.Add("disabled", "true");
-			/*if (Request.Browser.IsMobileDevice)
-				MasterPageFile = "~/mmaster.aspx";*/
+			//OkButton.Style.Add("disabled", "true");			
 		}
 
 		protected void Page_Load(object sender, EventArgs e)
@@ -34,80 +32,24 @@ namespace MainSite
 			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DataBaseHandler.Instance.GetFutureNailDates(), Mode.User);
 			scheduler.CreateNailDate += OnCreateNailDate;	
 			
-			mainPanel.Controls.Add(scheduler);
-			
-			//AddServicesToDialogTable();
-			/*if (Request.Browser.IsMobileDevice)
-			{
-				dialogTable.Style.Add("transform", "scale(2,2)");
-				Panl1.Style["padding-top"] = "200px";
-				//scheduler.Style.Add(HtmlTextWriterStyle.Width,"100%");
-			}*/
+			mainPanel.Controls.Add(scheduler);			
 		}
 
 		private void OnCreateNailDate(DateTime startTime)
 		{
-			nailDateLabel.Text = startTime.ToString("Дата dd MMMM yyyy HH:mm");
-			Session["nailDate"] = startTime;
-			GridView1.DataBind();
+			Session["nailDate"] = startTime;			
 			if (Request.Browser.IsMobileDevice)
 				Response.Redirect("SelectSercvices.aspx");
 			else
+			{
+				srvTable.ReloadServices();
 				ShowServicesSheet();
+			}
 		}
 
 		public void ShowServicesSheet()
 		{
 			Page.ClientScript.RegisterStartupScript(this.GetType(), "CallFunc", "showModal(event)", true);			
-		}
-
-		protected void AddNailDate(object sender, EventArgs e)
-		{
-			// Select the checkboxes from the GridView control
-			var servicesIDs = new List<int>();
-			var servicesNames = new List<string>();
-			foreach (GridViewRow row in GridView1.Rows)
-			{		
-				bool isChecked = ((CheckBox)row.FindControl("procedureRowSelect")).Checked;
-				if (isChecked)
-				{
-					servicesIDs.Add(int.Parse(((Label)row.FindControl("procedureIdLabel")).Text));
-					servicesNames.Add(((Label)row.FindControl("procedureAbbreviation")).Text);					
-				}
-			}		
-			//TODO: apply validation from http://stackoverflow.com/questions/1228112/how-do-i-make-a-checkbox-required-on-an-asp-net-form						
-			DateTime result = (DateTime)Session["nailDate"];						
-			DataBaseHandler.Instance.InsertNailDate(result, TimeSpan.FromHours(2), clientName.Text, phone.Text, servicesIDs);
-
-			Task.Run(() => { Response.Redirect(Request.RawUrl); });
-						
-			Session.Clear();
-			SendMailNotification(result, TimeSpan.FromHours(2), clientName.Text, phone.Text, servicesNames);
-		}
-
-		private void AddServicesToDialogTable()
-		{
-			//select selected services for date select * from Services where Services.id in (SELECT serviceId FROM dbo.NailDateService where nailDateId = 107)
-
-			var services = DataBaseHandler.Instance.GetAvailableServices();
-			HtmlTable table = dialogTable as HtmlTable;
-			var checks = new List<HtmlInputCheckBox>();
-			foreach (var service in services)
-			{
-				HtmlTableRow row = new HtmlTableRow();
-				HtmlInputCheckBox box = new HtmlInputCheckBox();				
-				var cell = new HtmlTableCell();
-				cell.ColSpan = 2;
-				cell.Controls.Add(box);
-				box.ID = service.ID.ToString();
-				checks.Add(box);
-				var title = new Literal() { Text = service.Name };
-				cell.Controls.Add(title);
-				row.Cells.Add(cell);
-				table.Rows.Insert(table.Rows.Count - 1, row);
-			}
-			Session["checks"] = checks;
-			Session["services"] = services;
 		}
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
