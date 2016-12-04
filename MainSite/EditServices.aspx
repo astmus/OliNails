@@ -12,7 +12,7 @@
     <ul>
         <li><a href="OwnControl.aspx">Расписание</a></li>
         <li><a class="active" href="EditServices.aspx">Редактирование услуг</a></li>
-        <li><a href="#contact">Contacts</a></li>
+        <li><a href="Pages/Report.aspx">Статистика</a></li>
         <li><a href="#about">About</a></li>
     </ul>
     <form id="form1" runat="server">
