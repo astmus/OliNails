@@ -88,7 +88,7 @@ namespace MainSite
 			return services;
 		}
 
-		public List<NailDate> GetFutureNailDates()
+		private List<NailDate> GetNailDatesSinceDate(DateTime sinceTime)
 		{
 			string query = "select * from NailDates where StartTime >= @DateFrom";
 			var dates = new List<NailDate>();
@@ -96,7 +96,7 @@ namespace MainSite
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
 			using (SqlCommand cmd = new SqlCommand(query, cn))
 			{
-				cmd.Parameters.Add("@DateFrom", SqlDbType.DateTime).Value = DateTimeHelper.getStartOfCurrentWeek();
+				cmd.Parameters.Add("@DateFrom", SqlDbType.DateTime).Value = sinceTime;
 				cn.Open();
 				SqlDataReader dr = cmd.ExecuteReader();
 				while (dr.Read())
@@ -104,6 +104,16 @@ namespace MainSite
 				cn.Close();
 			}
 			return dates;
+		}
+
+		public List<NailDate> GetFutureNailDates()
+		{
+			return GetNailDatesSinceDate(DateTimeHelper.getStartOfCurrentWeek());
+		}
+
+		public List<NailDate> GetNailDatesFromBeginningWeek()
+		{
+			return GetNailDatesSinceDate(DateTimeHelper.getStartOfCurrentWeek().Date);
 		}
 
 		public void DropNailDate(NailDate date)

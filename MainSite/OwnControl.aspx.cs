@@ -13,7 +13,7 @@ namespace MainSite
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;			
-			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DataBaseHandler.Instance.GetFutureNailDates(), Mode.Owner);
+			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DataBaseHandler.Instance.GetNailDatesFromBeginningWeek(), Mode.Owner);
 			scheduler.NailDateSelected += OnNailDateSeleted;
 			scheduler.ReservDate += OnReservDatePressed;
 			mainPanel.Controls.Add(scheduler);			
