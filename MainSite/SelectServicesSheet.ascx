@@ -98,8 +98,8 @@
                         <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите телефон" ControlToValidate="phone" ValidationGroup="valid" />
                         <asp:RegularExpressionValidator ID="MaskedEditValidator2" Display="Dynamic" runat="server" ForeColor="Red"
                             ControlToValidate="phone"
-                            IsValidEmpty="False" ValidationExpression="\+[0-9]{12}" ErrorMessage="Введите только цифры"
-                            ValidationGroup="valid" />
+                            IsValidEmpty="False" ValidationExpression="\+[0-9]{12}" ErrorMessage="Нужно 12 цифр"
+                            ValidationGroup="nailValid" />
         </td>
     </tr>
     <tr>

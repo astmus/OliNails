@@ -55,6 +55,7 @@ namespace MainSite
 					servicesNames.Add(((Label)row.FindControl("procedureAbbreviation")).Text);
 				}
 			}
+			
 			DateTime result = (DateTime)Session["nailDate"];
 			DataBaseHandler.Instance.InsertNailDate(result, TimeSpan.FromHours(2), clientName.Text, phone.Text, servicesIDs);
 

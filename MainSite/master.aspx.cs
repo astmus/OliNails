@@ -28,7 +28,6 @@ namespace MainSite
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
-			//GetFutureNailDates();	
 			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DataBaseHandler.Instance.GetFutureNailDates(), Mode.User);
 			scheduler.CreateNailDate += OnCreateNailDate;	
 			
