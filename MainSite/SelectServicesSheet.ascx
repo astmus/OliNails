@@ -4,10 +4,10 @@
 <script type="text/javascript">
 
     function selectRow(row)
-    {        
-        console.log("selectRow runned")
+    {          
         var input = row.cells[0].children[0]
-        row.cells[0].children[0].checked = !row.cells[0].children[0].checked
+        console.log(row)
+        input.checked = row.className == "selectedrow" ? false : true;
         price = parseInt(row.cells[1].children[0].innerHTML)
         var priceLabel = document.getElementById('totalPrice');
         var newPrice;
@@ -20,9 +20,10 @@
             newPrice = parseInt(priceLabel.innerHTML) - price
         }
         priceLabel.innerHTML = newPrice
-        document.getElementById('<%=OkButton.ClientID%>').disabled = newPrice == 0
-    }
-    
+        var butt = document.getElementById('<%=OkButton.ClientID%>')
+        butt.disabled = newPrice == 0
+    }    
+
     function applyHandlers()
     {
         var modal = document.getElementById('Panl1');

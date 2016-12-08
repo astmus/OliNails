@@ -54,23 +54,7 @@ namespace MainSite
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
 		{
 			e.Command.Parameters["@localTime"].Value = Session["nailDate"] ?? DateTimeHelper.currentLocalDateTime();
-		}
-
-		private void SendMailNotification(DateTime startDate, TimeSpan duration, string userName, string userPhon, List<string> selectedServicesName)
-		{
-			MailMessage mailMsg = new MailMessage();
-			mailMsg.From = new MailAddress("oli_882011@mail.ru");
-			mailMsg.To.Add(new MailAddress("olgas882013@gmail.com"));
-			mailMsg.IsBodyHtml = false;
-			mailMsg.Subject = "Запись на "+startDate.ToString();
-			mailMsg.Body = userName + " желает запись на " + Environment.NewLine + String.Join(",",selectedServicesName) + Environment.NewLine + startDate.ToString() + " тел: " + userPhon;
-			
-			SmtpClient client = new SmtpClient("smtp.mail.ru",25);
-			client.Credentials = new System.Net.NetworkCredential() { UserName = "oli_882011@mail.ru", Password = "rusaya8" };
-			client.EnableSsl = true;
-			
-			client.Send(mailMsg);
-		}
+		}		
 
 		public void ShowAlertBox(string message)
 		{
