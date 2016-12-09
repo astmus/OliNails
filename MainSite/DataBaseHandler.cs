@@ -21,6 +21,30 @@ namespace MainSite
 			}
 		}
 
+		public void AddNews(string message)
+		{
+			string query = "INSERT INTO News(message) VALUES (@newMessage);";			
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@newMessage", SqlDbType.NVarChar).Value = message;				
+				cn.Open();
+				try
+				{
+					var res = cmd.ExecuteNonQuery();					
+				}
+				catch (System.Exception ex)
+				{
+					LastErrorMessage = ex.Message;					
+				}
+				finally
+				{
+					cn.Close();
+				}
+			}
+		}
+
 		public bool AddNewService(string name, int price, int duration, string abbr)
 		{
 			//IDENT_CURRENT('NailDates')

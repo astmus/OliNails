@@ -12,7 +12,7 @@
         <li><a class="active" href="OwnControl.aspx">Расписание</a></li>
         <li><a href="EditServices.aspx">Редактирование услуг</a></li>
         <li><a href="Pages/Report.aspx">Статистика</a></li>
-        <li><a href="#about">About</a></li>
+        <li><a href="Pages/News.aspx">Новости</a></li>
     </ul>
     <form id="ownform" runat="server">
         <asp:Button runat="server" Style="display: none" ID="b2" OnClick="OnUpdateNialDateClick" />
