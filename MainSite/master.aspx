@@ -60,19 +60,40 @@
     <title>Расписание</title>
     <link rel="stylesheet" type="text/css" href="Modal.css" />
     <link rel="stylesheet" type="text/css" href="TableStyle.css" />
+    <link rel="stylesheet" type="text/css" href="SiteMenu.css" />
 </head>
 <body onload="applyHandlers();">
+
     <form id="form1" runat="server">
+
         <asp:HiddenField ID="hiddenField" runat="server" />
         <!-- The Modal -->
         <asp:ScriptManager ID="ScriptManager1" runat="server" />
+
         <div style="width: 100%; text-align: center">
-            <asp:Panel Style="display: inline-block" runat="server" ID="mainPanel">
-            </asp:Panel>
+            <ul>
+                <li><a class="active" href="master.aspx">Расписание</a></li>
+                <li><a href="Pages/Price.html">Прайс</a></li>
+                <li><a href="Pages/Contacts.html">Конткты</a></li>
+            </ul>
+            <asp:GridView Width="100%" GridLines="None" ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="NailDataSource" CssClass="mydatagrid2" HeaderStyle-CssClass="header" RowStyle-CssClass="rows2">
+                <Columns>
+                    <asp:TemplateField HeaderText="Внимание объявление" SortExpression="message">
+                        <ItemTemplate>
+                            <asp:Literal ID="Label1" runat="server" Text='<%# Bind("message") %>'></asp:Literal>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" SelectCommand="SELECT [message] FROM [News]"></asp:SqlDataSource>
+        <asp:Panel Style="display: inline-block" runat="server" ID="mainPanel">
+            
+        </asp:Panel>
         </div>
         <div runat="server" id="Panl1" class="modal">
             <MainSite:SelectServices ID="srvTable" runat="server" class="modal-content" />
         </div>
+
     </form>
 </body>
 </html>

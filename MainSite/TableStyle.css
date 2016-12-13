@@ -2,6 +2,12 @@
 {
 	border: solid 2px black;
 }
+
+.mydatagrid
+{
+	border-style:none
+}
+
 .header
 {
 	background-color: #646464;
@@ -21,6 +27,14 @@
 	min-height: 25px;
     text-align:center;
 }
+
+.rows2
+{
+	background-color: #fff;	
+	color: #000;	
+    text-align:center;
+}
+
 .rows:hover
 {
 	background-color: #4CAF50;

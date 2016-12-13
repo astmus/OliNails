@@ -16,12 +16,14 @@ namespace MainSite.Pages
 
 		protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
 		{
-			if (e.CommandName == "Insert")
-			{
-				string message = ((TextBox)GridView1.FooterRow.FindControl("newMessage")).Text;
-				DataBaseHandler.Instance.AddNews(message);
-				GridView1.DataBind();
-			}
+			
+		}
+
+		protected void Add_Click(object sender, EventArgs e)
+		{
+			string message = newMessage.Text;
+			DataBaseHandler.Instance.AddNews(message);
+			GridView1.DataBind();
 		}
 	}
 }

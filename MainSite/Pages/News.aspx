@@ -41,10 +41,7 @@
                             <asp:Label ID="Label1" runat="server" Text='<%# Bind("message") %>'></asp:Label>
                         </ItemTemplate>
                         <ControlStyle Width="100%" />
-                        <ItemStyle HorizontalAlign="Left" />
-                        <FooterTemplate>
-                            <asp:TextBox ID="newMessage" Style="width: 100%" TextMode="MultiLine" runat="server"></asp:TextBox>
-                        </FooterTemplate>
+                        <ItemStyle HorizontalAlign="Left" />                        
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="управление" ShowHeader="False">
                         <EditItemTemplate>
@@ -56,10 +53,7 @@
                             &nbsp;<asp:LinkButton ID="LinkButton2" runat="server" CausesValidation="False" CommandName="Delete" Text="Delete"></asp:LinkButton>
                         </ItemTemplate>
                         <ControlStyle CssClass="editdelete" />
-                        <ItemStyle Width="130px" />
-                        <FooterTemplate>
-                            <asp:Button runat="server" Text="Добавить" CommandName="Insert" ID="Add" />
-                        </FooterTemplate>
+                        <ItemStyle Width="130px" />                        
                         <FooterStyle HorizontalAlign="Center" />
                     </asp:TemplateField>
                 </Columns>
@@ -68,6 +62,18 @@
                 <PagerStyle CssClass="pager"></PagerStyle>
                 <RowStyle CssClass="rows"></RowStyle>
             </asp:GridView>
+            <asp:Table ID="Table1" CellSpacing="5" runat="server" Style="width:100%">
+                <asp:TableRow>
+                    <asp:TableCell Width="90%">
+                        <asp:TextBox ID="newMessage" Width="100%" TextMode="MultiLine" runat="server"/>
+                    </asp:TableCell>
+                    <asp:TableCell>
+                        <asp:Button runat="server" Width="100%" Text="Добавить" OnClick="Add_Click" ID="Add" />
+                    </asp:TableCell>
+                </asp:TableRow>
+            </asp:Table>
+            
+            
             <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" SelectCommand="SELECT * FROM [News]" UpdateCommand="UPDATE News SET message = @message WHERE (id = @id)" DeleteCommand="DELETE FROM News WHERE (id = @id)">
                 <UpdateParameters>
                     <asp:Parameter Name="message" />

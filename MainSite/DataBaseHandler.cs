@@ -97,7 +97,7 @@ namespace MainSite
 
 		public List<NailService> GetAvailableServices()
 		{
-			string query = "select * from Services where isObsolete = 'False'";
+			string query = "select * from Services where isObsolete = 'False' order by pos";
 			var services = new List<NailService>();
 
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
