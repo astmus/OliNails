@@ -107,13 +107,13 @@ namespace MainSite
 
 					var certainTime = currentDay.Date.Add(nailTime);
 					NailDate existsNailDate = WeekDates.FirstOrDefault(a => a.StartTime == certainTime);
-					if (existsNailDate != null)
+					if (existsNailDate != null && existsNailDate.StartTime > nowDateTime)
 						backColor = Color.FromArgb(1, 228, 83, 131);
 					else
 					if (currentDay.Date == nowDateTime.Date)
 						backColor = Color.FromArgb(1, 217, 232, 202);
 					else
-						backColor = odd % 2 == 0 ? Color.FromArgb(1, 233, 231, 241) : Color.FromArgb(1, 241, 239, 237);
+						backColor = odd % 2 == 0 ? Color.FromArgb(1, 230, 230, 245) : Color.FromArgb(1, 245, 240, 230);
 
 					ConfigureCell(ref dateCell, backColor);
 
@@ -139,19 +139,22 @@ namespace MainSite
 		}
 
 		private Control GenerateContentForOwnerCell(NailDate existsNailDate, DateTime certainTime, Color backColor)
-		{			
+		{
 			var b = new TagButton() { Tag = existsNailDate, BackColor = backColor, Width = 100, Height = 30 };
 			b.Click += onButtonPressedByOwner; ;
 			if (existsNailDate != null)
-				b.Text = existsNailDate.ClientName;				
+			{
+				b.Text = existsNailDate.ClientName;
+				b.BackColor = Color.FromArgb(1, 228, 83, 131);
+			}
 			else
 				if (certainTime > nowDateTime)
-				{
-					b.Tag = certainTime;
-					b.Text = "Блокировать";
-				}					
-				else
-					b = null;
+			{
+				b.Tag = certainTime;
+				b.Text = "Блокировать";
+			}
+			else
+				b = null;
 			return b;
 		}
 
@@ -167,7 +170,9 @@ namespace MainSite
 		private Control GenerateContentForUserCell(NailDate existsNailDate, DateTime certainTime, Color backColor)
 		{
 			Control result = null;
-			if (existsNailDate == null && certainTime > nowDateTime)
+			if (certainTime <= nowDateTime)
+				return null;
+			if (existsNailDate == null)
 			{
 				var b = new TagButton() { Tag = certainTime, Text = "Записаться", BackColor = backColor, Width = 100, Height = 30 };
 				b.Attributes.Add("time", certainTime.ToString("Дата dd MMMM yyyy HH:mm"));
@@ -176,7 +181,7 @@ namespace MainSite
 				b.Click += onAddDateButtonClick;				
 				result = b;
 			}
-			if (existsNailDate != null)
+			else
 				result = new Literal() { Text = "Занято" };
 			return result;
 		}

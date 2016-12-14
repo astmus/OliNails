@@ -18,7 +18,7 @@
         <asp:Button runat="server" Style="display: none" ID="b2" OnClick="OnUpdateNialDateClick" />
         <asp:Table runat="server" CellSpacing="0" CellPadding="0" EnableTheming="True">
             <asp:TableRow>
-                <asp:TableCell>
+                <asp:TableCell VerticalAlign="Top">
                     <asp:Panel DefaultButton="b2" runat="server" ID="mainPanel">
                     </asp:Panel>
                 </asp:TableCell>

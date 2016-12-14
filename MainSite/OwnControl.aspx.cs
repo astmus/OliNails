@@ -64,7 +64,7 @@ namespace MainSite
 
 			var services = DataBaseHandler.Instance.GetAvailableServices(); 
 			var selectedServices = DataBaseHandler.Instance.GetSelectedServicesForDate(obj.ID);
-			services = services.Union(selectedServices).Distinct(new NailServiceComparer()).OrderBy(ob=>ob.Name).ToList();
+			services = services.Union(selectedServices).Distinct(new NailServiceComparer()).ToList();
 			
 			var checks = GenerateServicesCheckBox(services, selectedServices);
 			AddServicesCheckBoxToPage(checks);
