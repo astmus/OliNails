@@ -103,6 +103,7 @@
     <Content Include="Files\Kontakty.files\image002.png" />
     <Content Include="Files\Kontakty.files\image003.png" />
     <Content Include="Files\Kontakty.files\image004.png" />
+    <Content Include="Files\PriceWeb_15_12_2016.png" />
     <Content Include="mmaster.aspx" />
     <Content Include="Modal.css" />
     <Content Include="OwnControl.aspx" />
