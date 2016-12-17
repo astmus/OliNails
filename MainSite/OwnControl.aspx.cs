@@ -1,14 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Linq;
+using System.Web.Services;
 
 namespace MainSite
 {
 	public partial class OwnControl : System.Web.UI.Page
 	{
+		[WebMethod]
+		public static string GetNoteMessage(int date)
+		{
+			DateTime dateTime = new DateTime(TimeSpan.FromDays(date).Ticks);
+			if (System.Web.HttpContext.Current.Session["date"] == null)
+				System.Web.HttpContext.Current.Session.Add("date", dateTime);
+			else
+				System.Web.HttpContext.Current.Session["date"] = dateTime;
+			
+			return DataBaseHandler.Instance.GetNote(dateTime)?.note;
+		}
+
+		[WebMethod]
+		public static void SaveNote(int date, string message)
+		{
+			DataBaseHandler.Instance.SaveNote(new DateTime(TimeSpan.FromDays(date).Ticks), message);
+		}
+
 		NailScheduler scheduler;
 		protected void Page_Load(object sender, EventArgs e)
 		{
@@ -129,6 +147,14 @@ namespace MainSite
 		protected void OnDeleteNailDateClick(object sender, EventArgs e)
 		{
 			HandleNailDateInSessionAndRefresh(nd => DataBaseHandler.Instance.DropNailDate(nd));			
+		}
+
+		protected void SaveNote(object sender, EventArgs e)
+		{			
+			DateTime date = (DateTime)Session["date"];
+			DataBaseHandler.Instance.SaveNote(date, note.Text);
+			Response.Redirect(Request.RawUrl);
+			Session.Clear();
 		}
 	}
 

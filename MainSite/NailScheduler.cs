@@ -37,12 +37,13 @@ namespace MainSite
 			BorderWidth = 2;
 			
 			var startDay = DateTimeHelper.getStartOfCurrentWeek();
+			var featureNoteDates = DataBaseHandler.Instance.GetNoteDates(startDay.Date);
 			for (int i = 0; i < CountOfNextWeeks; i++)
 			{
 				var row = new TableRow();				
 				var dateCell = new TableCell();
 				var endDay = startDay.AddDays(7);
-				var week = new WorkWeek(startDay, nailDates.Where(w=>w.StartTime.Date >= startDay.Date && w.StartTime.Date <= endDay.Date).ToList(), _currentMode);
+				var week = new WorkWeek(startDay, nailDates.Where(w=>w.StartTime.Date >= startDay.Date && w.StartTime.Date <= endDay.Date).ToList(), _currentMode, featureNoteDates);
 
 				switch (_currentMode)
 				{
@@ -82,13 +83,12 @@ namespace MainSite
 		{
 			TableHeaderRow mainTitle = new TableHeaderRow();
 			mainTitle.BackColor = Color.Gray;
+			mainTitle.ForeColor = Color.White;
 			TableHeaderCell cell = new TableHeaderCell();
 			cell.ColumnSpan = 8;			
 			cell.Text = "Расписаине";
 			mainTitle.Cells.Add(cell);
 			Rows.Add(mainTitle);
 		}
-
-		
 	}
 }

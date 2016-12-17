@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MainSite.DataModels;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -19,6 +20,70 @@ namespace MainSite
 			{				
 				return _instance ?? (_instance = new DataBaseHandler());
 			}
+		}
+
+		public void SaveNote(DateTime forDate, string note)
+		{
+			string query = "delete from notes where date = @date;INSERT INTO Notes(date, note) VALUES (@date, @note);";
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@date", SqlDbType.Date).Value = forDate.Date;
+				cmd.Parameters.Add("@note", SqlDbType.NVarChar).Value = note;
+				cn.Open();
+				try
+				{
+					var res = cmd.ExecuteNonQuery();
+				}
+				catch (System.Exception ex)
+				{
+					LastErrorMessage = ex.Message;
+				}
+				finally
+				{
+					cn.Close();
+				}
+			}
+		}
+
+		public Note GetNote(DateTime forDate)
+		{
+			string query = "select * from Notes where date = @date";
+			Note note = null;
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@date", SqlDbType.Date).Value = forDate.Date;
+				cn.Open();
+				SqlDataReader dr = cmd.ExecuteReader();
+				while (dr.Read())
+				{
+					note = Note.FromDataReader(dr);
+					break;
+				}
+				cn.Close();
+			}
+			return note;
+		}
+
+		public List<DateTime>GetNoteDates(DateTime fromDate)
+		{
+			string query = "select date from Notes where date >= @date";
+			var dates = new List<DateTime>();
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@date", SqlDbType.Date).Value = fromDate.Date;
+				cn.Open();
+				SqlDataReader dr = cmd.ExecuteReader();
+				while (dr.Read())
+					dates.Add((DateTime)dr["date"]);
+				cn.Close();
+			}
+			return dates;
 		}
 
 		public void AddNews(string message)

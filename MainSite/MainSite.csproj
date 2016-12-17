@@ -135,6 +135,7 @@
     <Content Include="SelectSercvices.aspx" />
     <Content Include="SelectServicesSheet.ascx" />
     <Content Include="SiteMenu.css" />
+    <Content Include="Styles\ScheduleTable.css" />
     <Content Include="TableStyle.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -142,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataBaseHandler.cs" />
+    <Compile Include="DataModels\Note.cs" />
     <Compile Include="DateTimeHelper.cs" />
     <Compile Include="EditServices.aspx.cs">
       <DependentUpon>EditServices.aspx</DependentUpon>
@@ -205,6 +207,7 @@
       <DependentUpon>SelectServicesSheet.ascx</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
+    <Compile Include="Styles\Colors.cs" />
     <Compile Include="TagButton.cs" />
     <Compile Include="NailScheduler.cs" />
     <Compile Include="WorkWeek.cs" />

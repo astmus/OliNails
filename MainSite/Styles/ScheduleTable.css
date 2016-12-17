@@ -1,0 +1,39 @@
+﻿.workWeek th{
+    color:White;
+    background-color:#505050;
+    border-color:Gray;
+    border-width:1px;
+    border-style:solid;
+} 
+
+.workWeek td{
+    border-color:Gray;
+    border-width:1px;
+    border-style:solid;
+    height:30px;
+    width:100px;
+    vertical-align:middle;
+    text-align:center;
+}
+
+.workWeek td.timeCell{
+    height:auto;
+    width:auto;
+    background-color:white;
+}
+
+.workWeek td.reserved{
+    background-color:#E45383;
+}
+
+.workWeek td.evenCell{
+    background-color:#F5F0E6;
+}
+
+.workWeek td.notEvenCell{
+    background-color:#E6E6F5
+}
+
+.workWeek td.active{
+    background-color:#74D778
+}

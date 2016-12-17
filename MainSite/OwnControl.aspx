@@ -4,8 +4,37 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+
     <title></title>
     <link rel="stylesheet" type="text/css" href="SiteMenu.css" />
+    <link rel="stylesheet" type="text/css" href="Styles/ScheduleTable.css" />
+    <style>
+        .hasNote{            
+            border-style: solid;
+            border-width: 15px 15px 0 0;
+            border-color: #ceff00 transparent transparent transparent;
+            width: 0px;
+            height: 0px;            
+            position: absolute;
+            transform:translateY(-5px)
+        }     
+          
+    </style>
+    <script>
+        function onSuccess(result) {
+            document.getElementById('<%=noteTable.ID%>').style.display = "block";
+            document.getElementById('<%=note.ID%>').value = result;            
+        }
+
+        function onError(result) {
+            alert(result);
+        }
+
+        function HandleIT(date) {
+            PageMethods.GetNoteMessage(date, onSuccess, onError);
+        }
+
+    </script>
 </head>
 <body>
     <ul>
@@ -15,14 +44,24 @@
         <li><a href="Pages/News.aspx">Новости</a></li>
     </ul>
     <form id="ownform" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"></asp:ScriptManager>
         <asp:Button runat="server" Style="display: none" ID="b2" OnClick="OnUpdateNialDateClick" />
         <asp:Table runat="server" CellSpacing="0" CellPadding="0" EnableTheming="True">
             <asp:TableRow>
-                <asp:TableCell VerticalAlign="Top">
+                <asp:TableCell  VerticalAlign="Top">
                     <asp:Panel DefaultButton="b2" runat="server" ID="mainPanel">
                     </asp:Panel>
                 </asp:TableCell>
                 <asp:TableCell VerticalAlign="Top">
+                    <asp:Table Style="display:none" ID="noteTable" runat="server" >
+                        <asp:TableRow>
+                            <asp:TableCell>
+                                <asp:Label runat="server" ID="noteTitle">Заметка</asp:Label><br/>
+                                <asp:TextBox ID="note" Style="width:100%" runat="server" TextMode="MultiLine" /><br/>
+                                <asp:Button runat="server" Text="Сохранить заметку" OnClick="SaveNote" />
+                            </asp:TableCell>
+                        </asp:TableRow>
+                    </asp:Table>
                     <asp:Table ID="detailDataTable" Visible="false" runat="server">
                         <asp:TableRow>
                             <asp:TableCell> Дата: </asp:TableCell>

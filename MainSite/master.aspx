@@ -59,8 +59,9 @@
 <head runat="server">
     <title>Расписание</title>
     <link rel="stylesheet" type="text/css" href="Modal.css" />
-    <link rel="stylesheet" type="text/css" href="TableStyle.css" />
+   <%-- <link rel="stylesheet" type="text/css" href="TableStyle.css" />--%>
     <link rel="stylesheet" type="text/css" href="SiteMenu.css" />
+    <link rel="stylesheet" type="text/css" href="Styles/ScheduleTable.css" />
 </head>
 <body onload="applyHandlers();">
 

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using MainSite.Styles;
 
 namespace MainSite
 {
@@ -22,7 +21,7 @@ namespace MainSite
 		public Action<DateTime> ReservDatePressed;
 		List<NailDate> WeekDates { get; set; }
 		private Mode _currentMode { get; set; }
-		public WorkWeek(DateTime firstDay, List<NailDate> weekDates, Mode workForMode)
+		public WorkWeek(DateTime firstDay, List<NailDate> weekDates, Mode workForMode,List<DateTime> noteDates)
 		{
 			FirstDay = firstDay;
 			WeekDates = weekDates;
@@ -34,20 +33,45 @@ namespace MainSite
 			DaysHeader = new TableHeaderRow();
 			DaysHeader.BorderColor = Color.Gray;
 			_currentMode = workForMode;
-			var headerCell = new TableHeaderCell() { ForeColor = Color.White, BackColor = Color.Black };
+			var headerCell = new TableHeaderCell();// { ForeColor = Color.White, BackColor = Color.Black };
 			headerCell.Style.Add("padding", "5px");
 			headerCell.Text = "время";
 			DaysHeader.Cells.Add(headerCell);
+			this.CssClass = "workWeek";
 			for (int i = 0; i < 7; i++)
 			{
-				DaysHeader.Cells.Add(new TableHeaderCell() { ForeColor = Color.White, BackColor = Color.FromArgb(1, 104, 105, 117), BorderColor = Color.Gray, BorderWidth = 1 });
+				var cell = new TableHeaderCell();// { ForeColor = Color.White, BackColor = StyleColors.TableHeaderBackground, BorderColor = Color.Gray, BorderWidth = 1 };
+				DaysHeader.Cells.Add(cell);
 				if (firstDay.Date == nowDateTime.Date)
-					DaysHeader.Cells[i + 1].BackColor = Color.FromArgb(1, 159, 197, 121);
-				DaysHeader.Cells[i + 1].Text = firstDay.ToString("ddd dd MMM").ToLower();
+					cell.BackColor = StyleColors.Active;
+				cell.Text = firstDay.ToString("ddd dd MMM").ToLower();
+				if (_currentMode == Mode.Owner)
+					if (noteDates.Contains(firstDay.Date))
+						addNoteMark(cell, firstDay);
+					else
+						cell.Attributes.Add("onclick", "HandleIT(" + (int)TimeSpan.FromTicks(firstDay.Ticks).TotalDays + "); return false");
+
 				firstDay = firstDay.AddDays(1);
 			}
 			this.Rows.Add(DaysHeader);
 			drawWeek();
+		}
+
+		private void addNoteMark(TableHeaderCell cell, DateTime date)
+		{
+			Panel cellContent = new Panel();
+			int countDays = (int)TimeSpan.FromTicks(date.Ticks).TotalDays;
+			cellContent.Attributes.Add("onclick", "HandleIT("+countDays+"); return false");
+
+			HtmlGenericControl div = new HtmlGenericControl();
+			div.TagName = "div";
+			div.Attributes.Add("class", "hasNote");			
+			cellContent.Controls.Add(div);			
+			var lit = new Label { Text = date.ToString("ddd dd MMM").ToLower() };
+			lit.Style.Add("posiion", "absolute");
+			cellContent.Controls.Add(lit);
+
+			cell.Controls.Add(cellContent);
 		}
 
 		/*private DateTime firstDayOfCurrentWeek
@@ -74,15 +98,6 @@ namespace MainSite
 			}
 		}
 
-		private void ConfigureCell(ref System.Web.UI.WebControls.TableCell dateCell, Color backColor)
-		{
-			dateCell.BackColor = backColor;
-			dateCell.BorderWidth = 1;
-			dateCell.BorderColor = Color.Gray;
-			dateCell.HorizontalAlign = HorizontalAlign.Center;
-			dateCell.VerticalAlign = VerticalAlign.Middle;
-		}
-
 		public void drawWeek()
 		{
 			int odd = 0;
@@ -93,12 +108,8 @@ namespace MainSite
 				var nailTime = TimeSpan.Parse(time);
 				var timeCell = new TableCell();
 				timeCell.Text = time;
-				timeCell.HorizontalAlign = HorizontalAlign.Center;
-				timeCell.BorderWidth = 1;
-				timeCell.BorderColor = Color.Gray;
-				timeCell.BackColor = Color.White;
+				timeCell.CssClass = "timeCell";
 				row.Cells.Add(timeCell);
-				Color backColor;
 
 				odd++;
 				for (int i = 1; i < 8; i++)
@@ -108,24 +119,22 @@ namespace MainSite
 					var certainTime = currentDay.Date.Add(nailTime);
 					NailDate existsNailDate = WeekDates.FirstOrDefault(a => a.StartTime == certainTime);
 					if (existsNailDate != null && existsNailDate.StartTime > nowDateTime)
-						backColor = Color.FromArgb(1, 228, 83, 131);
+						dateCell.CssClass = "reserved";//backColor = StyleColors.Reserved;
 					else
 					if (currentDay.Date == nowDateTime.Date)
-						backColor = Color.FromArgb(1, 217, 232, 202);
+						dateCell.CssClass = "active";//backColor = StyleColors.LightActive;
 					else
-						backColor = odd % 2 == 0 ? Color.FromArgb(1, 230, 230, 245) : Color.FromArgb(1, 245, 240, 230);
-
-					ConfigureCell(ref dateCell, backColor);
+						dateCell.CssClass = odd % 2 == 0 ? "evenCell" : "notEvenCell";//backColor = odd % 2 == 0 ? StyleColors.EvenLines : StyleColors.NotEvenLines;
 
 					Control innerControl = null;
 
 					switch (_currentMode)
 					{
 						case Mode.User:
-							innerControl = GenerateContentForUserCell(existsNailDate, certainTime, backColor);
+							innerControl = GenerateContentForUserCell(existsNailDate, certainTime);
 							break;							
 						case Mode.Owner:
-							innerControl = GenerateContentForOwnerCell(existsNailDate, certainTime, backColor);
+							innerControl = GenerateContentForOwnerCell(existsNailDate, certainTime);
 							break;
 					}
 
@@ -138,9 +147,9 @@ namespace MainSite
 			}
 		}
 
-		private Control GenerateContentForOwnerCell(NailDate existsNailDate, DateTime certainTime, Color backColor)
+		private Control GenerateContentForOwnerCell(NailDate existsNailDate, DateTime certainTime)
 		{
-			var b = new TagButton() { Tag = existsNailDate, BackColor = backColor, Width = 100, Height = 30 };
+			var b = new TagButton() { Tag = existsNailDate, BackColor = Color.Transparent, Width = 100, Height = 30 };
 			b.Click += onButtonPressedByOwner; ;
 			if (existsNailDate != null)
 			{
@@ -148,13 +157,10 @@ namespace MainSite
 				b.BackColor = Color.FromArgb(1, 228, 83, 131);
 			}
 			else
-				if (certainTime > nowDateTime)
 			{
 				b.Tag = certainTime;
-				b.Text = "Блокировать";
+				b.Text = certainTime > nowDateTime ? "Блокировать" : "Добавить";
 			}
-			else
-				b = null;
 			return b;
 		}
 
@@ -167,14 +173,14 @@ namespace MainSite
 				NailDateSelected?.Invoke(data as NailDate);
 		}
 
-		private Control GenerateContentForUserCell(NailDate existsNailDate, DateTime certainTime, Color backColor)
+		private Control GenerateContentForUserCell(NailDate existsNailDate, DateTime certainTime)
 		{
 			Control result = null;
 			if (certainTime <= nowDateTime)
 				return null;
 			if (existsNailDate == null)
 			{
-				var b = new TagButton() { Tag = certainTime, Text = "Записаться", BackColor = backColor, Width = 100, Height = 30 };
+				var b = new TagButton() { Tag = certainTime, Text = "Записаться", BackColor = Color.Transparent, Width = 100, Height = 30 };
 				b.Attributes.Add("time", certainTime.ToString("Дата dd MMMM yyyy HH:mm"));
 				//b.UseSubmitBehavior = false;
 				//b.OnClientClick = "showModal(event); return false;";
