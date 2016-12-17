@@ -114,11 +114,11 @@ namespace MainSite
 				odd++;
 				for (int i = 1; i < 8; i++)
 				{
-					var dateCell = new TableCell() { Width = 100, Height = 30 };
+					var dateCell = new TableCell();// { Width = 100, Height = 30 };
 
 					var certainTime = currentDay.Date.Add(nailTime);
 					NailDate existsNailDate = WeekDates.FirstOrDefault(a => a.StartTime == certainTime);
-					if (existsNailDate != null && existsNailDate.StartTime > nowDateTime)
+					if (existsNailDate != null && (existsNailDate.StartTime > nowDateTime || _currentMode == Mode.Owner))
 						dateCell.CssClass = "reserved";//backColor = StyleColors.Reserved;
 					else
 					if (currentDay.Date == nowDateTime.Date)
@@ -149,12 +149,12 @@ namespace MainSite
 
 		private Control GenerateContentForOwnerCell(NailDate existsNailDate, DateTime certainTime)
 		{
-			var b = new TagButton() { Tag = existsNailDate, BackColor = Color.Transparent, Width = 100, Height = 30 };
+			var b = new TagButton() { Tag = existsNailDate };
 			b.Click += onButtonPressedByOwner; ;
 			if (existsNailDate != null)
 			{
 				b.Text = existsNailDate.ClientName;
-				b.BackColor = Color.FromArgb(1, 228, 83, 131);
+				//b.BackColor = Color.FromArgb(1, 228, 83, 131);
 			}
 			else
 			{
@@ -180,8 +180,8 @@ namespace MainSite
 				return null;
 			if (existsNailDate == null)
 			{
-				var b = new TagButton() { Tag = certainTime, Text = "Записаться", BackColor = Color.Transparent, Width = 100, Height = 30 };
-				b.Attributes.Add("time", certainTime.ToString("Дата dd MMMM yyyy HH:mm"));
+				var b = new TagButton() { Tag = certainTime, Text = "Записаться" };
+				//b.Attributes.Add("time", certainTime.ToString("Дата dd MMMM yyyy HH:mm"));
 				//b.UseSubmitBehavior = false;
 				//b.OnClientClick = "showModal(event); return false;";
 				b.Click += onAddDateButtonClick;				

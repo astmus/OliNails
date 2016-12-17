@@ -1,10 +1,21 @@
-﻿.workWeek th{
+﻿
+.workWeek input[type=submit]{
+    background-color:Transparent;
+    height:30px;
+    width:100px;
+}
+
+.workWeek input[type=submit]:hover {
+    background-color:rgba(255,204,0,0.8);
+} 
+
+.workWeek th{
     color:White;
     background-color:#505050;
     border-color:Gray;
     border-width:1px;
     border-style:solid;
-} 
+}
 
 .workWeek td{
     border-color:Gray;
@@ -35,5 +46,5 @@
 }
 
 .workWeek td.active{
-    background-color:#74D778
+    background-color:#7bc17d
 }

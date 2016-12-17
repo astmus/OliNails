@@ -17,8 +17,8 @@
             height: 0px;            
             position: absolute;
             transform:translateY(-5px)
-        }     
-          
+        }   
+                 
     </style>
     <script>
         function onSuccess(result) {

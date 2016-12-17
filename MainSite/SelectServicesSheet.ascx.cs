@@ -105,7 +105,7 @@ namespace MainSite
 			mailMsg.To.Add(new MailAddress("olgas882013@gmail.com"));
 			mailMsg.IsBodyHtml = false;
 			mailMsg.Subject = "Запись на " + startDate.ToString();
-			mailMsg.Body = userName + " желает запись на " + Environment.NewLine + String.Join(",", selectedServicesName) + Environment.NewLine + startDate.ToString() + " тел: " + userPhon;
+			mailMsg.Body = userName + " " + Environment.NewLine + String.Join(",", selectedServicesName) + Environment.NewLine + startDate.ToString() + " тел: " + userPhon;
 
 			SmtpClient client = new SmtpClient("smtp.mail.ru", 25);
 			client.Credentials = new System.Net.NetworkCredential() { UserName = "oli_882011@mail.ru", Password = "rusaya8" };

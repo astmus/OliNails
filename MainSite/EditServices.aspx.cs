@@ -11,16 +11,12 @@ namespace MainSite
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			int i = 0;
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
 		}
 
 		protected void GridView1_PageIndexChanged(object sender, EventArgs e)
 		{
-			int i = 0;
-		}
-
-		
+		}	
 
 		protected void OnAddNewServiceClick(object sender, EventArgs e)
 		{
