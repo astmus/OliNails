@@ -9,6 +9,8 @@ namespace MainSite
 {
 	public partial class OwnControl : System.Web.UI.Page
 	{
+#region WebMethods
+
 		[WebMethod]
 		public static string GetNoteMessage(int date)
 		{
@@ -26,6 +28,13 @@ namespace MainSite
 		{
 			DataBaseHandler.Instance.SaveNote(new DateTime(TimeSpan.FromDays(date).Ticks), message);
 		}
+
+		[WebMethod]
+		public static void DeleteNote(int date)
+		{
+			DataBaseHandler.Instance.DeleteNote(new DateTime(TimeSpan.FromDays(date).Ticks));
+		}
+		#endregion
 
 		NailScheduler scheduler;
 		protected void Page_Load(object sender, EventArgs e)
@@ -153,6 +162,14 @@ namespace MainSite
 		{			
 			DateTime date = (DateTime)Session["date"];
 			DataBaseHandler.Instance.SaveNote(date, note.Text);
+			Response.Redirect(Request.RawUrl);
+			Session.Clear();
+		}
+
+		protected void OnDeleteNote_Click(object sender, EventArgs e)
+		{
+			DateTime date = (DateTime)Session["date"];
+			DataBaseHandler.Instance.DeleteNote(date);
 			Response.Redirect(Request.RawUrl);
 			Session.Clear();
 		}

@@ -22,6 +22,30 @@ namespace MainSite
 			}
 		}
 
+		public void DeleteNote(DateTime forDate)
+		{
+			string query = "delete from notes where date = @date";
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@date", SqlDbType.Date).Value = forDate.Date;				
+				cn.Open();
+				try
+				{
+					var res = cmd.ExecuteNonQuery();
+				}
+				catch (System.Exception ex)
+				{
+					LastErrorMessage = ex.Message;
+				}
+				finally
+				{
+					cn.Close();
+				}
+			}
+		}
+
 		public void SaveNote(DateTime forDate, string note)
 		{
 			string query = "delete from notes where date = @date;INSERT INTO Notes(date, note) VALUES (@date, @note);";

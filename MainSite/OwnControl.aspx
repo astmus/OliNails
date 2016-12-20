@@ -59,6 +59,7 @@
                                 <asp:Label runat="server" ID="noteTitle">Заметка</asp:Label><br/>
                                 <asp:TextBox ID="note" Style="width:100%" runat="server" TextMode="MultiLine" /><br/>
                                 <asp:Button runat="server" Text="Сохранить заметку" OnClick="SaveNote" />
+                                <asp:Button runat="server" Text="Удалить заметку" OnClick="OnDeleteNote_Click" />
                             </asp:TableCell>
                         </asp:TableRow>
                     </asp:Table>
