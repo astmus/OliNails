@@ -13,12 +13,27 @@ namespace MainSite.Pages
 		private int totalTime = 0;
 		protected void Page_Load(object sender, EventArgs e)
 		{
+			if (dateFrom.SelectedDate == DateTime.MinValue && dateTo.SelectedDate == DateTime.MinValue)
+			{
+				var currDate = DateTimeHelper.currentLocalDateTime();
+				dateFrom.TodaysDate = currDate.Date.AddDays((currDate.Day - 1) * -1);
+				dateFrom.SelectedDate = dateFrom.TodaysDate;
+				dateTo.TodaysDate = currDate;
+				dateTo.SelectedDate = dateTo.TodaysDate;				
+			}
+			dateTo.SelectionChanged += OnDateToChanged;
+		}
 
+		private void OnDateToChanged(object sender, EventArgs e)
+		{
+			GridView1.DataBind();
 		}
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
 		{
 			e.Command.Parameters["@StartTime"].Value = DateTimeHelper.currentLocalDateTime();
+			e.Command.Parameters["@from"].Value = dateFrom.SelectedDate;
+			e.Command.Parameters["@to"].Value = dateTo.SelectedDate;
 		}
 
 		protected void GridView1_DataBound(object sender, EventArgs e)
