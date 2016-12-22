@@ -33,7 +33,7 @@ namespace MainSite.Pages
 		{
 			e.Command.Parameters["@StartTime"].Value = DateTimeHelper.currentLocalDateTime();
 			e.Command.Parameters["@from"].Value = dateFrom.SelectedDate;
-			e.Command.Parameters["@to"].Value = dateTo.SelectedDate;
+			e.Command.Parameters["@to"].Value = dateTo.SelectedDate.AddDays(1);
 		}
 
 		protected void GridView1_DataBound(object sender, EventArgs e)
