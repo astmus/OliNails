@@ -201,6 +201,25 @@ namespace MainSite
 			return services;
 		}
 
+		public List<NailDate> GetNailDatesForTimeRange(DateTime sinceTime, DateTime tillTime)
+		{
+			string query = "select * from NailDates where StartTime >= @sinceTime and StartTime <=@tillTime";
+			var dates = new List<NailDate>();
+			// create connection and command
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@sinceTime", SqlDbType.DateTime).Value = sinceTime;
+				cmd.Parameters.Add("@tillTime", SqlDbType.DateTime).Value = tillTime.AddDays(1);
+				cn.Open();
+				SqlDataReader dr = cmd.ExecuteReader();
+				while (dr.Read())
+					dates.Add(NailDate.Parse(dr));
+				cn.Close();
+			}
+			return dates;
+		}
+
 		private List<NailDate> GetNailDatesSinceDate(DateTime sinceTime)
 		{
 			string query = "select * from NailDates where StartTime >= @DateFrom";
@@ -217,12 +236,7 @@ namespace MainSite
 				cn.Close();
 			}
 			return dates;
-		}
-
-		public List<NailDate> GetFutureNailDates()
-		{
-			return GetNailDatesSinceDate(DateTimeHelper.getStartOfCurrentWeek());
-		}
+		}		
 
 		public List<NailDate> GetNailDatesFromBeginningWeek()
 		{

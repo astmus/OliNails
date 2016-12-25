@@ -23,20 +23,20 @@ namespace MainSite
 		public event AddDateRecordCallback CreateNailDate;
 		public event Action<NailDate> NailDateSelected;
 		public event Action<DateTime> ReservDate;
-		public NailScheduler(List<string> timeList, List<NailDate> nailDates, Mode workForMode)
+		public NailScheduler(List<string> timeList, DateTime startDay, Mode workForMode)
 		{
 			CreateHeader();			
 			_timeList = timeList;
 			_currentMode = workForMode;
 			weeks = new List<WorkWeek>();
+			var nailDates = DataBaseHandler.Instance.GetNailDatesForTimeRange(startDay, startDay.AddDays(CountOfNextWeeks * 7));
 			CellSpacing = 1;
 			CellPadding = 0;
 			//BackColor = Color.Black;
 			BorderColor = Color.Black;
 			BorderStyle = BorderStyle.Solid;
-			BorderWidth = 2;
+			BorderWidth = 2;		
 			
-			var startDay = DateTimeHelper.getStartOfCurrentWeek();
 			var featureNoteDates = DataBaseHandler.Instance.GetNoteDates(startDay.Date);
 			for (int i = 0; i < CountOfNextWeeks; i++)
 			{

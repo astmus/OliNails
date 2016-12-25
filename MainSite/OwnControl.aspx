@@ -49,7 +49,15 @@
         <asp:Table runat="server" CellSpacing="0" CellPadding="0" EnableTheming="True">
             <asp:TableRow>
                 <asp:TableCell  VerticalAlign="Top">
-                    <asp:Panel DefaultButton="b2" runat="server" ID="mainPanel">
+                    <asp:Panel DefaultButton="b2" runat="server" ID="mainPanel">                        
+                        <asp:Table runat="server" style="width: 100%">
+                            <asp:TableRow>
+                                <asp:TableCell BackColor="Red"><asp:Button OnClick="OnPrevMothClick" Style="width:100%" runat="server" Text="<< месяц"/></asp:TableCell>
+                                <asp:TableCell BackColor="Gray"><asp:Button OnClick="OnPrevWeekClick" Style="width:100%" runat="server" Text="< неделя"/></asp:TableCell>
+                                <asp:TableCell BackColor="Blue"><asp:Button OnClick="OnNextWeekClick" Style="width:100%" runat="server" Text="неделя >"/></asp:TableCell>
+                                <asp:TableCell BackColor="Violet"><asp:Button OnClick="OnNextMonthClick" Style="width:100%" runat="server" Text="месяц >"/></asp:TableCell>
+                            </asp:TableRow>
+                        </asp:Table>
                     </asp:Panel>
                 </asp:TableCell>
                 <asp:TableCell VerticalAlign="Top">

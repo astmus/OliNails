@@ -40,8 +40,9 @@ namespace MainSite
 		NailScheduler scheduler;
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;			
-			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DataBaseHandler.Instance.GetNailDatesFromBeginningWeek(), Mode.Owner);
+			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
+			int daysShift = int.Parse(Request.Params["addDays"] ?? "0");
+			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek().AddDays(daysShift), Mode.Owner);
 			scheduler.NailDateSelected += OnNailDateSeleted;
 			scheduler.ReservDate += OnReservDatePressed;
 			mainPanel.Controls.Add(scheduler);
@@ -200,6 +201,30 @@ namespace MainSite
 			DataBaseHandler.Instance.DeleteNote(date);
 			Response.Redirect(Request.RawUrl);
 			Session.Clear();
+		}
+
+		protected void OnPrevMothClick(object sender, EventArgs e)
+		{
+			int days = int.Parse(Request.Params["addDays"] ?? "0") - 35;			
+			Response.Redirect("OwnControl.aspx?addDays="+days);
+		}
+
+		protected void OnNextMonthClick(object sender, EventArgs e)
+		{
+			int days = int.Parse(Request.Params["addDays"] ?? "0") + 35;
+			Response.Redirect("OwnControl.aspx?addDays=" + days);
+		}
+
+		protected void OnNextWeekClick(object sender, EventArgs e)
+		{
+			int days = int.Parse(Request.Params["addDays"] ?? "0") + 7 ;
+			Response.Redirect("OwnControl.aspx?addDays=" + days);
+		}
+
+		protected void OnPrevWeekClick(object sender, EventArgs e)
+		{
+			int days = int.Parse(Request.Params["addDays"] ?? "0") - 7;
+			Response.Redirect("OwnControl.aspx?addDays=" + days);
 		}
 	}
 
