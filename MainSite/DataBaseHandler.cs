@@ -282,7 +282,7 @@ namespace MainSite
 
 		public void UpdateNailDate(NailDate date,List<int> currentSelServicesIDs, List<int> oldServicesIDs)
 		{
-			string query = "update dbo.NailDates set StartTime = @StartTime, Duration = @Duration, ClientName = @ClientName, ClientPhone = @ClientPhone where id=@ID;";
+			string query = "update dbo.NailDates set StartTime = @StartTime, Duration = @Duration, ClientName = @ClientName, ClientPhone = @ClientPhone, tips = @tips where id=@ID;";
 			if (currentSelServicesIDs.Count == 0)
 				query += "delete from dbo.NailDateService where nailDateId = @ID;";
 			else
@@ -299,6 +299,7 @@ namespace MainSite
 				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = date.Duration.Ticks;
 				cmd.Parameters.Add("@ClientName", SqlDbType.NText, 20).Value = date.ClientName;
 				cmd.Parameters.Add("@ClientPhone", SqlDbType.VarChar, 15).Value = date.ClientPhone;
+				cmd.Parameters.Add("@tips", SqlDbType.SmallInt).Value = date.Tips;
 				needToAddServices.ForEach(i=> cmd.Parameters.Add(String.Format("@serviceId{0}", i), SqlDbType.Int).Value = i);
 				cn.Open();
 				cmd.ExecuteNonQuery();

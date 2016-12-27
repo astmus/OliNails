@@ -42,7 +42,7 @@ namespace MainSite
 		{
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
 			int daysShift = int.Parse(Request.Params["addDays"] ?? "0");
-			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek().AddDays(daysShift), Mode.Owner);
+			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek().Date.AddDays(daysShift), Mode.Owner);
 			scheduler.NailDateSelected += OnNailDateSeleted;
 			scheduler.ReservDate += OnReservDatePressed;
 			mainPanel.Controls.Add(scheduler);
@@ -118,6 +118,7 @@ namespace MainSite
 			seletedDate.Text = obj.StartTime.ToString();
 			clientName.Text = obj.ClientName;
 			clientPhone.Text = obj.ClientPhone;
+			tipsField.Text = obj.Tips.ToString();
 
 			var services = DataBaseHandler.Instance.GetAvailableServices(); 
 			var selectedServices = DataBaseHandler.Instance.GetSelectedServicesForDate(obj.ID);
@@ -177,6 +178,11 @@ namespace MainSite
 			date.ClientName = clientName.Text;
 			date.ClientPhone = clientPhone.Text;
 			date.StartTime = DateTime.Parse(seletedDate.Text);
+			short tmpTips = 0;
+			if (short.TryParse(tipsField.Text,out tmpTips))
+			{
+				date.Tips = tmpTips;
+			}			
 			var oldServices = (Session["selectedServices"] as List<NailService>).Select(s=>s.ID).ToList();
 			var servicesIDs = (Session["ownChecks"] as List<CheckBox>).Where(w => w.Checked == true).Select(s => Convert.ToInt32(s.ID)).ToList();
 			HandleNailDateInSessionAndRefresh(nd => DataBaseHandler.Instance.UpdateNailDate(nd, servicesIDs, oldServices));

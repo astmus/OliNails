@@ -98,10 +98,15 @@
                             </asp:TableCell>
                             <asp:TableCell> </asp:TableCell>
                         </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell ColumnSpan="2">
+                                Чаевые&nbsp<asp:TextBox runat="server" ID="tipsField"/>
+                            </asp:TableCell>
+                        </asp:TableRow>
                         <asp:TableRow ID="servicesRow">
                             <asp:TableCell ColumnSpan="2"> Выбранные услуги </asp:TableCell>
                             <asp:TableCell> </asp:TableCell>
-                        </asp:TableRow>
+                        </asp:TableRow>                        
                         <asp:TableRow>
                             <asp:TableCell ColumnSpan="2">
                                 <asp:Button runat="server" ID="myB" OnClick="OnUpdateNialDateClick" Text="обновить запись" />

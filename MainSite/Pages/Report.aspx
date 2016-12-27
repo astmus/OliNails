@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Report.aspx.cs" Inherits="MainSite.Pages.Report" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Report.aspx.cs" Inherits="MainSite.Pages.Report" UICulture="ru" Culture="ru-RU"%>
 
 <!DOCTYPE html>
 
@@ -32,10 +32,11 @@
                 <asp:BoundField DataField="ClientPhone" HeaderText="Телефон" SortExpression="ClientPhone" />               
                 <asp:BoundField DataField="procedures" HeaderText="Процедуры" ReadOnly="True" SortExpression="procedures" />
                 <asp:BoundField DataField="price" HeaderText="Стоимость" SortExpression="price" />
+                <asp:BoundField DataField="tips" HeaderText="Чай" SortExpression="tips" />
             </Columns>
         </asp:GridView>
         
-         <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" OnSelecting="NailDataSource_Selecting" SelectCommand="SELECT * FROM [FullNailDatesInfo] WHERE ([StartTime] &lt; @StartTime and [StartTime] &gt;= @from and [StartTime] &lt; @to) order by StartTime">
+         <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" OnSelecting="NailDataSource_Selecting" SelectCommand="SELECT * FROM [FullNailDatesInfo2] WHERE ([StartTime] &lt; @StartTime and [StartTime] &gt;= @from and [StartTime] &lt; @to) order by StartTime">
              <SelectParameters>
                  <asp:Parameter Name="StartTime" Type="DateTime" />
                  <asp:Parameter Name="from" />

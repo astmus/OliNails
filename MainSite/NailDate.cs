@@ -10,7 +10,8 @@ namespace MainSite
 		public TimeSpan Duration { get; set; }
 		public String ClientPhone { get; set; }
 		public String ClientName { get; set; }
-		public int ID { get; set; }		
+		public int ID { get; set; }
+		public short Tips { get; set; }
 		public NailDate()
 		{
 
@@ -24,6 +25,7 @@ namespace MainSite
 			result.Duration = TimeSpan.FromTicks((Int64)reader["Duration"]);
 			result.ClientName = reader["ClientName"] as string;
 			result.ClientPhone = reader["ClientPhone"] as string;
+			result.Tips = reader["tips"] != System.DBNull.Value ? (short)reader["tips"] : (short)0;
 			return result;
 		}
 	}
