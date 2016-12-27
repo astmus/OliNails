@@ -18,7 +18,12 @@
     <form id="form1" runat="server">
     <div>
         <asp:Calendar FirstDayOfWeek="Monday" style="display:inline-block" ID="dateFrom" runat="server"></asp:Calendar>      
-        <asp:Calendar FirstDayOfWeek="Monday" style="display:inline-block" ID="dateTo" runat="server"></asp:Calendar>                   
+        <asp:Calendar FirstDayOfWeek="Monday" style="display:inline-block" ID="dateTo" runat="server"></asp:Calendar>
+        <div style="background: #BBBBBB;display:inline-block; vertical-align:top;padding-top:5px">
+        <asp:Label runat="server" Text="Поиск" /><br/>
+        <asp:TextBox runat="server" ID="searchParam" />&nbsp
+        <asp:Button runat="server" OnClick="OnFindClick" style="display:inline-block;" Text="найти"/>                   
+        </div>
         <asp:GridView ID="GridView1" runat="server" OnRowDataBound="GridView1_RowDataBound" OnDataBound="GridView1_DataBound" AutoGenerateColumns="False" ShowFooter="true" DataSourceID="NailDataSource" CssClass="mydatagrid" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows">
             <Columns>                
                 <asp:BoundField DataField="StartTime" HeaderText="Дата" SortExpression="StartTime" DataFormatString="{0:dd.MM.yyyy HH:mm}" />

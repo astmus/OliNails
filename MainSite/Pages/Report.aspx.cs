@@ -31,6 +31,7 @@ namespace MainSite.Pages
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
 		{
+		
 			e.Command.Parameters["@StartTime"].Value = DateTimeHelper.currentLocalDateTime();
 			e.Command.Parameters["@from"].Value = dateFrom.SelectedDate;
 			e.Command.Parameters["@to"].Value = dateTo.SelectedDate.AddDays(1);
@@ -38,6 +39,7 @@ namespace MainSite.Pages
 
 		protected void GridView1_DataBound(object sender, EventArgs e)
 		{
+			if (GridView1.FooterRow == null) return;
 			GridView1.FooterRow.Cells[0].Text = "Суммарно";
 			GridView1.FooterRow.Cells[1].Text = String.Format("{0} часов", totalTime / 60);
 			GridView1.FooterRow.Cells[5].Text = String.Format("{0} руб.", totalPrice);
@@ -55,6 +57,12 @@ namespace MainSite.Pages
 				if (int.TryParse(e.Row.Cells[5].Text, out currPrice))
 					totalPrice += currPrice;
 			}
+		}
+
+		protected void OnFindClick(object sender, EventArgs e)
+		{
+			string param = searchParam.Text;
+			NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo where CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", param);
 		}
 	}
 }

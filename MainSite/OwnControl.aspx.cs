@@ -46,6 +46,7 @@ namespace MainSite
 			scheduler.NailDateSelected += OnNailDateSeleted;
 			scheduler.ReservDate += OnReservDatePressed;
 			mainPanel.Controls.Add(scheduler);
+			
 			//LogError("page loaded " + DateTime.Now.ToShortDateString()+" "+ DateTime.Now.ToShortTimeString());
 			CreateFile();
 		}

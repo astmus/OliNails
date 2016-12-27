@@ -17,8 +17,7 @@
             height: 0px;            
             position: absolute;
             transform:translateY(-5px)
-        }   
-                 
+        }                    
     </style>
     <script>
         function onSuccess(result) {
@@ -43,7 +42,7 @@
         <li><a href="Pages/Report.aspx">Статистика</a></li>
         <li><a href="Pages/News.aspx">Новости</a></li>
     </ul>
-    <form id="ownform" runat="server">
+    <form id="ownform" runat="server">        
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"></asp:ScriptManager>
         <asp:Button runat="server" Style="display: none" ID="b2" OnClick="OnUpdateNialDateClick" />
         <asp:Table runat="server" CellSpacing="0" CellPadding="0" EnableTheming="True">
