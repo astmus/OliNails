@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 
 namespace MainSite
 {
@@ -19,6 +20,36 @@ namespace MainSite
 			get
 			{				
 				return _instance ?? (_instance = new DataBaseHandler());
+			}
+		}
+
+		public void UpdateReportInfo(int id, string name, string phone, int? tips)
+		{
+			string query = "update dbo.NailDates set ClientName = @name, ClientPhone = @phone, tips = @tips where id=@ID;";
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query.ToString(), cn))
+			{
+				cmd.Parameters.Add("@name", SqlDbType.NText).Value = name;
+				cmd.Parameters.Add("@phone", SqlDbType.NVarChar,15).Value = phone;
+				if (tips.HasValue)
+					cmd.Parameters.Add("@tips", SqlDbType.SmallInt).Value = tips;
+				else
+					cmd.Parameters.AddWithValue("@tips", DBNull.Value);
+				cmd.Parameters.Add("@ID", SqlDbType.Int).Value = id;
+				cn.Open();
+				try
+				{
+					var res = cmd.ExecuteNonQuery();
+				}
+				catch (System.Exception ex)
+				{
+					LastErrorMessage = ex.Message;
+				}
+				finally
+				{
+					cn.Close();
+				}
 			}
 		}
 
@@ -298,8 +329,13 @@ namespace MainSite
 				cmd.Parameters.Add("@StartTime", SqlDbType.DateTime).Value = date.StartTime;
 				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = date.Duration.Ticks;
 				cmd.Parameters.Add("@ClientName", SqlDbType.NText, 20).Value = date.ClientName;
-				cmd.Parameters.Add("@ClientPhone", SqlDbType.VarChar, 15).Value = date.ClientPhone;
-				cmd.Parameters.Add("@tips", SqlDbType.SmallInt).Value = date.Tips;
+				cmd.Parameters.Add("@ClientPhone", SqlDbType.VarChar, 15).Value = date.ClientPhone;				
+
+				if (date.Tips.HasValue)
+					cmd.Parameters.Add("@tips", SqlDbType.SmallInt).Value = date.Tips;
+				else
+					cmd.Parameters.AddWithValue("@tips", DBNull.Value);
+
 				needToAddServices.ForEach(i=> cmd.Parameters.Add(String.Format("@serviceId{0}", i), SqlDbType.Int).Value = i);
 				cn.Open();
 				cmd.ExecuteNonQuery();

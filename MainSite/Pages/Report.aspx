@@ -7,6 +7,11 @@
     <title>Статистика</title>
     <link rel="stylesheet" type="text/css" href="../TableStyle.css" />
     <link rel="stylesheet" type="text/css" href="../SiteMenu.css" />
+    <style type="text/css">
+        .hiddencol {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <ul>
@@ -21,7 +26,8 @@
             <asp:Calendar FirstDayOfWeek="Monday" Style="display: inline-block" ID="dateTo" runat="server"></asp:Calendar>
             <div style="background: #BBBBBB; vertical-align: top; padding-top: 5px; display: inline-block">
                 <div>
-                    Количество визитов: <asp:Literal runat="server" Text="0" ID="countOfVisitors" />
+                    Количество визитов:
+                    <asp:Literal runat="server" Text="0" ID="countOfVisitors" />
                 </div>
                 <div style="padding-top: 5px">
                     <asp:Label runat="server" Text="Поиск" /><br />
@@ -29,16 +35,34 @@
         <asp:Button runat="server" OnClick="OnFindClick" Style="display: inline-block;" Text="найти" />
                 </div>
             </div>
-            <asp:GridView ID="GridView1" runat="server" OnRowDataBound="GridView1_RowDataBound" OnDataBound="GridView1_DataBound" AutoGenerateColumns="False" ShowFooter="true" DataSourceID="NailDataSource" CssClass="mydatagrid" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows">
+            <asp:GridView ID="GridView1" runat="server" OnRowUpdating="GridView1_RowUpdating" OnRowDataBound="GridView1_RowDataBound" OnDataBound="GridView1_DataBound" AutoGenerateColumns="False" ShowFooter="True" DataSourceID="NailDataSource" CssClass="mydatagrid" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows">
                 <Columns>
-                    <asp:BoundField DataField="StartTime" HeaderText="Дата" SortExpression="StartTime" DataFormatString="{0:dd.MM.yyyy HH:mm}" />
-                    <asp:BoundField DataField="duration" HeaderText="Время" SortExpression="duration" />
+                    <asp:BoundField DataField="nailDateId" HeaderText="id" ReadOnly="true" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" >
+                        <HeaderStyle CssClass="hiddencol"></HeaderStyle>
+                        <ItemStyle CssClass="hiddencol"></ItemStyle>
+                        <FooterStyle CssClass="hiddencol"></FooterStyle>
+                    </asp:BoundField>
+                    <asp:BoundField DataField="StartTime" HeaderText="Дата" SortExpression="StartTime" DataFormatString="{0:dd.MM.yyyy HH:mm}" ReadOnly="True" />
+                    <asp:BoundField DataField="duration" HeaderText="Время" SortExpression="duration" ReadOnly="True" />
                     <asp:BoundField DataField="ClientName" HeaderText="Имя" SortExpression="ClientName" />
                     <asp:BoundField DataField="ClientPhone" HeaderText="Телефон" SortExpression="ClientPhone" />
                     <asp:BoundField DataField="procedures" HeaderText="Процедуры" ReadOnly="True" SortExpression="procedures" />
-                    <asp:BoundField DataField="price" HeaderText="Стоимость" SortExpression="price" />
+                    <asp:BoundField DataField="price" HeaderText="Стоимость" SortExpression="price" ReadOnly="True" />
                     <asp:BoundField DataField="tips" HeaderText="Чай" SortExpression="tips" />
+                    <asp:TemplateField ShowHeader="True" HeaderText="Управление">
+                        <EditItemTemplate>
+                            <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="True" CommandName="Update" Text="Сохранить"></asp:LinkButton>
+                            <asp:LinkButton ID="LinkButton2" runat="server" CausesValidation="False" CommandName="Cancel" Text="Отмена"></asp:LinkButton>
+                        </EditItemTemplate>
+                        <ItemTemplate>
+                            <asp:LinkButton ID="LinkButton1" runat="server" CausesValidation="False" CommandName="Edit" Text="Изменить"></asp:LinkButton>
+                        </ItemTemplate>
+                        <ControlStyle CssClass="ruleRowButton" />
+                    </asp:TemplateField>
                 </Columns>
+                <HeaderStyle CssClass="header"></HeaderStyle>
+                <PagerStyle CssClass="pager"></PagerStyle>
+                <RowStyle CssClass="rows"></RowStyle>
             </asp:GridView>
 
             <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" OnSelecting="NailDataSource_Selecting" SelectCommand="SELECT * FROM [FullNailDatesInfo2] WHERE ([StartTime] &lt; @StartTime and [StartTime] &gt;= @from and [StartTime] &lt; @to) order by StartTime">

@@ -19,10 +19,10 @@ namespace MainSite
 		{
 			string address = HttpContext.Current.Request.UserHostAddress.ToString();
 			Application.Lock();
-			Logger.Instance.LogDebug(address);
+			Logger.Instance.LogDebug(DateTimeHelper.currentLocalDateTime().ToString() + address);
 			if (Application.AllKeys.Contains("countOfVisitors") == false)
 				Application.Add("countOfVisitors", 0);
-			if (address.IndexOf(@"109.254.70.107") == -1)
+			if (!address.Contains(@"109.254.70.107"))
 				Application["countOfVisitors"] = (int)Application["countOfVisitors"] + 1;
 
 			Application.UnLock();

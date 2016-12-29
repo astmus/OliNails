@@ -152,10 +152,10 @@ namespace MainSite
 			date.ClientPhone = clientPhone.Text;
 			date.StartTime = DateTime.Parse(seletedDate.Text);
 			short tmpTips = 0;
-			if (short.TryParse(tipsField.Text,out tmpTips))
-			{
+			if (short.TryParse(tipsField.Text,out tmpTips))			
 				date.Tips = tmpTips;
-			}			
+			else
+				date.Tips = null;
 			var oldServices = (Session["selectedServices"] as List<NailService>).Select(s=>s.ID).ToList();
 			var servicesIDs = (Session["ownChecks"] as List<CheckBox>).Where(w => w.Checked == true).Select(s => Convert.ToInt32(s.ID)).ToList();
 			HandleNailDateInSessionAndRefresh(nd => DataBaseHandler.Instance.UpdateNailDate(nd, servicesIDs, oldServices));
