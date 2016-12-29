@@ -47,7 +47,7 @@
                             <asp:TextBox ID="priceFrom" Width="30" runat="server" Text='<%# Bind("newPrice") %>'></asp:TextBox><br />
                              с <asp:TextBox Width="70" Text='<%#  Bind("sinceDate", "c {0:dd.MM.yyyy}") %>' ID="sinceDate" runat="server" /><asp:Button runat="server" ID="selDateBut" Text="выбрать" />
                             <ajaxToolkit:CalendarExtender ID="TxtDate_CalendarExtender" runat="server" 
-                                      Enabled="True" PopupButtonID="selDateBut" 
+                                      Enabled="True" PopupButtonID="selDateBut" SelectedDate='<%#  Bind("sinceDate") %>'
                                       TargetControlID="sinceDate" Format="dd.MM.yyyy">
                             </ajaxToolkit:CalendarExtender>                            
                         </EditItemTemplate>
