@@ -61,7 +61,7 @@ namespace MainSite
 		protected void NailDataSource_Updated(object sender, SqlDataSourceStatusEventArgs e)
 		{
 			string s = e.Command.Parameters["@result"].Value.ToString();
-			ShowAlertBox(s);
+			//ShowAlertBox(s);
 		}
 
 		public void ShowAlertBox(string message)

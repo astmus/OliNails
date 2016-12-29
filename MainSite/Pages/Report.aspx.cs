@@ -68,7 +68,7 @@ namespace MainSite.Pages
 		protected void OnFindClick(object sender, EventArgs e)
 		{
 			string param = searchParam.Text;
-			NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo2 where CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", param);
+			NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo2 where [StartTime] <= @StartTime and CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", param);
 		}
 	}
 }
