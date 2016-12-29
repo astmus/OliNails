@@ -23,6 +23,7 @@ namespace MainSite.Pages
 				dateTo.SelectedDate = dateTo.TodaysDate;				
 			}
 			dateTo.SelectionChanged += OnDateToChanged;
+			countOfVisitors.Text = Application["countOfVisitors"].ToString();
 		}
 
 		private void OnDateToChanged(object sender, EventArgs e)
@@ -67,7 +68,7 @@ namespace MainSite.Pages
 		protected void OnFindClick(object sender, EventArgs e)
 		{
 			string param = searchParam.Text;
-			NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo where CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", param);
+			NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo2 where CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", param);
 		}
 	}
 }

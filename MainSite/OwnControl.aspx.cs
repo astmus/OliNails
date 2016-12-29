@@ -45,36 +45,9 @@ namespace MainSite
 			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek().Date.AddDays(daysShift), Mode.Owner);
 			scheduler.NailDateSelected += OnNailDateSeleted;
 			scheduler.ReservDate += OnReservDatePressed;
-			mainPanel.Controls.Add(scheduler);
-			
-			//LogError("page loaded " + DateTime.Now.ToShortDateString()+" "+ DateTime.Now.ToShortTimeString());
-			CreateFile();
-		}
-
-		private void CreateFile()
-		{
-			string folderPath = Server.MapPath("~/Logs/");
-			
-			string userFilename = Path.Combine(folderPath, DateTime.Now.ToString("mm-ss") + ".txt");
-
-			using (FileStream stream = System.IO.File.Create(userFilename))
-			{
-				StreamWriter strwr = new StreamWriter(stream);
-				strwr.WriteLine("new file");
-				strwr.Close();
-				stream.Close();
-			}			
-		}
-
-		private void LogError(string message)
-		{
-			string path = Server.MapPath("~/Logs/log.txt");
-			using (StreamWriter writer = new StreamWriter(path, true))
-			{
-				writer.WriteLine(message);
-				writer.Close();
-			}
-		}
+			mainPanel.Controls.Add(scheduler);			
+			//LogError("page loaded " + DateTime.Now.ToShortDateString()+" "+ DateTime.Now.ToShortTimeString());			
+		}		
 
 		protected override void OnPreInit(EventArgs e)
 		{

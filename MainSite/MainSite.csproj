@@ -104,6 +104,8 @@
     <Content Include="Files\Kontakty.files\image003.png" />
     <Content Include="Files\Kontakty.files\image004.png" />
     <Content Include="Files\PriceWeb_15_12_2016.png" />
+    <Content Include="Global.asax" />
+    <Content Include="Logs\tmp.html" />
     <Content Include="mmaster.aspx" />
     <Content Include="Modal.css" />
     <Content Include="OwnControl.aspx" />
@@ -152,7 +154,11 @@
     <Compile Include="EditServices.aspx.designer.cs">
       <DependentUpon>EditServices.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="HtmlCheckBox.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="master.aspx.cs">
       <DependentUpon>master.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -212,9 +218,7 @@
     <Compile Include="NailScheduler.cs" />
     <Compile Include="WorkWeek.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Logs\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
