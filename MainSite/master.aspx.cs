@@ -21,21 +21,22 @@ namespace MainSite
 		public NailScheduler scheduler;
 		protected override void OnPreInit(EventArgs e)
 		{
-			base.OnPreInit(e);
-			//OkButton.Style.Add("disabled", "true");			
+			base.OnPreInit(e);			
 		}
 
 		protected void Page_Load(object sender, EventArgs e)
 		{
-			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
+			//Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
 			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek(), Mode.User);
 			scheduler.CreateNailDate += OnCreateNailDate;	
 			
-			mainPanel.Controls.Add(scheduler);			
+			mainPanel.Controls.Add(scheduler);
+			Logger.Instance.LogInfo("page loaded");					
 		}
 
 		private void OnCreateNailDate(DateTime startTime)
 		{
+			Logger.Instance.LogInfo(String.Format("OnCreateNailDate({0})",startTime.ToString("dd.MM.yyyy hh:mm")));
 			Session["nailDate"] = startTime;			
 			if (Request.Browser.IsMobileDevice)
 				Response.Redirect("SelectSercvices.aspx");
@@ -48,12 +49,14 @@ namespace MainSite
 
 		public void ShowServicesSheet()
 		{
+			Logger.Instance.LogInfo("ShowServicesSheet()");
 			Page.ClientScript.RegisterStartupScript(this.GetType(), "CallFunc", "showModal(event)", true);			
 		}
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
 		{
 			e.Command.Parameters["@localTime"].Value = Session["nailDate"] ?? DateTimeHelper.currentLocalDateTime();
+			Logger.Instance.LogInfo("NailDataSource_Selecting localTime = "+e.Command.Parameters["@localTime"].Value.ToString());
 		}		
 
 		public void ShowAlertBox(string message)

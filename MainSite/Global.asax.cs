@@ -19,12 +19,9 @@ namespace MainSite
 		{
 			string address = HttpContext.Current.Request.UserHostAddress.ToString();
 			Application.Lock();
-			Logger.Instance.LogDebug(DateTimeHelper.currentLocalDateTime().ToString() + address);
-			if (Application.AllKeys.Contains("countOfVisitors") == false)
-				Application.Add("countOfVisitors", 0);
-			if (!address.Contains(@"109.254.70.107"))
-				Application["countOfVisitors"] = (int)Application["countOfVisitors"] + 1;
-
+			Logger.Instance.LogInfo("session start");			
+			if (address != "109.254.70.107")
+				Logger.Instance.LogUserCount();
 			Application.UnLock();
 		}
 
@@ -40,12 +37,14 @@ namespace MainSite
 
 		protected void Application_Error(object sender, EventArgs e)
 		{
-
+			Exception exc = Server.GetLastError();
+			Logger.Instance.LogError("message = "+exc.Message);
+			Logger.Instance.LogError("inner message = " + exc.InnerException.Message);
 		}
 
 		protected void Session_End(object sender, EventArgs e)
 		{
-
+			Logger.Instance.LogInfo("session end");
 		}
 
 		protected void Application_End(object sender, EventArgs e)
