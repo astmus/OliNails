@@ -14,10 +14,15 @@ namespace MainSite
 		}
 
 		private static Logger _instance = null;
-
+		private static object _lockObj = new object();
 		public static Logger Instance
 		{
-			get { return _instance ?? (_instance = new Logger()); }
+			get {
+				lock (_lockObj)
+				{
+					return _instance ?? (_instance = new Logger());
+				}
+			}
 		}
 
 		#region private methods

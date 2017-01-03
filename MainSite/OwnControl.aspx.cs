@@ -52,8 +52,11 @@ namespace MainSite
 		protected override void OnPreInit(EventArgs e)
 		{
 			base.OnPreInit(e);
-			if (Session["ownChecks"] != null)
+			if (Session["ownChecks"] != null && Session["selectedNailDate"] != null)
+			{
 				AddServicesCheckBoxToPage(Session["ownChecks"] as List<CheckBox>);
+				DisplayNailDateInfo(Session["selectedNailDate"] as NailDate);
+			}
 		}
 
 		private void OnReservDatePressed(DateTime obj)
@@ -77,6 +80,16 @@ namespace MainSite
 			detailDataTable.Visible = true;
 		}
 
+		private void DisplayNailDateInfo(NailDate date)
+		{
+			dateCalendar.TodaysDate = date.StartTime;
+			dateCalendar.SelectedDate = dateCalendar.TodaysDate;
+			seletedDate.Text = date.StartTime.ToString();
+			clientName.Text = date.ClientName;
+			clientPhone.Text = date.ClientPhone;
+			tipsField.Text = date.Tips.ToString();
+		}
+
 		private void OnNailDateSeleted(NailDate obj)
 		{
 			if (Session["ownChecks"] != null)
@@ -85,13 +98,8 @@ namespace MainSite
 				foreach (var check in cks)
 					detailDataTable.Rows.RemoveAt(detailDataTable.Rows.GetRowIndex(servicesRow)+1);
 			}
-			
-			dateCalendar.SelectedDate = obj.StartTime;
-			dateCalendar.DataBind();
-			seletedDate.Text = obj.StartTime.ToString();
-			clientName.Text = obj.ClientName;
-			clientPhone.Text = obj.ClientPhone;
-			tipsField.Text = obj.Tips.ToString();
+
+			DisplayNailDateInfo(obj);
 
 			var services = DataBaseHandler.Instance.GetAvailableServices(); 
 			var selectedServices = DataBaseHandler.Instance.GetSelectedServicesForDate(obj.ID);

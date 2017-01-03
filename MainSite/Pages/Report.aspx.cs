@@ -24,7 +24,7 @@ namespace MainSite.Pages
 			}
 			dateTo.SelectionChanged += OnDateToChanged;
 			dateFrom.SelectionChanged += OnDateToChanged;
-			countOfVisitors.Text = Logger.Instance.GetUserCountForCurrentMonth().ToString();
+		countOfVisitors.Text = Logger.Instance.GetUserCountForCurrentMonth().ToString();
 		}
 
 		private void OnDateToChanged(object sender, EventArgs e)
