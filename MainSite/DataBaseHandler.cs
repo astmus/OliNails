@@ -199,7 +199,7 @@ namespace MainSite
 
 		public List<NailService> GetSelectedServicesForDate(int nailDateID)
 		{			
-			string query = "select * from Services where Services.id in (SELECT serviceId FROM dbo.NailDateService where nailDateId = @ID)";
+			string query = "select id,name,price,duration,abbreviation,isObsolete from Services,(SELECT serviceId FROM dbo.NailDateService where nailDateId = @ID) as t where t.serviceId = id";
 			var services = new List<NailService>();
 
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))

@@ -5,9 +5,8 @@
 
     function selectRow(row)
     {          
-        var input = row.cells[0].children[0]
-        console.log(row)
-        input.checked = row.className == "selectedrow" ? false : true;
+        var input = row.cells[0].children[0]        
+        input.checked = row.className == "selectedrow" ? false : true;        
         price = parseInt(row.cells[1].children[0].innerHTML)
         var priceLabel = document.getElementById('totalPrice');
         var newPrice;
@@ -23,6 +22,62 @@
         var butt = document.getElementById('<%=OkButton.ClientID%>')
         butt.disabled = newPrice == 0
     }    
+
+    function decreaseDesign(button)
+    {     
+        if (window.designPrice == null)
+            commonInitiate(button)
+        count = parseInt(window.spin.value)
+
+        if (count > 1)
+        {
+            count-=1         
+            if (count * window.designPrice > 0)
+                window.designRow.cells[1].children[0].innerHTML = (count * window.designPrice) + window.moneySymbol;            
+            priceLabel.innerHTML = parseInt(priceLabel.innerHTML) - window.designPrice
+        }  
+        else
+            selectRow(window.designRow);
+
+        spin.value = count        
+    }
+
+    function increaseDesign(button)
+    {
+        if (window.designPrice == null)
+            commonInitiate(button)
+        if (window.designCheckbox.checked == false)
+            selectRow(window.designRow);
+        
+        count = parseInt(window.spin.value)
+        if (count < 20) 
+        {
+            count += 1
+            window.designRow.cells[1].children[0].innerHTML = (count * window.designPrice) + window.moneySymbol;
+            priceLabel.innerHTML = parseInt(priceLabel.innerHTML) + window.designPrice
+        }
+
+        window.spin.value = count
+    }
+
+    function commonInitiate(button)
+    {        
+        var row = button.parentElement.parentElement.parentElement
+        var spin = document.getElementById('currentCount')
+        
+        window.designRow = row;
+        window.spin = spin;
+
+        if (window.designPrice == null)
+        {
+            totalCurrencyStr = row.cells[1].children[0].innerHTML
+            window.designPrice = parseInt(totalCurrencyStr);            
+        }
+
+        window.moneySymbol = totalCurrencyStr.substring(totalCurrencyStr.indexOf(" "))
+        window.designCheckbox = row.cells[0].children[0] 
+        window.priceLabel = document.getElementById('totalPrice');
+    }
 
     function applyHandlers()
     {
@@ -112,7 +167,8 @@
                             <asp:Label Visible="false" ID="procedureIdLabel" runat="server" Text='<%# Eval("id") %>'></asp:Label>
                             <asp:Label Visible="false" ID="procedureAbbreviation" runat="server" Text='<%# Eval("abbreviation") %>'></asp:Label>
                             <asp:CheckBox runat="server" ID="procedureRowSelect" />
-                            <asp:Label ID="Label1" runat="server" Text='<%# Eval("name") %>'></asp:Label>
+                            <asp:Label ID="Label1" runat="server" Text='<%# Eval("name") %>'></asp:Label>                            
+                            
                         </ItemTemplate>
                         <ItemStyle HorizontalAlign="Left" />
                     </asp:TemplateField>

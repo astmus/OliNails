@@ -4,6 +4,8 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using System.Linq;
 
 namespace MainSite
 {
@@ -56,6 +58,14 @@ namespace MainSite
 				}
 			}
 			
+			if (servicesIDs.Contains(10))
+			{				
+				var v = Request["currentCountN"];
+				int count = int.Parse(v);
+				if (count > 1)
+					servicesIDs.AddRange(Enumerable.Repeat(10, count-1));
+			}
+
 			DateTime result = (DateTime)Session["nailDate"];
 			DataBaseHandler.Instance.InsertNailDate(result, TimeSpan.FromHours(2), clientName.Text, phone.Text, servicesIDs);
 
@@ -127,7 +137,34 @@ namespace MainSite
 		protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
 		{
 			if (e.Row.RowType == DataControlRowType.DataRow)
+			{
 				e.Row.Attributes["onclick"] = "selectRow(this)";
+				uint id = 0;
+				if (uint.TryParse((e.Row.FindControl("procedureIdLabel") as Label).Text, out id))
+					if (id == 10)
+					{
+						Panel p = new Panel();
+						p.Style.Add("display", "inline-block");																		
+						HtmlInputButton decButt = new HtmlInputButton() { Value = "-"};
+						decButt.Attributes["onclick"] = "decreaseDesign(this);event.stopPropagation(); return false;";
+						HtmlInputButton incButt = new HtmlInputButton() { Value = "+",  };
+						incButt.Attributes["onclick"] = "increaseDesign(this);event.stopPropagation(); return false;";
+						var text = new HtmlGenericControl("input readonly");																
+						text.Style.Add("text-align", "center");												
+						text.Attributes["id"] = "currentCount";
+						text.Attributes["name"] = "currentCountN";
+						text.Attributes["value"] = "1";
+						text.Style.Add("width", "40px");
+						text.Style.Add("margin-left", "5px");
+						text.Style.Add("margin-right", "5px");
+						p.Controls.Add(decButt);
+						p.Controls.Add(text);
+						p.Controls.Add(incButt);
+						e.Row.Cells[0].Controls.Add(p);
+						
+						Session["currentCount"] = text;
+					}
+			}
 		}
 	}
 }
