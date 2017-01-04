@@ -215,6 +215,24 @@ namespace MainSite
 			return services;
 		}
 
+		public List<int> GetServicesIDsForDate(int nailDateID)
+		{
+			string query = "select id from Services,(SELECT serviceId FROM dbo.NailDateService where nailDateId = @ID) as t where t.serviceId = id";
+			var services = new List<int>();
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@ID", SqlDbType.Int).Value = nailDateID;
+				cn.Open();
+				SqlDataReader dr = cmd.ExecuteReader();
+				while (dr.Read())
+					services.Add((int)dr["id"]);
+				cn.Close();
+			}
+			return services;
+		}
+
 		public List<NailService> GetAvailableServices()
 		{
 			string query = "select * from Services where isObsolete = 'False' order by pos";
@@ -314,13 +332,16 @@ namespace MainSite
 		public void UpdateNailDate(NailDate date,List<int> currentSelServicesIDs, List<int> oldServicesIDs)
 		{
 			string query = "update dbo.NailDates set StartTime = @StartTime, Duration = @Duration, ClientName = @ClientName, ClientPhone = @ClientPhone, tips = @tips where id=@ID;";
-			if (currentSelServicesIDs.Count == 0)
+			var servWithOutDesign = currentSelServicesIDs.Where(w => w != 10);
+			if (servWithOutDesign.Count() == 0)
 				query += "delete from dbo.NailDateService where nailDateId = @ID;";
 			else
-				query += "delete from dbo.NailDateService where nailDateId = @ID and serviceId not in ("+String.Join(",",currentSelServicesIDs) +");";
+				query += "delete from dbo.NailDateService where nailDateId = @ID and serviceId not in ("+String.Join(",", servWithOutDesign) +");";
 
-			var needToAddServices = currentSelServicesIDs.Except(oldServicesIDs).ToList();			
-			needToAddServices.ForEach(fe => query += String.Format("insert into dbo.NailDateService (nailDateId, serviceId) values (@ID, @serviceId{0});", fe));
+			var tmp = oldServicesIDs.Where(w => w != 10);
+			foreach (int id in tmp)
+				currentSelServicesIDs.Remove(id);
+			currentSelServicesIDs.ForEach(fe => query += String.Format("insert into dbo.NailDateService (nailDateId, serviceId) values (@ID, @serviceId{0});", fe));
 
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
 			using (SqlCommand cmd = new SqlCommand(query, cn))
@@ -336,7 +357,7 @@ namespace MainSite
 				else
 					cmd.Parameters.AddWithValue("@tips", DBNull.Value);
 
-				needToAddServices.ForEach(i=> cmd.Parameters.Add(String.Format("@serviceId{0}", i), SqlDbType.Int).Value = i);
+				currentSelServicesIDs.Distinct().ToList().ForEach(i=> cmd.Parameters.Add(String.Format("@serviceId{0}", i), SqlDbType.Int).Value = i);
 				cn.Open();
 				cmd.ExecuteNonQuery();
 				cn.Close();

@@ -20,7 +20,8 @@
         }
         priceLabel.innerHTML = newPrice
         var butt = document.getElementById('<%=OkButton.ClientID%>')
-        butt.disabled = newPrice == 0
+        if (butt != null)
+            butt.disabled = newPrice == 0;
     }    
 
     function decreaseDesign(button)
@@ -70,10 +71,11 @@
 
         if (window.designPrice == null)
         {
-            totalCurrencyStr = row.cells[1].children[0].innerHTML
-            window.designPrice = parseInt(totalCurrencyStr);            
+            var sessionValue = <%= Session["designPrice"] == null ? null : Session["designPrice"].ToString() %>                      
+            window.designPrice = parseInt(sessionValue == null ? row.cells[1].children[0].innerHTML : sessionValue);            
         }
 
+        var totalCurrencyStr = row.cells[1].children[0].innerHTML
         window.moneySymbol = totalCurrencyStr.substring(totalCurrencyStr.indexOf(" "))
         window.designCheckbox = row.cells[0].children[0] 
         window.priceLabel = document.getElementById('totalPrice');
@@ -126,9 +128,15 @@
         if (<%=phone.ClientID%>.value.length == 4 && (keyCode == 8 || keyCode == 229)) return false;
         if (<%=phone.ClientID%>.value.length == 13 && (keyCode != 8 && keyCode != 229)) return false;
     }
+
+    window.onload = function()
+    {      
+        var totalPrice = '<%= Session["totalPrice"] == null ? "0" : Session["totalPrice"].ToString() %>'
+        document.getElementById('totalPrice').innerText = totalPrice;
+    }    
 </script>
 
-<table id="dialogTable"  runat="server" class="modal-content">
+<table id="dialogTable" runat="server" class="modal-content">
     <tr>
         <td style="text-align: center" colspan="2">
             <asp:Label Text="Дата" ID="nailDateLabel" runat="server" />
@@ -209,8 +217,10 @@
     </tr>
     <tr>
         <td style="text-align: justify" colspan="2">
+            <asp:Panel runat="server" ID="confirmButtonsPanel">
             <main:TagButton ID="OkButton" CausesValidation="true" ValidationGroup="nailValid" runat="server" Text="Отправить" OnClick="AddNailDate" />            
             <input class="close" type="button" value="Закрыть" onclick='javascript:history.go(-1)'>
+                </asp:Panel>
         </td>
     </tr>
 </table>

@@ -85,15 +85,6 @@ namespace MainSite {
         protected global::System.Web.UI.WebControls.Table detailDataTable;
         
         /// <summary>
-        /// seletedDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal seletedDate;
-        
-        /// <summary>
         /// dateCalendar control.
         /// </summary>
         /// <remarks>
@@ -112,24 +103,6 @@ namespace MainSite {
         protected global::System.Web.UI.WebControls.ListBox availableTimes;
         
         /// <summary>
-        /// clientName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox clientName;
-        
-        /// <summary>
-        /// clientPhone control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox clientPhone;
-        
-        /// <summary>
         /// tipsField control.
         /// </summary>
         /// <remarks>
@@ -139,13 +112,13 @@ namespace MainSite {
         protected global::System.Web.UI.WebControls.TextBox tipsField;
         
         /// <summary>
-        /// servicesRow control.
+        /// nailDatePanel control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TableRow servicesRow;
+        protected global::MainSite.SelectServicesSheet nailDatePanel;
         
         /// <summary>
         /// myB control.
