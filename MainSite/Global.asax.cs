@@ -12,7 +12,7 @@ namespace MainSite
 
 		protected void Application_Start(object sender, EventArgs e)
 		{
-			Logger.Instance.LogInfo("session start");
+			
 		}
 
 		protected void Session_Start(object sender, EventArgs e)
@@ -51,7 +51,7 @@ namespace MainSite
 
 		protected void Application_End(object sender, EventArgs e)
 		{
-			Logger.Instance.LogInfo("application end");
+			
 		}
 	}
 }
