@@ -5,9 +5,8 @@
 
     function selectRow(row)
     {          
-        var input = row.cells[0].children[0]
-        console.log(row)
-        input.checked = row.className == "selectedrow" ? false : true;
+        var input = row.cells[0].children[0]        
+        input.checked = row.className == "selectedrow" ? false : true;        
         price = parseInt(row.cells[1].children[0].innerHTML)
         var priceLabel = document.getElementById('totalPrice');
         var newPrice;
@@ -21,8 +20,66 @@
         }
         priceLabel.innerHTML = newPrice
         var butt = document.getElementById('<%=OkButton.ClientID%>')
-        butt.disabled = newPrice == 0
+        if (butt != null)
+            butt.disabled = newPrice == 0;
     }    
+
+    function decreaseDesign(button)
+    {     
+        if (window.designPrice == null)
+            commonInitiate(button)
+        count = parseInt(window.spin.value)
+
+        if (count > 1)
+        {
+            count-=1         
+            if (count * window.designPrice > 0)
+                window.designRow.cells[1].children[0].innerHTML = (count * window.designPrice) + window.moneySymbol;            
+            priceLabel.innerHTML = parseInt(priceLabel.innerHTML) - window.designPrice
+        }  
+        else
+            selectRow(window.designRow);
+
+        spin.value = count        
+    }
+
+    function increaseDesign(button)
+    {
+        if (window.designPrice == null)
+            commonInitiate(button)
+        if (window.designCheckbox.checked == false)
+            selectRow(window.designRow);
+        
+        count = parseInt(window.spin.value)
+        if (count < 20) 
+        {
+            count += 1
+            window.designRow.cells[1].children[0].innerHTML = (count * window.designPrice) + window.moneySymbol;
+            priceLabel.innerHTML = parseInt(priceLabel.innerHTML) + window.designPrice
+        }
+
+        window.spin.value = count
+    }
+
+    function commonInitiate(button)
+    {        
+        var row = button.parentElement.parentElement.parentElement
+        var spin = document.getElementById('currentCount')
+        
+        window.designRow = row;
+        window.spin = spin;
+
+        if (window.designPrice == null)
+        {
+            var sessionValue = <%= Session["designPrice"] == null ? null : Session["designPrice"].ToString() %>                      
+            window.designPrice = parseInt(sessionValue == null ? row.cells[1].children[0].innerHTML : sessionValue);            
+        }
+
+        var totalCurrencyStr = row.cells[1].children[0].innerHTML
+        window.moneySymbol = totalCurrencyStr.substring(totalCurrencyStr.indexOf(" "))
+        window.designCheckbox = row.cells[0].children[0] 
+        window.priceLabel = document.getElementById('totalPrice');
+    }
 
     function applyHandlers()
     {
@@ -71,9 +128,15 @@
         if (<%=phone.ClientID%>.value.length == 4 && (keyCode == 8 || keyCode == 229)) return false;
         if (<%=phone.ClientID%>.value.length == 13 && (keyCode != 8 && keyCode != 229)) return false;
     }
+
+    window.onload = function()
+    {      
+        var totalPrice = '<%= Session["totalPrice"] == null ? "0" : Session["totalPrice"].ToString() %>'
+        document.getElementById('totalPrice').innerText = totalPrice;
+    }    
 </script>
 
-<table id="dialogTable"  runat="server" class="modal-content">
+<table id="dialogTable" runat="server" class="modal-content">
     <tr>
         <td style="text-align: center" colspan="2">
             <asp:Label Text="Дата" ID="nailDateLabel" runat="server" />
@@ -112,7 +175,8 @@
                             <asp:Label Visible="false" ID="procedureIdLabel" runat="server" Text='<%# Eval("id") %>'></asp:Label>
                             <asp:Label Visible="false" ID="procedureAbbreviation" runat="server" Text='<%# Eval("abbreviation") %>'></asp:Label>
                             <asp:CheckBox runat="server" ID="procedureRowSelect" />
-                            <asp:Label ID="Label1" runat="server" Text='<%# Eval("name") %>'></asp:Label>
+                            <asp:Label ID="Label1" runat="server" Text='<%# Eval("name") %>'></asp:Label>                            
+                            
                         </ItemTemplate>
                         <ItemStyle HorizontalAlign="Left" />
                     </asp:TemplateField>
@@ -153,8 +217,10 @@
     </tr>
     <tr>
         <td style="text-align: justify" colspan="2">
+            <asp:Panel runat="server" ID="confirmButtonsPanel">
             <main:TagButton ID="OkButton" CausesValidation="true" ValidationGroup="nailValid" runat="server" Text="Отправить" OnClick="AddNailDate" />            
             <input class="close" type="button" value="Закрыть" onclick='javascript:history.go(-1)'>
+                </asp:Panel>
         </td>
     </tr>
 </table>

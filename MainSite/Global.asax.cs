@@ -12,16 +12,19 @@ namespace MainSite
 
 		protected void Application_Start(object sender, EventArgs e)
 		{
-
+			Logger.Instance.LogInfo("session start");
 		}
 
 		protected void Session_Start(object sender, EventArgs e)
 		{
 			string address = HttpContext.Current.Request.UserHostAddress.ToString();
 			Application.Lock();
-			Logger.Instance.LogInfo("session start");			
+			Logger.Instance.LogInfo("session start");
 			if (address != "109.254.70.107")
+			{
 				Logger.Instance.LogUserCount();
+				Logger.Instance.LogInfo("count user increased to ->"+ Logger.Instance.GetUserCountForCurrentMonth().ToString());				
+			}
 			Application.UnLock();
 		}
 
@@ -48,7 +51,7 @@ namespace MainSite
 
 		protected void Application_End(object sender, EventArgs e)
 		{
-
+			Logger.Instance.LogInfo("application end");
 		}
 	}
 }

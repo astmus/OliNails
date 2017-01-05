@@ -1,28 +1,29 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="OwnControl.aspx.cs" Inherits="MainSite.OwnControl" UICulture="ru" Culture="ru-RU" %>
 
 <!DOCTYPE html>
-
+<%@ Register TagPrefix="MainSite" TagName="SelectServices" Src="~/SelectServicesSheet.ascx" %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 
     <title></title>
     <link rel="stylesheet" type="text/css" href="SiteMenu.css" />
     <link rel="stylesheet" type="text/css" href="Styles/ScheduleTable.css" />
+    <link rel="stylesheet" type="text/css" href="TableStyle.css" />
     <style>
-        .hasNote{            
+        .hasNote {
             border-style: solid;
             border-width: 15px 15px 0 0;
             border-color: #ceff00 transparent transparent transparent;
             width: 0px;
-            height: 0px;            
+            height: 0px;
             position: absolute;
-            transform:translateY(-5px)
-        }                    
+            transform: translateY(-5px);
+        }
     </style>
     <script>
         function onSuccess(result) {
             document.getElementById('<%=noteTable.ID%>').style.display = "block";
-            document.getElementById('<%=note.ID%>').value = result;            
+            document.getElementById('<%=note.ID%>').value = result;
         }
 
         function onError(result) {
@@ -42,14 +43,14 @@
         <li><a href="Pages/Report.aspx">Статистика</a></li>
         <li><a href="Pages/News.aspx">Новости</a></li>
     </ul>
-    <form id="ownform" runat="server">        
+    <form id="ownform" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"></asp:ScriptManager>
         <asp:Button runat="server" Style="display: none" ID="b2" OnClick="OnUpdateNialDateClick" />
         <asp:Table runat="server" CellSpacing="0" CellPadding="0" EnableTheming="True">
             <asp:TableRow>
-                <asp:TableCell  VerticalAlign="Top">
-                    <asp:Panel DefaultButton="b2" runat="server" ID="mainPanel">                        
-                        <asp:Table runat="server" style="width: 100%">
+                <asp:TableCell VerticalAlign="Top">
+                    <asp:Panel DefaultButton="b2" runat="server" ID="mainPanel">
+                        <asp:Table runat="server" Style="width: 100%">
                             <asp:TableRow>
                                 <asp:TableCell BackColor="Red"><asp:Button OnClick="OnPrevMothClick" Style="width:100%" runat="server" Text="<< месяц"/></asp:TableCell>
                                 <asp:TableCell BackColor="Gray"><asp:Button OnClick="OnPrevWeekClick" Style="width:100%" runat="server" Text="< неделя"/></asp:TableCell>
@@ -60,11 +61,11 @@
                     </asp:Panel>
                 </asp:TableCell>
                 <asp:TableCell VerticalAlign="Top">
-                    <asp:Table Style="display:none" ID="noteTable" runat="server" >
+                    <asp:Table Style="display: none" ID="noteTable" runat="server">
                         <asp:TableRow>
                             <asp:TableCell>
-                                <asp:Label runat="server" ID="noteTitle">Заметка</asp:Label><br/>
-                                <asp:TextBox ID="note" Style="width:100%" runat="server" TextMode="MultiLine" /><br/>
+                                <asp:Label runat="server" ID="noteTitle">Заметка</asp:Label><br />
+                                <asp:TextBox ID="note" Style="width: 100%" runat="server" TextMode="MultiLine" /><br />
                                 <asp:Button runat="server" Text="Сохранить заметку" OnClick="SaveNote" />
                                 <asp:Button runat="server" Text="Удалить заметку" OnClick="OnDeleteNote_Click" />
                             </asp:TableCell>
@@ -72,41 +73,21 @@
                     </asp:Table>
                     <asp:Table ID="detailDataTable" Visible="false" runat="server">
                         <asp:TableRow>
-                            <asp:TableCell> Дата: </asp:TableCell>
+                            <asp:TableCell ColumnSpan="2">
+                                <asp:Calendar style="display:inline-block" runat="server" ID="dateCalendar" SelectionMode="Day" OnSelectionChanged="DateSelectionChanged" ShowGridLines="False" />
+                                <asp:ListBox style="vertical-align:top" AutoPostBack="True" runat="server" OnSelectedIndexChanged="availableTimes_SelectedIndexChanged" ID="availableTimes" />
+                            </asp:TableCell>                            
+                        </asp:TableRow>
+                        <asp:TableRow>
+                            <asp:TableCell ColumnSpan="2">
+                                Чаевые&nbsp<asp:TextBox runat="server" ID="tipsField" />
+                            </asp:TableCell>
+                        </asp:TableRow>
+                        <asp:TableRow>
                             <asp:TableCell>
-                                <asp:Literal runat="server" ID="seletedDate" />
+                                <MainSite:SelectServices ID="nailDatePanel" runat="server" ConfirmButtonVisibility="false" />
                             </asp:TableCell>
                         </asp:TableRow>
-                        <asp:TableRow>
-                            <asp:TableCell ColumnSpan="2">
-                                <asp:Calendar runat="server" ID="dateCalendar" SelectionMode="Day" OnSelectionChanged="DateSelectionChanged" ShowGridLines="False" />
-                            </asp:TableCell>
-                            <asp:TableCell VerticalAlign="Top">
-                                <asp:ListBox AutoPostBack="True" runat="server" OnSelectedIndexChanged="availableTimes_SelectedIndexChanged" ID="availableTimes" /></asp:TableCell>
-                        </asp:TableRow>
-                        <asp:TableRow>
-                            <asp:TableCell> Имя </asp:TableCell>
-                            <asp:TableCell ColumnSpan="2">
-                                <asp:TextBox runat="server" AutoPostBack="false" ID="clientName" />
-                            </asp:TableCell>
-                            <asp:TableCell> </asp:TableCell>
-                        </asp:TableRow>
-                        <asp:TableRow>
-                            <asp:TableCell> Телефон </asp:TableCell>
-                            <asp:TableCell ColumnSpan="2">
-                                <asp:TextBox runat="server" AutoPostBack="false" ID="clientPhone" />
-                            </asp:TableCell>
-                            <asp:TableCell> </asp:TableCell>
-                        </asp:TableRow>
-                        <asp:TableRow>
-                            <asp:TableCell ColumnSpan="2">
-                                Чаевые&nbsp<asp:TextBox runat="server" ID="tipsField"/>
-                            </asp:TableCell>
-                        </asp:TableRow>
-                        <asp:TableRow ID="servicesRow">
-                            <asp:TableCell ColumnSpan="2"> Выбранные услуги </asp:TableCell>
-                            <asp:TableCell> </asp:TableCell>
-                        </asp:TableRow>                        
                         <asp:TableRow>
                             <asp:TableCell ColumnSpan="2">
                                 <asp:Button runat="server" ID="myB" OnClick="OnUpdateNialDateClick" Text="обновить запись" />

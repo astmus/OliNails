@@ -45,18 +45,14 @@ namespace MainSite
 			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek().Date.AddDays(daysShift), Mode.Owner);
 			scheduler.NailDateSelected += OnNailDateSeleted;
 			scheduler.ReservDate += OnReservDatePressed;
-			mainPanel.Controls.Add(scheduler);			
-			//LogError("page loaded " + DateTime.Now.ToShortDateString()+" "+ DateTime.Now.ToShortTimeString());			
+			mainPanel.Controls.Add(scheduler);						
 		}		
 
 		protected override void OnPreInit(EventArgs e)
 		{
 			base.OnPreInit(e);
-			if (Session["ownChecks"] != null && Session["selectedNailDate"] != null)
-			{
-				AddServicesCheckBoxToPage(Session["ownChecks"] as List<CheckBox>);
-				DisplayNailDateInfo(Session["selectedNailDate"] as NailDate);
-			}
+			if (Session["nailDateIsSelected"] != null)
+				detailDataTable.Visible = true;
 		}
 
 		private void OnReservDatePressed(DateTime obj)
@@ -66,7 +62,7 @@ namespace MainSite
 			Response.Redirect(Request.RawUrl);
 		}
 
-		private void AddServicesCheckBoxToPage(List<CheckBox> checks)
+		private void AddServicesCheckBoxToPageObsolete(List<CheckBox> checks)
 		{			
 			foreach (var check in checks)
 			{
@@ -80,52 +76,23 @@ namespace MainSite
 			detailDataTable.Visible = true;
 		}
 
-		private void DisplayNailDateInfo(NailDate date)
-		{
-			dateCalendar.TodaysDate = date.StartTime;
-			dateCalendar.SelectedDate = dateCalendar.TodaysDate;
-			seletedDate.Text = date.StartTime.ToString();
-			clientName.Text = date.ClientName;
-			clientPhone.Text = date.ClientPhone;
-			tipsField.Text = date.Tips.ToString();
-		}
-
 		private void OnNailDateSeleted(NailDate obj)
-		{
-			if (Session["ownChecks"] != null)
-			{
-				var cks = Session["ownChecks"] as List<CheckBox>;
-				foreach (var check in cks)
-					detailDataTable.Rows.RemoveAt(detailDataTable.Rows.GetRowIndex(servicesRow)+1);
-			}
-
-			DisplayNailDateInfo(obj);
-
-			var services = DataBaseHandler.Instance.GetAvailableServices(); 
-			var selectedServices = DataBaseHandler.Instance.GetSelectedServicesForDate(obj.ID);
-			services = services.Union(selectedServices).Distinct(new NailServiceComparer()).ToList();
+		{			
+			dateCalendar.TodaysDate = obj.StartTime;
+			dateCalendar.SelectedDate = dateCalendar.TodaysDate;			
+			nailDatePanel.StartTime = obj.StartTime;
+			nailDatePanel.ClientName = obj.ClientName;
+			nailDatePanel.Phone = obj.ClientPhone;
+			tipsField.Text = obj.Tips.ToString();
+						
+			var selectedServices = DataBaseHandler.Instance.GetServicesIDsForDate(obj.ID);
 			
-			var checks = GenerateServicesCheckBox(services, selectedServices);
-			AddServicesCheckBoxToPage(checks);
-
-			Session["ownChecks"] = checks;
+			Session["nailDateIsSelected"] = true;
 			Session["selectedServices"] = selectedServices;
 			Session["selectedNailDate"] = obj;
-		}
-
-		List<CheckBox> GenerateServicesCheckBox(List<NailService> availableServices, List<NailService> selectedServices)
-		{
-			var checks = new List<CheckBox>();
-			foreach (var service in availableServices)
-			{
-				CheckBox box = new CheckBox();
-				box.ID = service.ID.ToString();
-				box.Text = service.Name;
-				box.Checked = selectedServices.FirstOrDefault(a => a.ID == service.ID) != null;
-				checks.Add(box);
-			}
-			return checks;
-		}
+			nailDatePanel.SelectedServicesIDs = selectedServices;
+			detailDataTable.Visible = true;
+		}		
 
 		protected void DateSelectionChanged(object sender, EventArgs e)
 		{
@@ -140,7 +107,7 @@ namespace MainSite
 		{
 			var listBox = sender as ListBox;			
 			TimeSpan time = TimeSpan.Parse((string)listBox.SelectedItem.Value);
-			seletedDate.Text = dateCalendar.SelectedDate.Add(time).ToString();
+			nailDatePanel.StartTime = dateCalendar.SelectedDate.Add(time);
 		}
 
 		private void HandleNailDateInSessionAndRefresh(Action<NailDate> handler)
@@ -156,17 +123,17 @@ namespace MainSite
 		protected void OnUpdateNialDateClick(object sender, EventArgs e)
 		{
 			NailDate date = Session["selectedNailDate"] as NailDate;
-			date.ClientName = clientName.Text;
-			date.ClientPhone = clientPhone.Text;
-			date.StartTime = DateTime.Parse(seletedDate.Text);
+			date.ClientName = nailDatePanel.ClientName;
+			date.ClientPhone = nailDatePanel.Phone;
+			date.StartTime = nailDatePanel.StartTime;
 			short tmpTips = 0;
 			if (short.TryParse(tipsField.Text,out tmpTips))			
 				date.Tips = tmpTips;
 			else
 				date.Tips = null;
-			var oldServices = (Session["selectedServices"] as List<NailService>).Select(s=>s.ID).ToList();
-			var servicesIDs = (Session["ownChecks"] as List<CheckBox>).Where(w => w.Checked == true).Select(s => Convert.ToInt32(s.ID)).ToList();
-			HandleNailDateInSessionAndRefresh(nd => DataBaseHandler.Instance.UpdateNailDate(nd, servicesIDs, oldServices));
+			var oldServices = (Session["selectedServices"] as List<int>);
+			
+			HandleNailDateInSessionAndRefresh(nd => DataBaseHandler.Instance.UpdateNailDate(nd, nailDatePanel.SelectedServicesIDs, oldServices));
 			Session.Clear();			
 		}
 

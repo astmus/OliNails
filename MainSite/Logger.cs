@@ -44,7 +44,15 @@ namespace MainSite
 
 		private string FormattedLogString(string message, string type)
 		{
-			string address = HttpContext.Current.Request.UserHostAddress.ToString();
+			string address = null;
+			try
+			{
+				address = HttpContext.Current.Request.UserHostAddress.ToString();
+			}
+			catch 
+			{
+				address = "anonim";
+			}				
 			return String.Format("{0} [{1}] {2} -> {3};", DateTimeHelper.currentLocalDateTime().ToString("dd.MM hh:mm:ss"), address, type, message);
 		}
 
