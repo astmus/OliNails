@@ -1,8 +1,12 @@
-﻿
-.workWeek input[type=submit]{
+﻿.workWeek input[type=submit]{
     background-color:Transparent;
     height:30px;
     width:100px;
+
+	border:0px solid;
+	display:inline-block;
+	cursor:pointer;		
+	text-decoration:none;
 }
 
 .workWeek input[type=submit]:hover {
@@ -34,7 +38,7 @@
 }
 
 .workWeek td.reserved{
-    background-color:#E45383;
+    background-color:#bd82fa;
 }
 
 .workWeek td.evenCell{
