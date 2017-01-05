@@ -79,7 +79,8 @@ namespace MainSite
 		private void OnNailDateSeleted(NailDate obj)
 		{			
 			dateCalendar.TodaysDate = obj.StartTime;
-			dateCalendar.SelectedDate = dateCalendar.TodaysDate;			
+			dateCalendar.SelectedDate = dateCalendar.TodaysDate;
+			DateSelectionChanged(dateCalendar, null);
 			nailDatePanel.StartTime = obj.StartTime;
 			nailDatePanel.ClientName = obj.ClientName;
 			nailDatePanel.Phone = obj.ClientPhone;
