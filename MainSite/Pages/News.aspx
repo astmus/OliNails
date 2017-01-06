@@ -25,6 +25,7 @@
         <li><a href="../EditServices.aspx">Редактирование услуг</a></li>
         <li><a href="Report.aspx">Статистика</a></li>
         <li><a class="active" href="News.aspx">Новости</a></li>
+        <li><a href="Materials.aspx">Материалы</a></li>
     </ul>
     <form id="form1" runat="server">
         <div>

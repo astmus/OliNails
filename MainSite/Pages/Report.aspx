@@ -19,6 +19,7 @@
         <li><a href="../EditServices.aspx">Редактирование услуг</a></li>
         <li><a class="active" href="Report.aspx">Статистика</a></li>
         <li><a href="News.aspx">Новости</a></li>
+        <li><a href="Materials.aspx">Материалы</a></li>
     </ul>
     <form id="form1" runat="server">
         <div>
@@ -60,6 +61,7 @@
                         <ControlStyle CssClass="ruleRowButton" />
                     </asp:TemplateField>
                 </Columns>
+                <AlternatingRowStyle CssClass="rows altrow" />
                 <HeaderStyle CssClass="header"></HeaderStyle>
                 <PagerStyle CssClass="pager"></PagerStyle>
                 <RowStyle CssClass="rows"></RowStyle>

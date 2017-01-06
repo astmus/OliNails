@@ -42,6 +42,7 @@
         <li><a href="EditServices.aspx">Редактирование услуг</a></li>
         <li><a href="Pages/Report.aspx">Статистика</a></li>
         <li><a href="Pages/News.aspx">Новости</a></li>
+        <li><a href="Pages/Materials.aspx">Материалы</a></li>
     </ul>
     <form id="ownform" runat="server">
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"></asp:ScriptManager>

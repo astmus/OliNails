@@ -14,6 +14,7 @@
         <li><a class="active" href="EditServices.aspx">Редактирование услуг</a></li>
         <li><a href="Pages/Report.aspx">Статистика</a></li>
         <li><a href="Pages/News.aspx">Новости</a></li>
+        <li><a href="Pages/Materials.aspx">Материалы</a></li>
     </ul>
     <form id="form1" runat="server">
         <asp:ScriptManager runat="server" />        
@@ -115,6 +116,7 @@
                         <ControlStyle CssClass="ruleRowButton" />
                     </asp:TemplateField>
                 </Columns>
+                <AlternatingRowStyle CssClass="rows altrow" />
                 <HeaderStyle CssClass="header"></HeaderStyle>
                 <PagerStyle CssClass="pager"></PagerStyle>
                 <RowStyle CssClass="rows"></RowStyle>

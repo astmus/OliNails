@@ -114,6 +114,7 @@
     <None Include="Properties\PublishProfiles\SomeeSite.pubxml" />
     <None Include="scripts\jquery-3.1.0.intellisense.js" />
     <Content Include="Pages\Contacts.html" />
+    <Content Include="Pages\Materials.aspx" />
     <Content Include="Pages\News.aspx" />
     <Content Include="Pages\Price.html" />
     <Content Include="Pages\Report.aspx" />
@@ -182,6 +183,13 @@
     </Compile>
     <Compile Include="OwnControl.aspx.designer.cs">
       <DependentUpon>OwnControl.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Materials.aspx.cs">
+      <DependentUpon>Materials.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Materials.aspx.designer.cs">
+      <DependentUpon>Materials.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\News.aspx.cs">
       <DependentUpon>News.aspx</DependentUpon>
