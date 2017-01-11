@@ -23,6 +23,33 @@ namespace MainSite
 			}
 		}
 
+		public bool StartNewMaterial(string oldMaterialId)
+		{
+			string query = "StartNewMaterial";
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query.ToString(), cn))
+			{
+				cmd.CommandType = CommandType.StoredProcedure;
+				cmd.Parameters.Add(new SqlParameter("@oldMaterialId",oldMaterialId));
+				cn.Open();
+				try
+				{
+					var res = cmd.ExecuteNonQuery();
+					return true;					
+				}
+				catch (System.Exception ex)
+				{
+					LastErrorMessage = ex.Message;
+					return false;
+				}
+				finally
+				{
+					cn.Close();
+				}
+			}
+		} 
+
 		public void UpdateReportInfo(int id, string name, string phone, int? tips)
 		{
 			string query = "update dbo.NailDates set ClientName = @name, ClientPhone = @phone, tips = @tips where id=@ID;";

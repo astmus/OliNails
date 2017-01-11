@@ -57,16 +57,19 @@
     font-weight: bold;
 }
 
-a.ruleRowButton {
-    background-color: Transparent;
+a.ruleRowButton {    
     font-family: Arial;
     font-size: 14px;
-    color: #000;
+    color: #FFF;
     font-weight: normal;
+    background-color:#646464;
+    padding:2px;    
+    margin:2px;
 }
 
 .mydatagrid a.ruleRowButton:hover {
-    background-color: #4CAF50;
+    background-color:#646464;
+    color: #CCC;    
 }
 
 .mydatagrid a:hover /** FOR THE PAGING ICONS  HOVER STYLES**/ {

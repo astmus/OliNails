@@ -8,7 +8,6 @@
 <script type="text/javascript">
 
     function selectRow(row) {
-        console.log("selectRow runned")
         var input = row.cells[0].children[0]
         row.cells[0].children[0].checked = !row.cells[0].children[0].checked
         price = parseInt(row.cells[1].children[0].innerHTML)
