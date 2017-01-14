@@ -23,6 +23,40 @@ namespace MainSite
 			}
 		}
 
+		public bool UpdateRelatedToMaterialServices(int materialId, List<string> relatedServicesIDs)
+		{
+			string query = "update dbo.NailDates set StartTime = @StartTime, Duration = @Duration, ClientName = @ClientName, ClientPhone = @ClientPhone, tips = @tips where id=@ID;";
+			
+			if (relatedServicesIDs.Count() == 0)
+				query += "delete from dbo.NailDateService where nailDateId = @ID;";
+			else
+				query += "delete from dbo.NailDateService where nailDateId = @ID and serviceId not in (" + String.Join(",", relatedServicesIDs) + ");";
+						
+			foreach (int id in tmp)
+				currentSelServicesIDs.Remove(id);
+			currentSelServicesIDs.ForEach(fe => query += String.Format("insert into dbo.NailDateService (nailDateId, serviceId) values (@ID, @serviceId{0});", fe));
+
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@ID", SqlDbType.Int).Value = date.ID;
+				cmd.Parameters.Add("@StartTime", SqlDbType.DateTime).Value = date.StartTime;
+				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = date.Duration.Ticks;
+				cmd.Parameters.Add("@ClientName", SqlDbType.NText, 20).Value = date.ClientName;
+				cmd.Parameters.Add("@ClientPhone", SqlDbType.VarChar, 15).Value = date.ClientPhone;
+
+				if (date.Tips.HasValue)
+					cmd.Parameters.Add("@tips", SqlDbType.SmallInt).Value = date.Tips;
+				else
+					cmd.Parameters.AddWithValue("@tips", DBNull.Value);
+
+				currentSelServicesIDs.Distinct().ToList().ForEach(i => cmd.Parameters.Add(String.Format("@serviceId{0}", i), SqlDbType.Int).Value = i);
+				cn.Open();
+				cmd.ExecuteNonQuery();
+				cn.Close();
+			}
+		}
+
 		public bool StartNewMaterial(string oldMaterialId)
 		{
 			string query = "StartNewMaterial";
