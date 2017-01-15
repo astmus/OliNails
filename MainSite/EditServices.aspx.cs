@@ -40,7 +40,7 @@ namespace MainSite
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
 		{
-			e.Command.Parameters["@localTime"].Value = DateTimeHelper.currentLocalDateTime();
+			e.Command.Parameters["@localTime"].Value = DateTimeHelper.currentLocalDateTime();			
 		}
 
 		protected void GridView1_RowUpdated(object sender, GridViewUpdatedEventArgs e)
@@ -50,12 +50,11 @@ namespace MainSite
 
 		protected void NailDataSource_Updating(object sender, SqlDataSourceCommandEventArgs e)
 		{
-			bool shouldShowWarning = e.Command.Parameters["@newPrice"].Value == null;
+			bool shouldShowWarning = e.Command.Parameters["@newPrice"].Value == null && e.Command.Parameters["@sinceDate"].Value != null;
 			e.Command.Parameters["@price"].Value = e.Command.Parameters["@newPrice"].Value ?? 0;
 			e.Command.Parameters.Remove(e.Command.Parameters["@newPrice"]);
 			if (shouldShowWarning)
 				ShowAlertBox("Внимание новая цена установлена равной нулю!!!");
-			
 		}
 
 		protected void NailDataSource_Updated(object sender, SqlDataSourceStatusEventArgs e)
