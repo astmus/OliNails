@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AjaxControlToolkit;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -12,19 +12,15 @@ namespace MainSite.Pages
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-
+			if (!IsPostBack)
+				if (Cache["materialsCacheKey"] == null)
+					Cache["materialsCacheKey"] = DateTime.Now;
 		}
 
 		protected void table_RowDataBound(object sender, GridViewRowEventArgs e)
 		{
 			if (e.Row.RowType != DataControlRowType.DataRow) return;
-			if (sender == materialTable)
-			{
-				if (e.Row.RowState != DataControlRowState.Edit)
-					e.Row.Attributes["onclick"] = Page.ClientScript.GetPostBackClientHyperlink(materialTable, "Select$" + e.Row.RowIndex);
-			}
-			else
-			{
+			
 				e.Row.Attributes["onclick"] = "selectRow(this,event)";
 				useMaterialDataSource.SelectParameters["materialId"].DefaultValue = editMaterialId;
 				var values = ((DataView)useMaterialDataSource.Select(DataSourceSelectArguments.Empty)).Table.Rows.Cast<DataRow>().Select(s => s[1].ToString());
@@ -38,32 +34,22 @@ namespace MainSite.Pages
 					e.Row.CssClass = "rows";
 					(e.Row.Cells[1].Controls[1] as CheckBox).Checked = false;
 				}
-			}
-		}
-
-		protected void table_SelectedIndexChanged(object sender, EventArgs e)
-		{
-
-		}
-
-		protected void useMaterialDataSource_Selected(object sender, SqlDataSourceStatusEventArgs e)
-		{
 			
 		}
 
 		string editMaterialId = null;
 		protected void materialTable_RowEditing(object sender, GridViewEditEventArgs e)
 		{
-			materialTable.Rows[e.NewEditIndex].Attributes["onclick"] = null;
+			var gridView = sender as GridView;
+			gridView.Rows[e.NewEditIndex].Attributes.Remove("onclick");
 			editMaterialId = ((DataView)materialDataSource.Select(DataSourceSelectArguments.Empty)).Table.Rows[e.NewEditIndex][0].ToString();
-			materialTable.SelectedIndex = e.NewEditIndex;
+			gridView.SelectedIndex = e.NewEditIndex;
 			selectServicesTable.Visible = true;
 			selectServicesTable.DataBind();		
 		}
 
 		protected void materialTable_RowCommand(object sender, GridViewCommandEventArgs e)
 		{
-
 			switch (e.CommandName.ToString())
 			{
 				case "New":
@@ -76,6 +62,9 @@ namespace MainSite.Pages
 					break;
 				case "Cancel":
 					selectServicesTable.Visible = false;
+					break;
+				case "Insert":
+					materialDataSource.Insert();
 					break;
 			}
 		}
@@ -90,7 +79,31 @@ namespace MainSite.Pages
 				if (!(row.FindControl("selectedServiceBox") as CheckBox).Checked) continue;				
 				selectedServicesIDs.Add(row.Cells[0].Text);
 			}
-			DataBaseHandler.Instance.Update
+			DataBaseHandler.Instance.UpdateRelatedToMaterialServices(int.Parse(materialId), selectedServicesIDs);
+			selectServicesTable.Visible = false;
+			Cache["materialsCacheKey"] = DateTime.Now;
+			useMaterialTable.DataBind();
+		}
+
+		protected void materialTable_RowCreated(object sender, GridViewRowEventArgs e)
+		{
+			if (e.Row.RowType == DataControlRowType.DataRow && (e.Row.RowState & DataControlRowState.Edit) != DataControlRowState.Edit)
+				e.Row.Attributes["onclick"] = this.Page.ClientScript.GetPostBackClientHyperlink(this.materialTable, "Select$" + e.Row.RowIndex);
+		}
+
+		protected void onInsertNewMaterialClick(object sender, EventArgs e)
+		{
+			materialDataSource.Insert();
+			//Cache["materialsCacheKey"] = DateTime.Now;
+			materialTable.DataBind();
+		}
+
+		protected void materialDataSource_Inserting(object sender, SqlDataSourceCommandEventArgs e)
+		{
+			e.Command.Parameters["@name"].Value = (materialTable.FooterRow.FindControl("nameBox") as TextBox).Text;
+			e.Command.Parameters["@price"].Value = Int16.Parse((materialTable.FooterRow.FindControl("priceTextBox") as TextBox).Text);
+			e.Command.Parameters["@amount"].Value = Int16.Parse((materialTable.FooterRow.FindControl("amountTextBox") as TextBox).Text);
+			e.Command.Parameters["@startTime"].Value = DateTime.Parse((materialTable.FooterRow.FindControl("sinceTimeBox") as TextBox).Text);
 		}
 	}
 }
