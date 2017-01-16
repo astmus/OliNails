@@ -10,6 +10,21 @@
     <link rel="stylesheet" type="text/css" href="Styles/ScheduleTable.css" />
     <link rel="stylesheet" type="text/css" href="TableStyle.css" />
     <style>
+        .btn {
+            background: #333;            
+            font-family: Arial;
+            color: #ffffff;
+            font-size: 14px;
+            border: solid 0px;
+            padding: 10px;
+            text-decoration: none;
+        }
+
+            .btn:hover {
+                background: #111;                
+                text-decoration: none;
+            }
+
         .hasNote {
             border-style: solid;
             border-width: 15px 15px 0 0;
@@ -51,12 +66,12 @@
             <asp:TableRow>
                 <asp:TableCell VerticalAlign="Top">
                     <asp:Panel DefaultButton="b2" runat="server" ID="mainPanel">
-                        <asp:Table runat="server" Style="width: 100%">
-                            <asp:TableRow>
-                                <asp:TableCell BackColor="Red"><asp:Button OnClick="OnPrevMothClick" Style="width:100%" runat="server" Text="<< месяц"/></asp:TableCell>
-                                <asp:TableCell BackColor="Gray"><asp:Button OnClick="OnPrevWeekClick" Style="width:100%" runat="server" Text="< неделя"/></asp:TableCell>
-                                <asp:TableCell BackColor="Blue"><asp:Button OnClick="OnNextWeekClick" Style="width:100%" runat="server" Text="неделя >"/></asp:TableCell>
-                                <asp:TableCell BackColor="Violet"><asp:Button OnClick="OnNextMonthClick" Style="width:100%" runat="server" Text="месяц >"/></asp:TableCell>
+                        <asp:Table runat="server" CellPadding="0" CellSpacing="0" Style="width: 100%">
+                            <asp:TableRow BorderStyle="Solid" BorderWidth="1" BorderColor="#111">
+                                <asp:TableCell><asp:Button OnClick="OnPrevMothClick" CssClass="btn" Style="width:100%" runat="server" Text="<< месяц"/></asp:TableCell>
+                                <asp:TableCell><asp:Button OnClick="OnPrevWeekClick" CssClass="btn" Style="width:100%" runat="server" Text="< неделя"/></asp:TableCell>
+                                <asp:TableCell><asp:Button OnClick="OnNextWeekClick" CssClass="btn" Style="width:100%" runat="server" Text="неделя >"/></asp:TableCell>
+                                <asp:TableCell><asp:Button OnClick="OnNextMonthClick" CssClass="btn" Style="width:100%" runat="server" Text="месяц >"/></asp:TableCell>
                             </asp:TableRow>
                         </asp:Table>
                     </asp:Panel>
@@ -75,9 +90,9 @@
                     <asp:Table ID="detailDataTable" Visible="false" runat="server">
                         <asp:TableRow>
                             <asp:TableCell ColumnSpan="2">
-                                <asp:Calendar style="display:inline-block" runat="server" ID="dateCalendar" SelectionMode="Day" OnSelectionChanged="DateSelectionChanged" ShowGridLines="False" />
-                                <asp:ListBox style="vertical-align:top" AutoPostBack="True" runat="server" OnSelectedIndexChanged="availableTimes_SelectedIndexChanged" ID="availableTimes" />
-                            </asp:TableCell>                            
+                                <asp:Calendar Style="display: inline-block" runat="server" ID="dateCalendar" SelectionMode="Day" OnSelectionChanged="DateSelectionChanged" ShowGridLines="False" />
+                                <asp:ListBox Style="vertical-align: top" AutoPostBack="True" runat="server" OnSelectedIndexChanged="availableTimes_SelectedIndexChanged" ID="availableTimes" />
+                            </asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell ColumnSpan="2">
