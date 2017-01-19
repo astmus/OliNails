@@ -51,8 +51,8 @@ namespace MainSite
 		protected override void OnPreInit(EventArgs e)
 		{
 			base.OnPreInit(e);
-			if (Session["nailDateIsSelected"] != null)
-				detailDataTable.Visible = true;
+			//if (Session["selectedNailDate"] != null)
+			//	OnNailDateSeleted(Session["selectedNailDate"] as NailDate);
 		}
 
 		private void OnReservDatePressed(DateTime obj)
