@@ -79,19 +79,17 @@ namespace MainSite
 			}
 		} 
 
-		public void UpdateReportInfo(int id, string name, string phone, int? tips)
+		public void UpdateReportInfo(int id, string name, string phone, int? tips, int? realDuration)
 		{
-			string query = "update dbo.NailDates set ClientName = @name, ClientPhone = @phone, tips = @tips where id=@ID;";
+			string query = "update dbo.NailDates set ClientName = @name, ClientPhone = @phone, tips = @tips, Duration = @duration where id=@ID;";
 
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
 			using (SqlCommand cmd = new SqlCommand(query.ToString(), cn))
 			{
 				cmd.Parameters.Add("@name", SqlDbType.NText).Value = name;
 				cmd.Parameters.Add("@phone", SqlDbType.NVarChar,15).Value = phone;
-				if (tips.HasValue)
-					cmd.Parameters.Add("@tips", SqlDbType.SmallInt).Value = tips;
-				else
-					cmd.Parameters.AddWithValue("@tips", DBNull.Value);
+				cmd.Parameters.Add("@tips", SqlDbType.SmallInt).Value = (object)tips ?? DBNull.Value;
+				cmd.Parameters.Add("@duration", SqlDbType.BigInt).Value = (object)realDuration ?? 0;
 				cmd.Parameters.Add("@ID", SqlDbType.Int).Value = id;
 				cn.Open();
 				try

@@ -69,28 +69,29 @@ namespace MainSite.Pages
 		protected void OnFindClick(object sender, EventArgs e)
 		{
 			string param = searchParam.Text;
-			NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo2 where [StartTime] <= @StartTime and CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", param);
+			NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo where [StartTime] <= @StartTime and CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", param);
 		}
 
 		protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
 		{
 			e.Cancel = true;
 			string error = null;
-			if (e.NewValues[0] == null || e.NewValues[0].ToString().Length < 3)
+			if (e.NewValues[1] == null || e.NewValues[1].ToString().Length < 3)
 				error = "слишком короткое имя";
-			if (e.NewValues[1] == null || e.NewValues[1].ToString().Length < 10)
+			if (e.NewValues[2] == null || e.NewValues[2].ToString().Length < 10)
 				error = "неверный номер телефона";
+			int? realDration = null;
+			int parsed = 0;
+			if (int.TryParse(e.NewValues[0] as String, out parsed))
+				realDration = parsed;
+
 			if (error != null)
 			{
 				ShowAlertBox(error);
 				return;
 			}
 
-			int tips = 0;
-			if (int.TryParse(e.NewValues[2] as string, out tips))
-				DataBaseHandler.Instance.UpdateReportInfo(int.Parse(e.OldValues[0] as string),e.NewValues[0] as String, e.NewValues[1] as String, tips);
-			else
-				DataBaseHandler.Instance.UpdateReportInfo(int.Parse(e.OldValues[0] as string),e.NewValues[0] as String, e.NewValues[1] as String, null);
+			DataBaseHandler.Instance.UpdateReportInfo(int.Parse(e.OldValues[0] as string),e.NewValues[1] as String, e.NewValues[2] as String, (e.NewValues[3] as string).ToNullableInt(), realDration);
 			GridView1.EditIndex = -1;
 			GridView1.DataBind();
 		}

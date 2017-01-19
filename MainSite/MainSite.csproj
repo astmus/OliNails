@@ -155,6 +155,7 @@
     <Compile Include="EditServices.aspx.designer.cs">
       <DependentUpon>EditServices.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Extensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

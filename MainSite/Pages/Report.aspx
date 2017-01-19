@@ -45,6 +45,7 @@
                     </asp:BoundField>
                     <asp:BoundField DataField="StartTime" HeaderText="Дата" SortExpression="StartTime" DataFormatString="{0:dd.MM.yyyy HH:mm}" ReadOnly="True" />
                     <asp:BoundField DataField="duration" HeaderText="Время" SortExpression="duration" ReadOnly="True" />
+                    <asp:BoundField DataField="realDuration" HeaderText="Факт.время" SortExpression="realDuration"/>
                     <asp:BoundField DataField="ClientName" HeaderText="Имя" SortExpression="ClientName" />
                     <asp:BoundField DataField="ClientPhone" HeaderText="Телефон" SortExpression="ClientPhone" />
                     <asp:BoundField DataField="procedures" HeaderText="Процедуры" ReadOnly="True" SortExpression="procedures" />
@@ -67,7 +68,7 @@
                 <RowStyle CssClass="rows"></RowStyle>
             </asp:GridView>
 
-            <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" OnSelecting="NailDataSource_Selecting" SelectCommand="SELECT * FROM [FullNailDatesInfo2] WHERE ([StartTime] &lt; @StartTime and [StartTime] &gt;= @from and [StartTime] &lt; @to) order by StartTime">
+            <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" OnSelecting="NailDataSource_Selecting" SelectCommand="SELECT * FROM [FullNailDatesInfo] WHERE ([StartTime] &lt; @StartTime and [StartTime] &gt;= @from and [StartTime] &lt; @to) order by StartTime">
                 <SelectParameters>
                     <asp:Parameter Name="StartTime" Type="DateTime" />
                     <asp:Parameter Name="from" />

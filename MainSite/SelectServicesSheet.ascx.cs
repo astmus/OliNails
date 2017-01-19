@@ -114,12 +114,12 @@ namespace MainSite
 			}
 
 			DateTime result = (DateTime)Session["nailDate"];
-			DataBaseHandler.Instance.InsertNailDate(result, TimeSpan.FromHours(2), clientName.Text, phone.Text, servicesIDs);
+			DataBaseHandler.Instance.InsertNailDate(result, TimeSpan.Zero, clientName.Text, phone.Text, servicesIDs);
 
 			Task.Run(() => { Response.Redirect("/master.aspx"); });
 
 			Session.Clear();
-			SendMailNotification(result, TimeSpan.FromHours(2), clientName.Text, phone.Text, servicesNames);
+			SendMailNotification(result, TimeSpan.Zero, clientName.Text, phone.Text, servicesNames);
 		}
 
 		//private void AddServicesToDialogTable()
