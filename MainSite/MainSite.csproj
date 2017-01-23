@@ -243,7 +243,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>1754</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:1754/</IISUrl>
+          <IISUrl>http://127.0.0.1:1754/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

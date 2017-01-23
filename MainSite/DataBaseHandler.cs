@@ -23,6 +23,34 @@ namespace MainSite
 			}
 		}
 
+		public NailDate GetNailDateById(int nailDateId)
+		{
+			string query = "select * from NailDates where Id >= @id";
+			NailDate dates = null;
+			// create connection and command
+			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+			using (SqlCommand cmd = new SqlCommand(query, cn))
+			{
+				cmd.Parameters.Add("@id", SqlDbType.Int).Value = nailDateId;				
+				cn.Open();
+				SqlDataReader dr = cmd.ExecuteReader();
+				try
+				{
+					dr.Read();
+					dates = NailDate.Parse(dr);
+				}
+				catch (System.Exception ex)
+				{
+					LastErrorMessage = ex.Message;
+				}
+				finally
+				{
+					cn.Close();
+				}				
+			}
+			return dates;
+		}
+
 		public bool UpdateRelatedToMaterialServices(int materialId, List<string> relatedServicesIDs)
 		{
 			string query = "delete from dbo.MaterialServices where materialId = @ID;";
@@ -383,7 +411,7 @@ namespace MainSite
 			return Settings.Instance.AvailableTimes.Except(reservedDates).ToList(); 
 		}
 
-		public void UpdateNailDate(NailDate date,List<int> currentSelServicesIDs, List<int> oldServicesIDs)
+		public bool UpdateNailDate(NailDate date,List<int> currentSelServicesIDs, List<int> oldServicesIDs)
 		{
 			string query = "update dbo.NailDates set StartTime = @StartTime, Duration = @Duration, ClientName = @ClientName, ClientPhone = @ClientPhone, tips = @tips where id=@ID;";
 			var servWithOutDesign = currentSelServicesIDs.Where(w => w != 10);
@@ -413,8 +441,19 @@ namespace MainSite
 
 				currentSelServicesIDs.Distinct().ToList().ForEach(i=> cmd.Parameters.Add(String.Format("@serviceId{0}", i), SqlDbType.Int).Value = i);
 				cn.Open();
-				cmd.ExecuteNonQuery();
-				cn.Close();
+				try
+				{
+					cmd.ExecuteNonQuery();
+				}
+				catch 
+				{
+					return false;
+				}
+				finally
+				{
+					cn.Close();
+				}
+				return true;
 			}
 		}
 

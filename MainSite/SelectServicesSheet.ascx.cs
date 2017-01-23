@@ -15,11 +15,19 @@ namespace MainSite
 		{
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
 			if (Session["nailDate"] != null)
-				nailDateLabel.Text = ((DateTime)Session["nailDate"]).ToString("Дата dd MMMM yyyy HH:mm");			
+				nailDateLabel.Text = ((DateTime)Session["nailDate"]).ToString("Дата dd MMMM yyyy HH:mm");
+			if (Request.Cookies["userData"] != null)
+			{
+				Phone = Server.HtmlEncode(Request.Cookies["userData"]["phone"]);
+				ClientName = Server.HtmlEncode(Response.Cookies["userData"]["name"]);
+			}
 			//this.Style.Add("transform", "scale(2,2)");
 		}
 
-#region Properties
+		public event Action<SelectServicesSheet> UpdateNailDate;
+		public event Action<SelectServicesSheet> DeleteNailDate;
+
+		#region Properties
 
 		public string Phone
 		{
@@ -47,8 +55,8 @@ namespace MainSite
 		{
 			get { return confirmButtonsPanel.Visible; }
 			set { confirmButtonsPanel.Visible = value; }
-		}
-				
+		}	
+
 		private List<int> _selectedServicesIDs = new List<int>();
 		public List<int> SelectedServicesIDs
 		{
@@ -69,9 +77,16 @@ namespace MainSite
 				return _selectedServicesIDs;
 			}
 			set { _selectedServicesIDs = value; GridView1.DataBind(); }
-		}		
+		}
 
 		#endregion
+
+		public void SetDisplayEditDeleteButtons(bool visible)
+		{
+			updateDateButton.Visible = visible;
+			deleteDateButton.Visible = visible;
+			OkButton.Visible = !visible;
+		}
 
 		public void ShowServicesSheet()
 		{
@@ -116,9 +131,6 @@ namespace MainSite
 			DateTime result = (DateTime)Session["nailDate"];
 			DataBaseHandler.Instance.InsertNailDate(result, TimeSpan.Zero, clientName.Text, phone.Text, servicesIDs);
 
-			Task.Run(() => { Response.Redirect("/master.aspx"); });
-
-			Session.Clear();
 			SendMailNotification(result, TimeSpan.Zero, clientName.Text, phone.Text, servicesNames);
 		}
 
@@ -229,6 +241,18 @@ namespace MainSite
 				}
 			}
 
-		}		
+		}
+
+		protected void deleteDateButton_Click(object sender, EventArgs e)
+		{
+			if (DeleteNailDate != null)
+				DeleteNailDate(this);
+		}
+
+		protected void updateDateButton_Click(object sender, EventArgs e)
+		{
+			if (UpdateNailDate != null)
+				UpdateNailDate(this);
+		}
 	}
 }

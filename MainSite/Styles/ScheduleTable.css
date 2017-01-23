@@ -8,6 +8,10 @@
 	text-decoration:none;
 }
 
+.workWeek td.reserved:hover{
+    background-color:#7bc17d;
+}
+
 .workWeek input[type=submit]:hover {
     background-color:rgba(255,204,0,0.8);
 } 
@@ -50,4 +54,8 @@
 
 .workWeek td.active{
     background-color:#7bc17d
+}
+
+.workWeek td.alterActive{
+    background-color:rgba(255,204,0,0.8)
 }

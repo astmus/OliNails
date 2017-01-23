@@ -23,7 +23,7 @@ namespace MainSite
 		public event AddDateRecordCallback CreateNailDate;
 		public event Action<NailDate> NailDateSelected;
 		public event Action<DateTime> ReservDate;
-		public NailScheduler(List<string> timeList, DateTime startDay, Mode workForMode)
+		public NailScheduler(List<string> timeList, DateTime startDay, Mode workForMode, DateTime highlightedDate)
 		{
 			CreateHeader();			
 			_timeList = timeList;
@@ -43,7 +43,7 @@ namespace MainSite
 				var row = new TableRow();				
 				var dateCell = new TableCell();
 				var endDay = startDay.AddDays(7);
-				var week = new WorkWeek(startDay, nailDates.Where(w=>w.StartTime.Date >= startDay.Date && w.StartTime.Date <= endDay.Date).ToList(), _currentMode, featureNoteDates);
+				var week = new WorkWeek(startDay, nailDates.Where(w=>w.StartTime.Date >= startDay.Date && w.StartTime.Date <= endDay.Date).ToList(), _currentMode, featureNoteDates, highlightedDate);
 
 				switch (_currentMode)
 				{

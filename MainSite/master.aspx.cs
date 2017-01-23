@@ -1,18 +1,8 @@
-﻿using AjaxControlToolkit;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Net.Mail;
+﻿using System;
 using System.Web;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Threading.Tasks;
-using System.Web.UI.HtmlControls;
-using System.Text;
 
 namespace MainSite
 {
@@ -27,7 +17,15 @@ namespace MainSite
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			//Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
-			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek(), Mode.User);
+
+			string val = null;
+			if (Request.Cookies["userData"] != null)
+				val = Server.HtmlEncode(Request.Cookies["userData"]["date"]);
+		    DateTime date = DateTime.MinValue;
+			if (!String.IsNullOrEmpty(val))
+				date = new DateTime(long.Parse(val));			
+
+			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek(), Mode.User, date);
 			scheduler.CreateNailDate += OnCreateNailDate;	
 			
 			mainPanel.Controls.Add(scheduler);
@@ -73,6 +71,29 @@ namespace MainSite
 		{			
 			if (e.Row.RowType == DataControlRowType.DataRow)
 				e.Row.Attributes["onclick"] = "selectRow(this)";
+		}
+
+		[WebMethod(EnableSession = true)]
+		public static void CheckEditNailDate(int dateId, string enteredPhone)
+		{			
+			var nailDate = DataBaseHandler.Instance.GetNailDateById(dateId);
+			if (nailDate == null)
+				Logger.Instance.LogError(String.Format("CheckEditNailDate dateId({0}) not found", dateId));
+			else
+			if (enteredPhone != nailDate.ClientPhone)
+				throw new ValidatePhoneForEditException(dateId, enteredPhone);
+			else
+			{
+				HttpContext.Current.Session["nailDateForEdit"] = nailDate;
+			}
+		}
+	}
+
+	public class ValidatePhoneForEditException : Exception
+	{
+		public ValidatePhoneForEditException(int nailDateId, string enteredPhone)
+			: base(String.Format("Failed walidate phone for edit nail date. NailDateId => {0}; Entered phone => {1}", nailDateId, enteredPhone))
+		{ 
 		}
 	}
 }

@@ -4,7 +4,6 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Linq;
 using System.Web.Services;
-using System.IO;
 
 namespace MainSite
 {
@@ -42,7 +41,7 @@ namespace MainSite
 		{
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
 			int daysShift = int.Parse(Request.Params["addDays"] ?? "0");
-			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek().Date.AddDays(daysShift), Mode.Owner);
+			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek().Date.AddDays(daysShift), Mode.Owner, DateTime.MinValue);
 			scheduler.NailDateSelected += OnNailDateSeleted;
 			scheduler.ReservDate += OnReservDatePressed;
 			mainPanel.Controls.Add(scheduler);						

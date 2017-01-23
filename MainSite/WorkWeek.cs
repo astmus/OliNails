@@ -21,7 +21,7 @@ namespace MainSite
 		public Action<DateTime> ReservDatePressed;
 		List<NailDate> WeekDates { get; set; }
 		private Mode _currentMode { get; set; }
-		public WorkWeek(DateTime firstDay, List<NailDate> weekDates, Mode workForMode,List<DateTime> noteDates)
+		public WorkWeek(DateTime firstDay, List<NailDate> weekDates, Mode workForMode,List<DateTime> noteDates, DateTime highlightedDate)
 		{
 			FirstDay = firstDay;
 			WeekDates = weekDates;
@@ -54,7 +54,7 @@ namespace MainSite
 				firstDay = firstDay.AddDays(1);
 			}
 			this.Rows.Add(DaysHeader);
-			drawWeek();
+			drawWeek(highlightedDate);
 		}
 
 		private void addNoteMark(TableHeaderCell cell, DateTime date)
@@ -98,7 +98,7 @@ namespace MainSite
 			}
 		}
 
-		public void drawWeek()
+		public void drawWeek(DateTime highlightedDate)
 		{
 			int odd = 0;
 			foreach (string time in Settings.Instance.AvailableTimes)
@@ -136,6 +136,12 @@ namespace MainSite
 						case Mode.Owner:
 							innerControl = GenerateContentForOwnerCell(existsNailDate, certainTime);
 							break;
+					}
+
+					if (highlightedDate == certainTime && innerControl is Label)
+					{
+						(innerControl as Label).Text = "Ваша запись";
+						dateCell.CssClass = "alterActive";
 					}
 
 					if (innerControl != null)
@@ -184,11 +190,17 @@ namespace MainSite
 				//b.Attributes.Add("time", certainTime.ToString("Дата dd MMMM yyyy HH:mm"));
 				//b.UseSubmitBehavior = false;
 				//b.OnClientClick = "showModal(event); return false;";
-				b.Click += onAddDateButtonClick;				
+				b.Click += onAddDateButtonClick;
 				result = b;
 			}
 			else
-				result = new Literal() { Text = "Занято" };
+			{
+				result = new Label() { Text = "Занято" };				
+				(result as Label).Attributes.Add("onclick", "showEnterPhonePrompt(this.getAttribute('dateid'))");
+				(result as Label).Attributes.Add("onmouseover", "this.innerHTML = 'Изменить'");
+				(result as Label).Attributes.Add("onmouseleave", "this.innerHTML = 'Занято'");
+				(result as Label).Attributes.Add("dateid", existsNailDate.ID.ToString());
+			}
 			return result;
 		}
 
