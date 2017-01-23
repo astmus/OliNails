@@ -110,8 +110,8 @@
     <Content Include="Modal.css" />
     <Content Include="OwnControl.aspx" />
     <Content Include="packages.config" />
-    <None Include="Properties\PublishProfiles\OliNails.pubxml" />
-    <None Include="Properties\PublishProfiles\SomeeSite.pubxml" />
+    <None Include="Properties\PublishProfiles\Server.pubxml" />
+    <None Include="Properties\PublishProfiles\TestServer.pubxml" />
     <None Include="scripts\jquery-3.1.0.intellisense.js" />
     <Content Include="Pages\Contacts.html" />
     <Content Include="Pages\Materials.aspx" />
@@ -244,6 +244,8 @@
           <DevelopmentServerPort>1754</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://127.0.0.1:1754/</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>http://127.0.0.1:1754/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

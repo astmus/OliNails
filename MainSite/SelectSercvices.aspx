@@ -10,7 +10,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <control:services runat="server" />
+        <control:services ID="services" runat="server" />
     </form>
 </body>
 </html>

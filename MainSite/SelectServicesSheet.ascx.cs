@@ -16,10 +16,10 @@ namespace MainSite
 			Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
 			if (Session["nailDate"] != null)
 				nailDateLabel.Text = ((DateTime)Session["nailDate"]).ToString("Дата dd MMMM yyyy HH:mm");
-			if (Request.Cookies["userData"] != null)
+			if (Request.Cookies["userData"] != null && IsPostBack == false && Phone.Length < 13 && String.IsNullOrEmpty(ClientName))
 			{
 				Phone = Server.HtmlEncode(Request.Cookies["userData"]["phone"]);
-				ClientName = Server.HtmlEncode(Response.Cookies["userData"]["name"]);
+				ClientName = Server.HtmlEncode(Request.Cookies["userData"]["name"]);
 			}
 			//this.Style.Add("transform", "scale(2,2)");
 		}
@@ -128,10 +128,17 @@ namespace MainSite
 					servicesIDs.AddRange(Enumerable.Repeat(10, count-1));
 			}
 
-			DateTime result = (DateTime)Session["nailDate"];
-			DataBaseHandler.Instance.InsertNailDate(result, TimeSpan.Zero, clientName.Text, phone.Text, servicesIDs);
+			Response.Cookies["userData"]["date"] = StartTime.Ticks.ToString();
+			Response.Cookies["userData"]["phone"] = Phone;
+			Response.Cookies["userData"]["name"] = ClientName;
+			Response.Cookies["userData"].Expires = StartTime;
 
-			SendMailNotification(result, TimeSpan.Zero, clientName.Text, phone.Text, servicesNames);
+			DataBaseHandler.Instance.InsertNailDate(StartTime, TimeSpan.Zero, ClientName, Phone, servicesIDs);
+
+			SendMailNotification(StartTime, TimeSpan.Zero, ClientName, Phone, servicesNames);
+			Task.Run(() => { Response.Redirect("/master.aspx"); });
+			
+			Session.Clear();			
 		}
 
 		//private void AddServicesToDialogTable()
@@ -180,7 +187,7 @@ namespace MainSite
 			client.Credentials = new System.Net.NetworkCredential() { UserName = "oli_882011@mail.ru", Password = "rusaya8" };
 			client.EnableSsl = true;
 
-			client.Send(mailMsg);
+			client.SendAsync(mailMsg, new object());
 		}
 
 		protected override void OnLoad(EventArgs e)
