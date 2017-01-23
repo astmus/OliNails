@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="SelectServicesSheet.ascx.cs" Inherits="MainSite.SelectServicesSheet"  %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="SelectServicesSheet.ascx.cs" Inherits="MainSite.SelectServicesSheet" %>
 <%@ Register Assembly="MainSite" Namespace="MainSite" TagPrefix="main" %>
 
 <script type="text/javascript">
@@ -100,7 +100,7 @@
         }
     }
 
-     function applyMask()
+    function applyMask()
     {
         return;
         var keyCode = ('which' in event) ? event.which : event.keyCode; 
@@ -125,7 +125,7 @@
         var keyCode = ('which' in event) ? event.which : event.keyCode;
         //return ((<%=phone.ClientID%>.value.length > 4 && <%=phone.ClientID%>.value.length <= 13));
         console.log(keyCode);
-        if (<%=phone.ClientID%>.value.length == 4 && (keyCode == 8 || keyCode == 229)) return false;
+        if (<%=phone.ClientID%>.value.length == 3 && (keyCode == 8 || keyCode == 229)) return false;
         if (<%=phone.ClientID%>.value.length == 13 && (keyCode != 8 && keyCode != 229)) return false;
     }
 
@@ -158,12 +158,12 @@
             <asp:Label ID="phoneText" Text="Телефон" runat="server" />
         </td>
         <td>
-            <asp:TextBox ID="phone" onkeyup="applyMask()" onkeydown="return validatePhone(event)" runat="server" Text="+380" ValidationGroup="nailValid" />
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите телефон" ControlToValidate="phone" ValidationGroup="valid" />
-                        <asp:RegularExpressionValidator ID="MaskedEditValidator2" Display="Dynamic" runat="server" ForeColor="Red"
-                            ControlToValidate="phone"
-                            IsValidEmpty="False" ValidationExpression="\+[0-9]{12}" ErrorMessage="Нужно 12 цифр"
-                            ValidationGroup="nailValid" />
+            <asp:TextBox ID="phone" onkeyup="applyMask()" onkeydown="return validatePhone(event)" runat="server" Text="+38" ValidationGroup="nailValid" />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" Display="Dynamic" ForeColor="Red" ErrorMessage="Введите телефон" ControlToValidate="phone" ValidationGroup="valid" />
+            <asp:RegularExpressionValidator ID="MaskedEditValidator2" Display="Dynamic" runat="server" ForeColor="Red"
+                ControlToValidate="phone"
+                IsValidEmpty="False" ValidationExpression="\+[0-9]{12}" ErrorMessage="Нужно 12 цифр"
+                ValidationGroup="nailValid" />
         </td>
     </tr>
     <tr>
@@ -175,8 +175,8 @@
                             <asp:Label Visible="false" ID="procedureIdLabel" runat="server" Text='<%# Eval("id") %>'></asp:Label>
                             <asp:Label Visible="false" ID="procedureAbbreviation" runat="server" Text='<%# Eval("abbreviation") %>'></asp:Label>
                             <asp:CheckBox runat="server" ID="procedureRowSelect" />
-                            <asp:Label ID="Label1" runat="server" Text='<%# Eval("name") %>'></asp:Label>                            
-                            
+                            <asp:Label ID="Label1" runat="server" Text='<%# Eval("name") %>'></asp:Label>
+
                         </ItemTemplate>
                         <ItemStyle HorizontalAlign="Left" />
                     </asp:TemplateField>
@@ -218,9 +218,11 @@
     <tr>
         <td style="text-align: justify" colspan="2">
             <asp:Panel runat="server" ID="confirmButtonsPanel">
-            <main:TagButton ID="OkButton" CausesValidation="true" ValidationGroup="nailValid" runat="server" Text="Отправить" OnClick="AddNailDate" />            
-            <input class="close" type="button" value="Закрыть" onclick='javascript:history.go(-1)'>
-                </asp:Panel>
+                <asp:Button ID="deleteDateButton" Visible="false" runat="server" OnClick="deleteDateButton_Click" Text="отменить запись" />
+                <asp:Button ID="updateDateButton" Visible="false" runat="server" OnClick="updateDateButton_Click" Text="обновить запись" />
+                <main:TagButton ID="OkButton" CausesValidation="true" ValidationGroup="nailValid" runat="server" Text="Отправить" OnClick="AddNailDate" />
+                <input class="close" type="button" value="Закрыть" onclick='javascript:history.go(-1)'>                
+            </asp:Panel>
         </td>
     </tr>
 </table>

@@ -121,6 +121,24 @@ namespace MainSite {
         protected global::System.Web.UI.WebControls.Panel confirmButtonsPanel;
         
         /// <summary>
+        /// deleteDateButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button deleteDateButton;
+        
+        /// <summary>
+        /// updateDateButton control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button updateDateButton;
+        
+        /// <summary>
         /// OkButton control.
         /// </summary>
         /// <remarks>
