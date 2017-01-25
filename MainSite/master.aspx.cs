@@ -53,7 +53,7 @@ namespace MainSite
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
 		{
-			e.Command.Parameters["@localTime"].Value = Session["nailDate"] ?? DateTimeHelper.currentLocalDateTime();
+			e.Command.Parameters["@localTime"].Value = Session["nailDate"] ?? DateTime.Now;
 			Logger.Instance.LogInfo("NailDataSource_Selecting localTime = "+e.Command.Parameters["@localTime"].Value.ToString());
 		}		
 

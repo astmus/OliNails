@@ -31,7 +31,8 @@ namespace MainSite
 		{
 			NailDate date = Session["nailDateForEdit"] as NailDate;
 			DataBaseHandler.Instance.DropNailDate(date);
-			ShowAlertBox("Вы отменили запись, пожалуйста возвращайтесь к нам:)");			
+			ShowAlertBox("Вы отменили запись, пожалуйста возвращайтесь к нам:)");
+			Session.Clear();
 		}
 
 		private void OnUpdateNailDateClick(SelectServicesSheet obj)

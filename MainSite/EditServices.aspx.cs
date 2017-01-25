@@ -40,7 +40,7 @@ namespace MainSite
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
 		{
-			e.Command.Parameters["@localTime"].Value = DateTimeHelper.currentLocalDateTime();			
+			e.Command.Parameters["@localTime"].Value = DateTime.Now;
 		}
 
 		protected void GridView1_RowUpdated(object sender, GridViewUpdatedEventArgs e)

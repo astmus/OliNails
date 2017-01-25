@@ -9,19 +9,8 @@ namespace MainSite
 	{
 		public static DateTime getStartOfCurrentWeek()
 		{
-			DateTime nowDateTime = DateTime.UtcNow;
-			DateTime newDateTime = TimeZoneInfo.ConvertTime(
-				nowDateTime,
-				TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
-			return newDateTime.AddDays(1 - (newDateTime.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)newDateTime.DayOfWeek));
-		}
-
-		public static DateTime currentLocalDateTime()
-		{
-			DateTime nowDateTime = DateTime.UtcNow;
-			return TimeZoneInfo.ConvertTime(
-				nowDateTime,
-				TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
-		}
+			DateTime nowDateTime = DateTime.UtcNow;			
+			return nowDateTime.AddDays(1 - (nowDateTime.DayOfWeek == DayOfWeek.Sunday ? 7 : (int)nowDateTime.DayOfWeek));
+		}		
 	}
 }

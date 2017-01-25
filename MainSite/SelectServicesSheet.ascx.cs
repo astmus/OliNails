@@ -18,8 +18,8 @@ namespace MainSite
 				nailDateLabel.Text = ((DateTime)Session["nailDate"]).ToString("Дата dd MMMM yyyy HH:mm");
 			if (Request.Cookies["userData"] != null && IsPostBack == false && Phone.Length < 13 && String.IsNullOrEmpty(ClientName))
 			{
-				Phone = Server.HtmlEncode(Request.Cookies["userData"]["phone"]);
-				ClientName = Server.HtmlEncode(Request.Cookies["userData"]["name"]);
+				Phone = Request.Cookies["userData"]["phone"];
+				ClientName = Server.UrlDecode(Request.Cookies["userData"]["name"]);
 			}
 			//this.Style.Add("transform", "scale(2,2)");
 		}
@@ -130,7 +130,7 @@ namespace MainSite
 
 			Response.Cookies["userData"]["date"] = StartTime.Ticks.ToString();
 			Response.Cookies["userData"]["phone"] = Phone;
-			Response.Cookies["userData"]["name"] = ClientName;
+			Response.Cookies["userData"]["name"] = Server.UrlEncode(ClientName);
 			Response.Cookies["userData"].Expires = StartTime;
 
 			DataBaseHandler.Instance.InsertNailDate(StartTime, TimeSpan.Zero, ClientName, Phone, servicesIDs);
@@ -187,7 +187,7 @@ namespace MainSite
 			client.Credentials = new System.Net.NetworkCredential() { UserName = "oli_882011@mail.ru", Password = "rusaya8" };
 			client.EnableSsl = true;
 
-			client.SendAsync(mailMsg, new object());
+			client.Send(mailMsg);
 		}
 
 		protected override void OnLoad(EventArgs e)

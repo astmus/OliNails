@@ -53,7 +53,7 @@ namespace MainSite
 			{
 				address = "anonim";
 			}				
-			return String.Format("{0} [{1}] {2} -> {3};", DateTimeHelper.currentLocalDateTime().ToString("dd.MM hh:mm:ss"), address, type, message);
+			return String.Format("{0} [{1}] {2} -> {3};", DateTime.Now.ToString("dd.MM hh:mm:ss"), address, type, message);
 		}
 
 		#endregion

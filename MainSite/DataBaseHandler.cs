@@ -260,7 +260,7 @@ namespace MainSite
 				cmd.Parameters.Add("@price", SqlDbType.SmallInt).Value = price;
 				cmd.Parameters.Add("@duration", SqlDbType.SmallInt).Value = duration;
 				cmd.Parameters.Add("@abbreviation", SqlDbType.NVarChar,3).Value = abbr;
-				cmd.Parameters.Add("@startDate", SqlDbType.DateTime).Value = DateTimeHelper.currentLocalDateTime().Date;
+				cmd.Parameters.Add("@startDate", SqlDbType.DateTime).Value = DateTime.Now.Date;
 				cn.Open();
 				try
 				{

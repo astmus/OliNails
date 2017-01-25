@@ -16,7 +16,7 @@ namespace MainSite.Pages
 		{
 			if (dateFrom.SelectedDate == DateTime.MinValue && dateTo.SelectedDate == DateTime.MinValue)
 			{
-				var currDate = DateTimeHelper.currentLocalDateTime().Date;
+				var currDate = DateTime.Now.Date;
 				dateFrom.TodaysDate = currDate;
 				dateFrom.SelectedDate = dateFrom.TodaysDate;
 				dateTo.TodaysDate = currDate;
@@ -33,8 +33,8 @@ namespace MainSite.Pages
 		}
 
 		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
-		{		
-			e.Command.Parameters["@StartTime"].Value = DateTimeHelper.currentLocalDateTime();
+		{
+			e.Command.Parameters["@StartTime"].Value = DateTime.Now;
 			e.Command.Parameters["@from"].Value = dateFrom.SelectedDate;
 			e.Command.Parameters["@to"].Value = dateTo.SelectedDate.AddDays(1);
 		}
