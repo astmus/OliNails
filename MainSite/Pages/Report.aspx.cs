@@ -11,6 +11,7 @@ namespace MainSite.Pages
 	{
 		private int totalPrice = 0;
 		private int totalTime = 0;
+		private int totalFactTime = 0;
 		private int totalTips = 0;
 		protected void Page_Load(object sender, EventArgs e)
 		{
@@ -44,8 +45,9 @@ namespace MainSite.Pages
 			if (GridView1.FooterRow == null) return;
 			GridView1.FooterRow.Cells[1].Text = "Суммарно";
 			GridView1.FooterRow.Cells[2].Text = String.Format("{0} часов", totalTime / 60);
-			GridView1.FooterRow.Cells[6].Text = String.Format("{0} руб.", totalPrice);
-			GridView1.FooterRow.Cells[7].Text = String.Format("{0} руб.", totalTips+totalPrice);
+			GridView1.FooterRow.Cells[3].Text = String.Format("{0} часов", totalFactTime / 60);
+			GridView1.FooterRow.Cells[7].Text = String.Format("{0} руб.", totalPrice);
+			GridView1.FooterRow.Cells[8].Text = String.Format("{0} руб.", totalTips+totalPrice);
 		}
 
 		protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -54,14 +56,18 @@ namespace MainSite.Pages
 			{
 				int currPrice = 0;
 				int currTime = 0;
+				int currFactTime = 0;
 				int currTips = 0;
 				if (int.TryParse(e.Row.Cells[2].Text, out currTime))
 					totalTime += currTime;
 
-				if (int.TryParse(e.Row.Cells[6].Text, out currPrice))
+				if (int.TryParse(e.Row.Cells[3].Text, out currFactTime))
+					totalFactTime += currFactTime;
+
+				if (int.TryParse(e.Row.Cells[7].Text, out currPrice))
 					totalPrice += currPrice;
 
-				if (int.TryParse(e.Row.Cells[7].Text, out currTips))
+				if (int.TryParse(e.Row.Cells[8].Text, out currTips))
 					totalTips += currTips;
 			}
 		}
