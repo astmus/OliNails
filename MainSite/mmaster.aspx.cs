@@ -11,7 +11,7 @@ namespace MainSite
 	{
 		protected void Page_Load(object sender, EventArgs e)
 		{
-
+			scheduler.AwailableTimes = Settings.Instance.AvailableTimes.Select(s => TimeSpan.Parse(s)).ToList();
 		}
 	}
 }
