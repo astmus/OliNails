@@ -18,13 +18,13 @@
 <body>
     <form id="form1" runat="server">
     <div>
-        <controls:NailDateCalendar Style="width:100%; height:100vw" ID="scheduler" runat="server" Font-Size="16" FirstDayOfWeek="Monday" BackColor="#646464" BorderColor="#333333" ShowGridLines="true" DayNameFormat="Shortest" ForeColor="White" Font-Names="Arial">
+        <controls:NailDateCalendar OnVisibleMonthChanged="scheduler_VisibleMonthChanged" OnSelectionChanged="scheduler_SelectionChanged" Style="width:100%; height:100vw" ID="scheduler" runat="server" Font-Size="16" FirstDayOfWeek="Monday" BackColor="#646464" BorderColor="#333333" ShowGridLines="true" DayNameFormat="Shortest" ForeColor="White" Font-Names="Arial">
             <NextPrevStyle BackColor="#646464" />                
             <DayHeaderStyle Font-Size="18" Height="30" BackColor="#333333" BorderColor="#111111" Font-Bold="True" />                
             <OtherMonthDayStyle BorderColor="#111111" ForeColor="#111111" />
             <SelectedDayStyle BorderColor="#bd82fa" BorderWidth="5" Font-Bold="True" ForeColor="White" />                
             <TitleStyle Font-Size="24" BackColor="#333333" Height="40" Font-Bold="True" BorderColor="#111111" />
-            <TodayDayStyle BackColor="#4CAF50" ForeColor="White" BorderColor="#111111" />
+            <TodayDayStyle BorderColor="#4CAF50" ForeColor="White" BorderWidth="5" />
             <WeekendDayStyle BackColor="#404040" BorderColor="#111111" />
             <DayStyle BorderColor="#111111" />
         </controls:NailDateCalendar>       

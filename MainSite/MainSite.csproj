@@ -98,7 +98,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Controls\TimedRectangle.ascx" />
     <Content Include="EditServices.aspx" />
     <Content Include="Files\Kontakty.files\image001.png" />
     <Content Include="Files\Kontakty.files\image002.png" />
@@ -147,13 +146,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\NailDateCalendar.cs" />
-    <Compile Include="Controls\TimedRectangle.ascx.cs">
-      <DependentUpon>TimedRectangle.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\TimedRectangle.ascx.designer.cs">
-      <DependentUpon>TimedRectangle.ascx</DependentUpon>
-    </Compile>
     <Compile Include="DataBaseHandler.cs" />
     <Compile Include="DataModels\Note.cs" />
     <Compile Include="DateTimeHelper.cs" />
