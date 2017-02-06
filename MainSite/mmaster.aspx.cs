@@ -19,10 +19,26 @@ namespace MainSite
 		{
 
 		}
-
-		protected void scheduler_SelectionChanged(object sender, EventArgs e)
-		{
-			int i = 0;
-		}		
+				
+		protected void scheduler_SelectionChanged1(List<NailDate> obj)
+		{			
+			buttonsPanel.Visible = true;
+			foreach (string time in Settings.Instance.AvailableTimes)
+			{
+				TimeSpan span = TimeSpan.Parse(time);
+				Button b = new Button();
+				if (obj.Any(a => a.StartTime.TimeOfDay == span))
+				{
+					b.Text = "Занято/Изменить";
+					b.CssClass = "reserved";
+				}
+				else
+				{
+					b.Text = "Записаться на " + time;
+					b.CssClass = "notreserved";
+				}
+				buttonsPanel.Controls.Add(b);
+			}
+		}
 	}
 }

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Web.UI.HtmlControls;
 
 namespace MainSite.Controls
 {
@@ -19,9 +17,9 @@ namespace MainSite.Controls
 		public TimeSpan WorkDayStartAt = TimeSpan.FromHours(10);
 		public TimeSpan WorkDayLength = TimeSpan.FromHours(10);
 		public List<TimeSpan> AwailableTimes { get; set; }
+		public new event Action<List<NailDate>> SelectionChanged;
 
-		private DateTime? _lastDate;
-		private string _controlId = Guid.NewGuid().ToString();
+		private DateTime? _lastDate;		
 
 		protected override ControlCollection CreateControlCollection()
 		{
@@ -31,20 +29,24 @@ namespace MainSite.Controls
 		protected override void OnSelectionChanged()
 		{
 			base.OnSelectionChanged();
+			if (SelectionChanged != null)
+				SelectionChanged(_nailDates.Where(w => w.StartTime.Date == this.SelectedDate).ToList());
 		}
 
 		protected override void OnDayRender(TableCell cell, CalendarDay day)
 		{
 			if (day.Date < DateTime.Now.Date) // if cell date less that now we just block cell for not to do unnecessary actions 
 			{
-				cell.Text = "";
+				cell.BackColor = Color.FromArgb(255, 51, 51, 51);
+				day.IsSelectable = false;
+				cell.ForeColor = cell.BackColor;
 				base.OnDayRender(cell, day);
 				return;
 			}
 
 			if (!_lastDate.HasValue)
 			{
-				_lastDate = day.Date.AddDays(42);
+				_lastDate = day.Date.AddDays(42); // week place, need rework. Load only rest days count till last displayed data
 				var now = DateTime.Now.Date;
 				DateTime? forDate = _forDate;
 				if (!forDate.HasValue || forDate != day.Date)
@@ -59,7 +61,8 @@ namespace MainSite.Controls
 			switch (dates.Length)
 			{
 				case 3: // then all day is already reserved, disable reserve functionality
-					cell.Text = "";
+					cell.BackColor = Color.FromArgb(255, 78, 36, 122);					
+					cell.ForeColor = Color.FromArgb(255, 60, 30, 100);
 					break;
 				case 0: // all is available for reserve, do nothing for display reserves
 					break;
@@ -103,11 +106,11 @@ namespace MainSite.Controls
 		{
 			get
 			{
-				return (List<NailDate>)HttpContext.Current.Session[_controlId + "nailDates"] ?? new List<NailDate>();
+				return (List<NailDate>)HttpContext.Current.Session["NailDateCalendarnailDates"] ?? new List<NailDate>();
 			}
 			set
 			{
-				HttpContext.Current.Session[_controlId + "nailDates"] = value;
+				HttpContext.Current.Session["NailDateCalendarnailDates"] = value;
 			}
 		}
 
@@ -115,11 +118,11 @@ namespace MainSite.Controls
 		{
 			get
 			{
-				return (DateTime?)HttpContext.Current.Session[_controlId + "forDate"];
+				return (DateTime?)HttpContext.Current.Session["NailDateCalendarforDate"];
 			}
 			set
 			{
-				HttpContext.Current.Session[_controlId + "forDate"] = value;
+				HttpContext.Current.Session["NailDateCalendarforDate"] = value;
 			}
 		}
 
