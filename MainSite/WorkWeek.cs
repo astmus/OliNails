@@ -156,7 +156,7 @@ namespace MainSite
 		private Control GenerateContentForOwnerCell(NailDate existsNailDate, DateTime certainTime)
 		{
 			var b = new TagButton() { Tag = existsNailDate };
-			b.Click += onButtonPressedByOwner; ;
+			b.Click += onButtonPressedByOwner;
 			if (existsNailDate != null)
 			{
 				b.Text = existsNailDate.ClientName;

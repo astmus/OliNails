@@ -5,6 +5,7 @@
 <%@ Register TagPrefix="MainSite" TagName="SelectServices" Src="~/SelectServicesSheet.ascx" %>
 <!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="scripts/AlterDatePrompt.js" ></script>
 <script type="text/javascript">
 
     function selectRow(row) {
@@ -41,38 +42,7 @@
                 modal.style.display = "none";
             }
         }
-    }
-
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = document.cookie;
-        var from = decodedCookie.indexOf(name) + name.length;
-        var to = decodedCookie.indexOf("&", from);        
-        return to < 0 ? decodedCookie.substring(from) : decodedCookie.substring(from, to);
-    }
-
-    function showEnterPhonePrompt(dateId) {
-        var phone = getCookie('phone')
-        console.log(phone);
-        console.log(document.cookie);
-        if (phone.length < 13)
-            phone = '+38';
-        var phone = prompt("Что бы изменить или отвенить запись введите ваш номер телефона", phone);
-        if (phone.length > 4) {
-            PageMethods.CheckEditNailDate(dateId, phone, onSuccess, onError);
-        }
-    }
-
-    function onSuccess(result) {
-        window.location.href = "SelectSercvices.aspx";
-    }
-
-    function onError(result) {
-        if (confirm("К сожалению номер телефона несовпал.\n Возможно вы выбрали не свою запись.\n Если все верно, свяжитесь с нами.\n Позвонить Оле?") == true)
-        {
-            window.open("tel:+380953464708");
-        }
-    }
+    }   
 
     function showModal(event) {
        <%-- var label = document.getElementById("nailDateLabel");        
@@ -86,7 +56,7 @@
     }
 </script>
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
+<head runat="server">    
     <title>Расписание</title>
     <link rel="stylesheet" type="text/css" href="Modal.css" />
     <link rel="stylesheet" type="text/css" href="TableStyle.css" />

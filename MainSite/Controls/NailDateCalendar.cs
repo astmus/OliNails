@@ -62,7 +62,7 @@ namespace MainSite.Controls
 			{
 				case 3: // then all day is already reserved, disable reserve functionality
 					cell.BackColor = Color.FromArgb(255, 78, 36, 122);					
-					cell.ForeColor = Color.FromArgb(255, 60, 30, 100);
+					cell.ForeColor = Color.FromArgb(255, 50, 20, 90);
 					break;
 				case 0: // all is available for reserve, do nothing for display reserves
 					break;
