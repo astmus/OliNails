@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainSite", "MainSite\MainSi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OliNailsMobile", "OliNailsMobile\OliNailsMobile.csproj", "{C761445A-88B8-42E0-99C8-5AEA89F00210}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhoneConnectorHost", "PhoneConnectorHost\PhoneConnectorHost.csproj", "{CDADCC80-2031-43D9-B7AF-F74B46AB028B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmsSendProvider", "PhoneConnectorHost\SmsSendProvider.csproj", "{CDADCC80-2031-43D9-B7AF-F74B46AB028B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
