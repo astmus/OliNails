@@ -25,24 +25,32 @@ namespace PhoneConnectorHost
             var proc = new System.Diagnostics.Process();
             proc.StartInfo.RedirectStandardInput = true;
             proc.StartInfo.RedirectStandardOutput = true;
-            //proc.StartInfo.FileName = @"C:\platform-tools\adb.exe";
-            proc.StartInfo.FileName = @"c:\Program Files (x86)\Android\android-sdk\platform-tools\adb.exe";
-            proc.StartInfo.Arguments = "shell";
+            proc.StartInfo.FileName = @"c:\Program Files (x86)\Android\android-sdk\platform-tools\send.bat";
+            proc.StartInfo.Arguments = String.Format("{0} \"{1}\"","+380939372858","Вы записались на 13:00 19.02.2017");
             proc.StartInfo.UseShellExecute = false;
             proc.StartInfo.CreateNoWindow = true;            
             proc.Start();
-            proc.StandardInput.WriteLine(String.Format("am start -a android.intent.action.SENDTO -d sms:{0} --es sms_body \"{1}\" --ez exit_on_sent true",args[0], "olinails.com Vy uspeshno zapisalis na "));
-            proc.StandardInput.WriteLine(String.Format("input text {0}.%sJdem%svas.",args[2].Replace(" ","%s")));
+            proc.WaitForExit();
+            string res = "";
+            while (res.IndexOf("completed") == -1)
+                res = proc.StandardOutput.ReadLine();
+            //proc.StandardInput.WriteLine(String.Format("am start -a android.intent.action.SENDTO -d sms:{0} --es sms_body \"{1}\" --ez exit_on_sent true",args[0], "olinails.com Вы успешно записались на "));
+            //string s = String.Format("am start -a android.intent.action.SENDTO -d sms:{0} --es sms_body \"{1}\" --ez exit_on_sent true", args[0], "olinails.com ");
+            //proc.StandardInput.WriteLine(s);
+            //proc.StandardInput.Flush();
             //Thread.Sleep(1000);
-             proc.StandardInput.WriteLine("input keyevent 22");
-            //Thread.Sleep(1000);
-            proc.StandardInput.WriteLine("input keyevent 66");
+            //proc.StandardInput.WriteLine(String.Format("input text \"{0}.%sJdem%Vas.\"",args[1].Replace(" ","%s")));
+
+            /*Thread.Sleep(1000);
+            proc.StandardInput.WriteLine("shell input keyevent 22");
+            Thread.Sleep(1000);
+            proc.StandardInput.WriteLine("shell input keyevent 66");
             Thread.Sleep(1000);
             string res = "";
             while (res.IndexOf("input keyevent 66") == -1)
                 res = proc.StandardOutput.ReadLine();
             Thread.Sleep(500);
-            Console.WriteLine("sms is sent");
+            Console.WriteLine("sms is sent");*/
             proc.Close();
         }
         /*static void Main(string[] args)
