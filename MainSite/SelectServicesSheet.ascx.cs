@@ -134,9 +134,9 @@ namespace MainSite
 			Response.Cookies["userData"]["name"] = Server.UrlEncode(ClientName);
 			Response.Cookies["userData"].Expires = StartTime;
 
-            //DataBaseHandler.Instance.InsertNailDate(StartTime, TimeSpan.Zero, ClientName, Phone, servicesIDs);
-            //executeAsync(() => { SendMailNotification(StartTime, TimeSpan.Zero, ClientName, Phone, servicesNames); });
-            /*executeAsync(() => {*/ SendSMS(ClientName, Phone, StartTime); /*});*/
+            DataBaseHandler.Instance.InsertNailDate(StartTime, TimeSpan.Zero, ClientName, Phone, servicesIDs);
+            executeAsync(() => { SendMailNotification(StartTime, TimeSpan.Zero, ClientName, Phone, servicesNames); });
+            executeAsync(() => { SendSMS(ClientName, Phone, StartTime); });
 
             Response.Redirect("/master.aspx");
 
@@ -145,11 +145,12 @@ namespace MainSite
 
         private void SendSMS(string clientName,string phoneNumber,DateTime startTime)
         {
-            string message = string.Format("www.olinails.com Вы успешно записалиьс на ");
-            //Task.Run()
+            string message = string.Format("Вы записались на "+startTime.ToString("HH:mm dd.MM.yyyy"));
             try
             {
-                System.Diagnostics.Process.Start(@"C:\platform-tools\SmsSendProvider.exe", string.Format("{0} \"{1}\"", phoneNumber, message)).WaitForExit();
+                var proc = System.Diagnostics.Process.Start(@"C:\platform-tools\send.bat", string.Format("{0} \"{1}\"", phoneNumber, message));
+                proc.WaitForExit();
+                proc.Close();
                 Logger.Instance.LogInfo("Sms was sent to " + phoneNumber);
             }
             catch (System.Exception ex)
@@ -206,13 +207,11 @@ namespace MainSite
 		{
 			MailMessage mailMsg = new MailMessage();
 			mailMsg.From = new MailAddress("oli_882011@mail.ru");
-#if Release
-            mailMsg.To.Add(new MailAddress("olgas882013@gmail.com"));
-#else
+#if DEBUG
             mailMsg.To.Add(new MailAddress("astmusresist@gmail.com"));
+#else
+            mailMsg.To.Add(new MailAddress("olgas882013@gmail.com"));            
 #endif
-
-
             mailMsg.IsBodyHtml = false;
 			mailMsg.Subject = "Запись на " + startDate.ToString();
 			mailMsg.Body = userName + " " + Environment.NewLine + String.Join(",", selectedServicesName) + Environment.NewLine + startDate.ToString("dd.MM.yyyy HH:mm") + " тел: " + userPhon;
