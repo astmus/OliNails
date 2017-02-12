@@ -23,8 +23,24 @@
     </ul>
     <form id="form1" runat="server">
         <div>
-            <asp:Calendar FirstDayOfWeek="Monday" Style="display: inline-block" ID="dateFrom" runat="server"></asp:Calendar>
-            <asp:Calendar FirstDayOfWeek="Monday" Style="display: inline-block" ID="dateTo" runat="server"></asp:Calendar>
+            <asp:Calendar FirstDayOfWeek="Monday" Style="display: inline-block" ID="dateFrom" runat="server" BackColor="#646464" BorderColor="#333333" ShowGridLines="true" DayNameFormat="Shortest" ForeColor="White" CellPadding="5" Font-Names="Arial">
+                <DayHeaderStyle BackColor="#333333" BorderColor="#111111" Font-Bold="True" />                
+                <OtherMonthDayStyle BorderColor="#111111" ForeColor="#111111" />
+                <SelectedDayStyle BorderColor="#111111" BackColor="#bd82fa" Font-Bold="True" ForeColor="White" />                
+                <TitleStyle BackColor="#333333" Font-Bold="True" BorderColor="#111111" />
+                <TodayDayStyle BackColor="#4CAF50" ForeColor="White" BorderColor="#111111" />
+                <WeekendDayStyle BackColor="#404040" BorderColor="#111111" />
+                <DayStyle BorderColor="#111111" />
+            </asp:Calendar>
+            <asp:Calendar FirstDayOfWeek="Monday" Style="display: inline-block" ID="dateTo" runat="server" BackColor="#646464" BorderColor="#333333" ShowGridLines="true" DayNameFormat="Shortest" ForeColor="White" CellPadding="5" Font-Names="Arial">
+                <DayHeaderStyle BackColor="#333333" BorderColor="#111111" Font-Bold="True" />                
+                <OtherMonthDayStyle BorderColor="#111111" ForeColor="#111111" />
+                <SelectedDayStyle BorderColor="#111111" BackColor="#bd82fa" Font-Bold="True" ForeColor="White" />                
+                <TitleStyle BackColor="#333333" Font-Bold="True" BorderColor="#111111" />
+                <TodayDayStyle BackColor="#4CAF50" ForeColor="White" BorderColor="#111111" />
+                <WeekendDayStyle BackColor="#404040" BorderColor="#111111" />
+                <DayStyle BorderColor="#111111" />
+            </asp:Calendar>
             <div style="background: #BBBBBB; vertical-align: top; padding-top: 5px; display: inline-block">
                 <div>
                     Количество визитов:

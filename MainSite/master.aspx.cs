@@ -17,19 +17,23 @@ namespace MainSite
 		protected void Page_Load(object sender, EventArgs e)
 		{
 			//Page.UnobtrusiveValidationMode = System.Web.UI.UnobtrusiveValidationMode.None;
+			if (Request.Browser.IsMobileDevice)
+				Response.Redirect("mmaster.aspx");
+			else
+			{
+				string val = null;
+				if (Request.Cookies["userData"] != null)
+					val = Server.HtmlEncode(Request.Cookies["userData"]["date"]);
+				DateTime date = DateTime.MinValue;
+				if (!String.IsNullOrEmpty(val))
+					date = new DateTime(long.Parse(val));
 
-			string val = null;
-			if (Request.Cookies["userData"] != null)
-				val = Server.HtmlEncode(Request.Cookies["userData"]["date"]);
-		    DateTime date = DateTime.MinValue;
-			if (!String.IsNullOrEmpty(val))
-				date = new DateTime(long.Parse(val));			
+				scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek(), Mode.User, date);
+				scheduler.CreateNailDate += OnCreateNailDate;
 
-			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek(), Mode.User, date);
-			scheduler.CreateNailDate += OnCreateNailDate;	
-			
-			mainPanel.Controls.Add(scheduler);
-			Logger.Instance.LogInfo("page loaded");					
+				mainPanel.Controls.Add(scheduler);
+				Logger.Instance.LogInfo("page loaded");
+			}
 		}
 
 		private void OnCreateNailDate(DateTime startTime)

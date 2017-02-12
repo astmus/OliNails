@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="TableStyle.css" />
     <style>
         .btn {
-            background: #333;            
+            background: #333;
             font-family: Arial;
             color: #ffffff;
             font-size: 14px;
@@ -21,7 +21,7 @@
         }
 
             .btn:hover {
-                background: #111;                
+                background: #111;
                 text-decoration: none;
             }
 
@@ -90,7 +90,15 @@
                     <asp:Table ID="detailDataTable" Visible="false" runat="server">
                         <asp:TableRow>
                             <asp:TableCell ColumnSpan="2">
-                                <asp:Calendar Style="display: inline-block" runat="server" ID="dateCalendar" SelectionMode="Day" OnSelectionChanged="DateSelectionChanged" ShowGridLines="False" />
+                                <asp:Calendar Style="display: inline-block" runat="server" ID="dateCalendar" SelectionMode="Day" OnSelectionChanged="DateSelectionChanged" BackColor="#646464" BorderColor="#333333" ShowGridLines="true" DayNameFormat="Shortest" ForeColor="White" CellPadding="5" Font-Names="Arial">
+                                    <DayHeaderStyle BackColor="#333333" BorderColor="#111111" Font-Bold="True" />
+                                    <OtherMonthDayStyle BorderColor="#111111" ForeColor="#111111" />
+                                    <SelectedDayStyle BorderColor="#111111" BackColor="#bd82fa" Font-Bold="True" ForeColor="White" />
+                                    <TitleStyle BackColor="#333333" Font-Bold="True" BorderColor="#111111" />
+                                    <TodayDayStyle BackColor="#4CAF50" ForeColor="White" BorderColor="#111111" />
+                                    <WeekendDayStyle BackColor="#404040" BorderColor="#111111" />
+                                    <DayStyle BorderColor="#111111" />
+                                </asp:Calendar>
                                 <asp:ListBox Style="vertical-align: top" AutoPostBack="True" runat="server" OnSelectedIndexChanged="availableTimes_SelectedIndexChanged" ID="availableTimes" />
                             </asp:TableCell>
                         </asp:TableRow>
