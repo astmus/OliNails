@@ -21,21 +21,23 @@ namespace PhoneConnectorHost
                 Console.ReadKey();
                 return;
             }
+            
             var proc = new System.Diagnostics.Process();
             proc.StartInfo.RedirectStandardInput = true;
             proc.StartInfo.RedirectStandardOutput = true;
-            proc.StartInfo.FileName = @"C:\platform-tools\adb.exe";
+            //proc.StartInfo.FileName = @"C:\platform-tools\adb.exe";
+            proc.StartInfo.FileName = @"c:\Program Files (x86)\Android\android-sdk\platform-tools\adb.exe";
             proc.StartInfo.Arguments = "shell";
             proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.CreateNoWindow = true;
+            proc.StartInfo.CreateNoWindow = true;            
             proc.Start();
-
-            proc.StandardInput.WriteLine(String.Format("am start -a android.intent.action.SENDTO -d sms:{0} --es sms_body '{1}' --ez exit_on_sent true",args[0],args[1]));
-            proc.StandardInput.Flush();
-            Thread.Sleep(500);
-            proc.StandardInput.WriteLine("input keyevent 22");
-            Thread.Sleep(500);
+            proc.StandardInput.WriteLine(String.Format("am start -a android.intent.action.SENDTO -d sms:{0} --es sms_body \"{1}\" --ez exit_on_sent true",args[0], "olinails.com Vy uspeshno zapisalis na "));
+            proc.StandardInput.WriteLine(String.Format("input text {0}.%sJdem%svas.",args[2].Replace(" ","%s")));
+            //Thread.Sleep(1000);
+             proc.StandardInput.WriteLine("input keyevent 22");
+            //Thread.Sleep(1000);
             proc.StandardInput.WriteLine("input keyevent 66");
+            Thread.Sleep(1000);
             string res = "";
             while (res.IndexOf("input keyevent 66") == -1)
                 res = proc.StandardOutput.ReadLine();

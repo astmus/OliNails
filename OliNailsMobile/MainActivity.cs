@@ -61,7 +61,7 @@ namespace OliNailsMobile
             logToView("Uploading Data to PC ....");
             if (Looper.MyLooper() == Looper.MainLooper)
             {
-                string ml = "main looper";
+                //string ml = "main looper";
             }
             else
             {
@@ -69,7 +69,7 @@ namespace OliNailsMobile
                 {
                     Thread.Sleep(1000);
                 }
-                catch (InterruptedException e)
+                catch
                 {                    
                 }
             }

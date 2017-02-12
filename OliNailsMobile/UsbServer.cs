@@ -28,7 +28,7 @@ namespace OliNailsMobile
         private static UsbServer _instance = null;
         private ServerSocket _server;
         private volatile bool _isRunning = false;
-        private string _replyMessage = "Client#";
+        //private string _replyMessage = "Client#";
         private IUploadAllData _uploadAllData;
         private IGotDataNowAct _startSurvey;
         Thread _thread;
@@ -71,7 +71,7 @@ namespace OliNailsMobile
                     }
                     _isRunning = false;
                 }
-                catch (System.Exception ex)
+                catch 
                 {
                 	
                 }
@@ -90,7 +90,7 @@ namespace OliNailsMobile
                     _server.Close();
                     _server = null;
                 }
-                catch (System.Exception ex)
+                catch
                 {
                 	
                 }

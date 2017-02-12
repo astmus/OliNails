@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using System.Linq;
+using System.Threading;
 
 namespace MainSite
 {
@@ -133,40 +134,67 @@ namespace MainSite
 			Response.Cookies["userData"]["name"] = Server.UrlEncode(ClientName);
 			Response.Cookies["userData"].Expires = StartTime;
 
-			DataBaseHandler.Instance.InsertNailDate(StartTime, TimeSpan.Zero, ClientName, Phone, servicesIDs);
+            //DataBaseHandler.Instance.InsertNailDate(StartTime, TimeSpan.Zero, ClientName, Phone, servicesIDs);
+            //executeAsync(() => { SendMailNotification(StartTime, TimeSpan.Zero, ClientName, Phone, servicesNames); });
+            /*executeAsync(() => {*/ SendSMS(ClientName, Phone, StartTime); /*});*/
 
-			SendMailNotification(StartTime, TimeSpan.Zero, ClientName, Phone, servicesNames);
-			Task.Run(() => { Response.Redirect("/master.aspx"); });
-			
-			Session.Clear();			
+            Response.Redirect("/master.aspx");
+
+            Session.Clear();			
 		}
 
-		//private void AddServicesToDialogTable()
-		//{
-		//	//select selected services for date select * from Services where Services.id in (SELECT serviceId FROM dbo.NailDateService where nailDateId = 107)
+        private void SendSMS(string clientName,string phoneNumber,DateTime startTime)
+        {
+            string message = string.Format("www.olinails.com Вы успешно записалиьс на ");
+            //Task.Run()
+            try
+            {
+                System.Diagnostics.Process.Start(@"C:\platform-tools\SmsSendProvider.exe", string.Format("{0} \"{1}\"", phoneNumber, message)).WaitForExit();
+                Logger.Instance.LogInfo("Sms was sent to " + phoneNumber);
+            }
+            catch (System.Exception ex)
+            {
+                //write to log reason of cant send sms
+                Logger.Instance.LogError("Cant send sms because " + ex.Message);
+            }            
+        }
 
-		//	var services = DataBaseHandler.Instance.GetAvailableServices();
-		//	HtmlTable table = dialogTable as HtmlTable;
-		//	var checks = new List<HtmlInputCheckBox>();
-		//	foreach (var service in services)
-		//	{
-		//		HtmlTableRow row = new HtmlTableRow();
-		//		HtmlInputCheckBox box = new HtmlInputCheckBox();
-		//		var cell = new HtmlTableCell();
-		//		cell.ColSpan = 2;
-		//		cell.Controls.Add(box);
-		//		box.ID = service.ID.ToString();
-		//		checks.Add(box);
-		//		var title = new Literal() { Text = service.Name };
-		//		cell.Controls.Add(title);
-		//		row.Cells.Add(cell);
-		//		table.Rows.Insert(table.Rows.Count - 1, row);
-		//	}
-		//	Session["checks"] = checks;
-		//	Session["services"] = services;
-		//}
+        private void executeAsync(Action method)
+        {
+            Thread doAsyncWork = new Thread(delegate ()
+            {
+                method();
+            });
+            doAsyncWork.IsBackground = true;
+            doAsyncWork.Start();
+        }
 
-		protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
+        //private void AddServicesToDialogTable()
+        //{
+        //	//select selected services for date select * from Services where Services.id in (SELECT serviceId FROM dbo.NailDateService where nailDateId = 107)
+
+        //	var services = DataBaseHandler.Instance.GetAvailableServices();
+        //	HtmlTable table = dialogTable as HtmlTable;
+        //	var checks = new List<HtmlInputCheckBox>();
+        //	foreach (var service in services)
+        //	{
+        //		HtmlTableRow row = new HtmlTableRow();
+        //		HtmlInputCheckBox box = new HtmlInputCheckBox();
+        //		var cell = new HtmlTableCell();
+        //		cell.ColSpan = 2;
+        //		cell.Controls.Add(box);
+        //		box.ID = service.ID.ToString();
+        //		checks.Add(box);
+        //		var title = new Literal() { Text = service.Name };
+        //		cell.Controls.Add(title);
+        //		row.Cells.Add(cell);
+        //		table.Rows.Insert(table.Rows.Count - 1, row);
+        //	}
+        //	Session["checks"] = checks;
+        //	Session["services"] = services;
+        //}
+
+        protected void NailDataSource_Selecting(object sender, SqlDataSourceSelectingEventArgs e)
 		{
 			if (Session["nailDate"] != null)
 				e.Command.Parameters["@localTime"].Value = Session["nailDate"];
@@ -178,19 +206,25 @@ namespace MainSite
 		{
 			MailMessage mailMsg = new MailMessage();
 			mailMsg.From = new MailAddress("oli_882011@mail.ru");
-			mailMsg.To.Add(new MailAddress("olgas882013@gmail.com"));
-			mailMsg.IsBodyHtml = false;
+#if Release
+            mailMsg.To.Add(new MailAddress("olgas882013@gmail.com"));
+#else
+            mailMsg.To.Add(new MailAddress("astmusresist@gmail.com"));
+#endif
+
+
+            mailMsg.IsBodyHtml = false;
 			mailMsg.Subject = "Запись на " + startDate.ToString();
-			mailMsg.Body = userName + " " + Environment.NewLine + String.Join(",", selectedServicesName) + Environment.NewLine + startDate.ToString() + " тел: " + userPhon;
+			mailMsg.Body = userName + " " + Environment.NewLine + String.Join(",", selectedServicesName) + Environment.NewLine + startDate.ToString("dd.MM.yyyy HH:mm") + " тел: " + userPhon;
 
 			SmtpClient client = new SmtpClient("smtp.mail.ru", 25);
 			client.Credentials = new System.Net.NetworkCredential() { UserName = "oli_882011@mail.ru", Password = "rusaya8" };
 			client.EnableSsl = true;
 
-			client.Send(mailMsg);
-		}
+            client.Send(mailMsg);
+		}        
 
-		protected override void OnLoad(EventArgs e)
+        protected override void OnLoad(EventArgs e)
 		{
 			base.OnLoad(e);
 			foreach (GridViewRow row in GridView1.Rows)

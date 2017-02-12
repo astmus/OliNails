@@ -60,7 +60,7 @@ namespace OliNailsMobile
 
                 _socket.Close();
             }
-            catch (Java.Lang.Exception e)
+            catch
             {
 
             }

@@ -45,7 +45,7 @@ namespace MainSite
 
 		protected void GridView1_RowUpdated(object sender, GridViewUpdatedEventArgs e)
 		{			
-			int i = 0;
+			
 		}
 
 		protected void NailDataSource_Updating(object sender, SqlDataSourceCommandEventArgs e)
