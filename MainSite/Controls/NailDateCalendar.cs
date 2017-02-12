@@ -30,7 +30,7 @@ namespace MainSite.Controls
 		{
 			base.OnSelectionChanged();
 			if (SelectionChanged != null)
-				SelectionChanged(_nailDates.Where(w => w.StartTime.Date == this.SelectedDate).ToList());
+				SelectionChanged(_nailDates.Where(w => w.StartTime.Date == this.SelectedDate && w.StartTime > DateTime.Now).ToList());
 		}
 
 		protected override void OnDayRender(TableCell cell, CalendarDay day)
