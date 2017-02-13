@@ -138,9 +138,8 @@ namespace MainSite
             executeAsync(() => { SendMailNotification(StartTime, TimeSpan.Zero, ClientName, Phone, servicesNames); });
             executeAsync(() => { SendSMS(ClientName, Phone, StartTime); });
 
-            Response.Redirect("/master.aspx");
-
-            Session.Clear();			
+            Session.Clear();
+            Response.Redirect("/master.aspx");            			
 		}
 
         private void SendSMS(string clientName,string phoneNumber,DateTime startTime)
