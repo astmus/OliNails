@@ -20,7 +20,8 @@
 </script>
 <script src="scripts/AlterDatePrompt.js"></script>
 <head runat="server">
-    <title></title>
+    <title>Расписание</title>
+    <link rel="stylesheet" type="text/css" href="SiteMenu.css" />
     <style>
         a {
             text-decoration: none;
@@ -50,8 +51,15 @@
 </head>
 <body>
     <form id="form1" runat="server">
+        <ul>
+                <li><a style="margin:0px" class="active" href="master.aspx">Расписание</a></li>
+                <li><a style="margin:0px" href="Pages/Price.html">Прайс</a></li>
+                <li><a style="margin:0px" href="Pages/Contacts.html">Конткты</a></li>
+            </ul>
         <asp:ScriptManager ID="ScriptManager2" runat="server" EnablePageMethods="true" />
+
         <div>
+            
             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                 <ContentTemplate>
                     <controls:NailDateCalendar OnSelectionChanged="scheduler_SelectionChanged" Style="width: 100%; height: 100vw" ID="scheduler" runat="server" Font-Size="16" FirstDayOfWeek="Monday" BackColor="#646464" BorderColor="#333333" ShowGridLines="true" DayNameFormat="Shortest" ForeColor="White" Font-Names="Arial">
