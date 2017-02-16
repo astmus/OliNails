@@ -13,11 +13,28 @@ namespace DatesReminder
     {
         static void Main(string[] args)
         {
-                        
+            var infos = GetDummyUserRemindInfo();
+            foreach (var info in infos)
+                SendSms(info);
         }
 
-        public static void GetNailDateById(int nailDateId)
+        private static void SendSms(UserRemindInfo info)
         {
+
+        }
+
+        public static List<UserRemindInfo> GetDummyUserRemindInfo()
+        {
+            List<UserRemindInfo> result = new List<UserRemindInfo>();
+            result.Add(new UserRemindInfo() { Name = "Мах", PhoneNumber = "+380668851043", Time = "10:00" });
+            result.Add(new UserRemindInfo() { Name = "Мах", PhoneNumber = "+380939372715", Time = "13:00" });
+            result.Add(new UserRemindInfo() { Name = "Мах", PhoneNumber = "+380668851043", Time = "17:00" });
+            return result;
+        }
+
+        public static List<UserRemindInfo> GetUserRemindInfo()
+        {
+            List<UserRemindInfo> result = new List<UserRemindInfo>(); 
             string query = "select * from InfoAboutClientsForTomorrow";
             // create connection and command
             using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
@@ -27,24 +44,32 @@ namespace DatesReminder
                 SqlDataReader dr = cmd.ExecuteReader();
                 try
                 {
-                    dr.Read();
-                 //   dates = NailDate.Parse(dr);
+                    while (dr.Read())
+                    {
+                        UserRemindInfo info = new UserRemindInfo();
+                        info.Name = (string)dr["ClientName"];
+                        info.PhoneNumber = (string)dr["ClientPhone"];
+                        info.Time = ((DateTime)dr["StartTime"]).ToString("HH:mm");
+                        result.Add(info);
+                    }
+                    //   dates = NailDate.Parse(dr);
                 }
                 catch (System.Exception ex)
                 {
                 }
                 finally
                 {
-                    cn.Close();
+                    cn.Close();                    
                 }
+                return result;
             }
         }
     }
 
     struct UserRemindInfo
     {
-        string Name;
-        string PhoneNumber;
-        string Time;
+        public string Name;
+        public string PhoneNumber;
+        public string Time;
     }
 }
