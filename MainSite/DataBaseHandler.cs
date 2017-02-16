@@ -430,7 +430,7 @@ namespace MainSite
 			{
 				cmd.Parameters.Add("@ID", SqlDbType.Int).Value = date.ID;
 				cmd.Parameters.Add("@StartTime", SqlDbType.DateTime).Value = date.StartTime;
-				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = date.Duration.Ticks;
+				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = date.Duration.TotalMinutes;
 				cmd.Parameters.Add("@ClientName", SqlDbType.NText, 20).Value = date.ClientName;
 				cmd.Parameters.Add("@ClientPhone", SqlDbType.VarChar, 15).Value = date.ClientPhone;				
 
