@@ -20,7 +20,7 @@ namespace MainSite
 			string address = HttpContext.Current.Request.UserHostAddress.ToString();
 			Application.Lock();
 			Logger.Instance.LogInfo("session start");
-			if (address != "109.254.70.107")
+			if (address != "109.254.70.107" && address.IndexOf("192.168") == -1)
 			{
 				Logger.Instance.LogUserCount();
 				Logger.Instance.LogInfo("count user increased to ->"+ Logger.Instance.GetUserCountForCurrentMonth().ToString());				
