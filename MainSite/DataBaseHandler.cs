@@ -334,7 +334,7 @@ namespace MainSite
 
 		public List<NailDate> GetNailDatesForTimeRange(DateTime sinceTime, DateTime tillTime)
 		{
-			string query = "select * from NailDates where StartTime >= @sinceTime and StartTime <=@tillTime";
+			string query = "select * from NailDates where StartTime >= @sinceTime and StartTime <=@tillTime order by StartTime";
 			var dates = new List<NailDate>();
 			// create connection and command
 			using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
@@ -472,7 +472,7 @@ namespace MainSite
 			{
 				// define parameters and their values
 				cmd.Parameters.Add("@StartTime", SqlDbType.DateTime).Value = startDate;
-				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = duration.Ticks;
+				cmd.Parameters.Add("@Duration", SqlDbType.BigInt).Value = duration.TotalMinutes;
 				cmd.Parameters.Add("@ClientName", SqlDbType.NText, 20).Value = userName;
 				cmd.Parameters.Add("@ClientPhone", SqlDbType.VarChar, 15).Value = userPhone;
 				for (int i = 0; i < pos; i++)
