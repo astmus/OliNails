@@ -19,7 +19,7 @@ namespace MainSite
 		{
 			buttonsPanel.Visible = true;
 			foreach (string time in Settings.Instance.AvailableTimes)
-			{
+			{                
 				TimeSpan span = TimeSpan.Parse(time);
 				NailDate date = null;
 				Button b = new Button();
@@ -32,11 +32,13 @@ namespace MainSite
 					b.Attributes.Add("dateid", date.ID.ToString());
 				}
 				else
-				{
-					b.Text = "Записаться на " + time;
+				{                    
+                    DateTime targetTime = scheduler.SelectedDate.Add(span);
+                    if (targetTime < DateTime.Now) continue;
+                    b.Text = "Записаться на " + time;
 					b.CssClass = "notreserved";
-                    b.OnClientClick = string.Format("addNewNailDate('{0}')", (scheduler.SelectedDate.Add(TimeSpan.Parse(time)) - DateTime.MinValue).TotalMinutes);
-					b.UseSubmitBehavior = false;
+                    b.OnClientClick = string.Format("addNewNailDate('{0}')", (targetTime - DateTime.MinValue).TotalMinutes); //We subtract the minimum value to obtain the type of a variable that has Timspan TotalMinutes field
+                    b.UseSubmitBehavior = false;
 				}
                 buttonsPanel.Controls.Add(b);
             }
