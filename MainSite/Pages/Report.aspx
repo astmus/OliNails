@@ -52,7 +52,7 @@
         <asp:Button runat="server" OnClick="OnFindClick" Style="display: inline-block;" Text="найти" />
                 </div>
             </div>
-            <asp:GridView ID="GridView1" runat="server" OnRowUpdating="GridView1_RowUpdating" OnRowDataBound="GridView1_RowDataBound" OnDataBound="GridView1_DataBound" AutoGenerateColumns="False" ShowFooter="True" DataSourceID="NailDataSource" CssClass="mydatagrid" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows">
+            <asp:GridView ID="GridView1" runat="server" OnRowUpdating="GridView1_RowUpdating" OnDataBinding="GridView1_DataBinding" OnRowEditing="GridView1_RowEditing" OnRowCancelingEdit="GridView1_RowCancelingEdit" OnRowDataBound="GridView1_RowDataBound" OnDataBound="GridView1_DataBound" AutoGenerateColumns="False" ShowFooter="True" DataSourceID="NailDataSource" CssClass="mydatagrid" PagerStyle-CssClass="pager" HeaderStyle-CssClass="header" RowStyle-CssClass="rows">
                 <Columns>
                     <asp:BoundField DataField="nailDateId" HeaderText="id" ReadOnly="true" ItemStyle-CssClass="hiddencol" HeaderStyle-CssClass="hiddencol" >
                         <HeaderStyle CssClass="hiddencol"></HeaderStyle>

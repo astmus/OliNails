@@ -25,7 +25,7 @@ namespace MainSite.Pages
 			}
 			dateTo.SelectionChanged += OnDateToChanged;
 			dateFrom.SelectionChanged += OnDateToChanged;
-		countOfVisitors.Text = Logger.Instance.GetUserCountForCurrentMonth().ToString();
+		    countOfVisitors.Text = Logger.Instance.GetUserCountForCurrentMonth().ToString();
 		}
 
 		private void OnDateToChanged(object sender, EventArgs e)
@@ -74,9 +74,8 @@ namespace MainSite.Pages
 
 		protected void OnFindClick(object sender, EventArgs e)
 		{
-			string param = searchParam.Text;
-			NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo where [StartTime] <= @StartTime and CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", param);
-		}
+            ApplyFilter();
+        }
 
 		protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
 		{
@@ -106,5 +105,27 @@ namespace MainSite.Pages
 		{
 			Page.ClientScript.RegisterStartupScript(this.GetType(), "CallMyFunction", "alert('" + message + "');", true);
 		}
-	}
+
+        protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            ApplyFilter();
+        }
+
+        protected void GridView1_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            ApplyFilter();
+        }
+
+        private void ApplyFilter()
+        {
+            if (string.IsNullOrEmpty(searchParam.Text) == false)
+                NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo where [StartTime] <= @StartTime and CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", searchParam.Text);
+        }
+
+        protected void GridView1_DataBinding(object sender, EventArgs e)
+        {
+            ApplyFilter();
+            totalTime = totalFactTime = totalPrice = totalTips = 0;
+        }
+    }
 }
