@@ -44,8 +44,9 @@ namespace MainSite
 			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek().Date.AddDays(daysShift), Mode.Owner, DateTime.MinValue);
 			scheduler.NailDateSelected += OnNailDateSeleted;
 			scheduler.ReservDate += OnReservDatePressed;
-			mainPanel.Controls.Add(scheduler);						
-		}		
+			mainPanel.Controls.Add(scheduler);   
+            
+        }		
 
 		protected override void OnPreInit(EventArgs e)
 		{
@@ -90,7 +91,8 @@ namespace MainSite
 			Session["nailDateIsSelected"] = true;
 			Session["selectedServices"] = selectedServices;
 			Session["selectedNailDate"] = obj;
-			nailDatePanel.SelectedServicesIDs = selectedServices;
+            Session["selectedNailDateID"] = obj.ID;
+            nailDatePanel.SelectedServicesIDs = selectedServices;
 			detailDataTable.Visible = true;
 		}		
 
@@ -181,9 +183,15 @@ namespace MainSite
 			int days = int.Parse(Request.Params["addDays"] ?? "0") - 7;
 			Response.Redirect("OwnControl.aspx?addDays=" + days);
 		}
-	}
 
-	class NailServiceComparer : IEqualityComparer<NailService>
+        protected void usedMaterialsTable_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
+            e.Row.Attributes["onclick"] = "selectMaterialRow(this,event)";            
+        }
+    }
+
+    class NailServiceComparer : IEqualityComparer<NailService>
 	{
 
 		public bool Equals(NailService x, NailService y)
