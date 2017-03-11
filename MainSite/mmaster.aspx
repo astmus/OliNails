@@ -59,7 +59,18 @@
         <asp:ScriptManager ID="ScriptManager2" runat="server" EnablePageMethods="true" />
 
         <div>
-            
+            <asp:GridView Width="100%" GridLines="None" ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="NailDataSource" CssClass="mydatagrid2" HeaderStyle-CssClass="header" RowStyle-CssClass="rows2">
+                <Columns>
+                    <asp:TemplateField HeaderText="Внимание объявление" SortExpression="message">
+                        <ItemTemplate>
+                            <div align="center">
+                                <asp:Literal ID="Label1" runat="server" Text='<%# Bind("message") %>'></asp:Literal>
+                            </div>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" SelectCommand="SELECT [message] FROM [News]"></asp:SqlDataSource>
             <asp:UpdatePanel ID="UpdatePanel1" runat="server">
                 <ContentTemplate>
                     <controls:NailDateCalendar OnSelectionChanged="scheduler_SelectionChanged" Style="width: 100%; height: 100vw" ID="scheduler" runat="server" Font-Size="16" FirstDayOfWeek="Monday" BackColor="#646464" BorderColor="#333333" ShowGridLines="true" DayNameFormat="Shortest" ForeColor="White" Font-Names="Arial">

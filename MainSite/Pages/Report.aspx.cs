@@ -116,16 +116,21 @@ namespace MainSite.Pages
             ApplyFilter();
         }
 
-        private void ApplyFilter()
+        private void ApplyFilter(string sortByCondition = "order by StartTime")
         {
             if (string.IsNullOrEmpty(searchParam.Text) == false)
-                NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo where [StartTime] <= @StartTime and CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0", searchParam.Text);
+                NailDataSource.SelectCommand = String.Format("select * from FullNailDatesInfo where [StartTime] <= @StartTime and CHARINDEX('{0}',ClientPhone) > 0 or CHARINDEX(N'{0}',ClientName) > 0 or CHARINDEX(N'{0}',procedures) > 0 "+sortByCondition, searchParam.Text);
         }
 
         protected void GridView1_DataBinding(object sender, EventArgs e)
         {
             ApplyFilter();
             totalTime = totalFactTime = totalPrice = totalTips = 0;
+        }
+
+        protected void GridView1_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            ApplyFilter("");
         }
     }
 }
