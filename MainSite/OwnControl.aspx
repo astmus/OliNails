@@ -61,17 +61,15 @@
             row.className = input.checked ? "selectedrow" : "rows"
             e.stopPropagation();
         }
-        function selectAll(grid)
-        {
+        function selectAll(grid) {
             var table = document.getElementById('<%= usedMaterialsTable.ClientID %>');
 
-            for (var i = 0, row; row = table.rows[i]; i++)
-            {
+            for (var i = 0, row; row = table.rows[i]; i++) {
                 console.log(row);
-                console.log(row.cells[0].children != null);              
+                console.log(row.cells[0].children != null);
                 var check = row.cells[1].children[0];
                 check.checked = true;
-                row.className = "selectedrow";                
+                row.className = "selectedrow";
             }
         }
     </script>
@@ -114,7 +112,7 @@
                     </asp:Table>
                 </asp:TableCell>
                 <asp:TableCell>
-                    <asp:Table ID="detailDataTable" Visible="true" runat="server" CellSpacing="0" Style="display: inline">
+                    <asp:Table ID="detailDataTable" Visible="false" runat="server" CellSpacing="0" Style="display: inline">
                         <asp:TableRow>
                             <asp:TableCell ColumnSpan="2">
                                 <asp:Calendar Style="display: inline-block" runat="server" ID="dateCalendar" SelectionMode="Day" OnSelectionChanged="DateSelectionChanged" BackColor="#646464" BorderColor="#333333" ShowGridLines="true" DayNameFormat="Shortest" ForeColor="White" CellPadding="5" Font-Names="Arial">
@@ -136,9 +134,9 @@
                         </asp:TableRow>
                         <asp:TableRow>
                             <asp:TableCell>
-                                <MainSite:SelectServices ID="nailDatePanel" runat="server" ConfirmButtonVisibility="false" />                                
+                                <MainSite:SelectServices ID="nailDatePanel" runat="server" ConfirmButtonVisibility="false" />
                             </asp:TableCell>
-                            <asp:TableCell VerticalAlign="Top" style="padding-top:70px">
+                            <asp:TableCell VerticalAlign="Top" Style="padding-top: 70px">
                                 <asp:Table runat="server">
                                     <asp:TableRow>
                                         <asp:TableCell ColumnSpan="2">
@@ -158,7 +156,7 @@
                                                 <PagerStyle CssClass="pager" />
                                                 <RowStyle CssClass="rows" />
                                             </asp:GridView>
-                                            <asp:SqlDataSource ID="materialsDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" SelectCommand="select m.id,m.name,m.startTime, CAST(ISNULL(um.materialId, 0) as bit) as selected  from Materials m left outer join UsedMaterials um on m.id = um.materialId where id in (select materialId from MaterialServices where serviceId in (select serviceId from NailDateService where nailDateId = @nailDateId))">
+                                            <asp:SqlDataSource ID="materialsDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" SelectCommand="SELECT * FROM dbo.AvailableUsedMaterials(@nailDateId)">
                                                 <SelectParameters>
                                                     <asp:SessionParameter DefaultValue="-1" Name="nailDateId" SessionField="selectedNailDateID" />
                                                 </SelectParameters>
@@ -167,10 +165,10 @@
                                     </asp:TableRow>
                                     <asp:TableFooterRow>
                                         <asp:TableCell>
-                                            <asp:Button runat="server" Text="Сохранить" />
+                                            <asp:Button runat="server" Text="Сохранить" OnClick="SaveUsedMaterialsForDate" Width="100%" />
                                         </asp:TableCell>
                                         <asp:TableCell>
-                                            <asp:Button runat="server" Text="Выбрать все" UseSubmitBehavior="false" OnClientClick="selectAll();return false;" />
+                                            <asp:Button runat="server" Width="100%" Text="Выбрать все" UseSubmitBehavior="false" OnClientClick="selectAll();return false;" />
                                         </asp:TableCell>
                                     </asp:TableFooterRow>
                                 </asp:Table>
@@ -179,6 +177,7 @@
                         <asp:TableRow>
                             <asp:TableCell ColumnSpan="2">
                                 <asp:Button runat="server" ID="myB" OnClick="OnUpdateNialDateClick" Text="обновить запись" />
+                                <asp:Button runat="server" OnClick="HideDetailPanel" Text="скрыть" />
                             </asp:TableCell>
                         </asp:TableRow>
                         <asp:TableRow>
@@ -187,12 +186,9 @@
                             </asp:TableCell>
                         </asp:TableRow>
                     </asp:Table>
-
                 </asp:TableCell>
             </asp:TableRow>
         </asp:Table>
-
-
     </form>
 </body>
 </html>

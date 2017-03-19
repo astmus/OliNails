@@ -189,6 +189,24 @@ namespace MainSite
             if (e.Row.RowType != DataControlRowType.DataRow) return;
             e.Row.Attributes["onclick"] = "selectMaterialRow(this,event)";            
         }
+
+        protected void HideDetailPanel(object sender, EventArgs e)
+        {
+            detailDataTable.Visible = false;
+        }
+
+        protected void SaveUsedMaterialsForDate(object sender, EventArgs e)
+        {
+            List<int> usedMatIds = new List<int>();
+            foreach (GridViewRow row in usedMaterialsTable.Rows)
+            {
+                CheckBox check = row.FindControl("CheckBox1") as CheckBox;
+                if (check != null && check.Checked)
+                    usedMatIds.Add(int.Parse(row.Cells[0].Text));
+            }
+            NailDate date = Session["selectedNailDate"] as NailDate;
+            DataBaseHandler.Instance.SaveUsedMaterialsForNailDate(date.ID,usedMatIds);
+        }
     }
 
     class NailServiceComparer : IEqualityComparer<NailService>

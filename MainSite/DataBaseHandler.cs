@@ -23,6 +23,30 @@ namespace MainSite
 			}
 		}
 
+        public void SaveUsedMaterialsForNailDate(int nailDateId, List<int> materialsIds)
+        {
+            string query = "delete from dbo.UsedMaterials where nailDateId = @ID;";
+            query += "insert into dbo.UsedMaterials(nailDateId, materialId) values " + string.Join(",", materialsIds.Select(s=> String.Format("(@ID, {0})", s)).ToList());
+            using (SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionSctring"].ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(query, cn))
+            {
+                cmd.Parameters.Add("@ID", SqlDbType.Int).Value = nailDateId;
+                cn.Open();
+                try
+                {
+                    var res = cmd.ExecuteNonQuery();
+                }
+                catch (System.Exception ex)
+                {
+                    LastErrorMessage = ex.Message;
+                }
+                finally
+                {
+                    cn.Close();
+                }
+            }
+        }
+
 		public NailDate GetNailDateById(int nailDateId)
 		{
 			string query = "select * from NailDates where Id >= @id";
