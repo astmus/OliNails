@@ -15,7 +15,7 @@
         window.location.href = "SelectSercvices.aspx";
     }
 
-    function onError(result) {        
+    function onError(result) {
     }
 </script>
 <script src="scripts/AlterDatePrompt.js"></script>
@@ -30,14 +30,14 @@
             height: 70%;
         }
 
-        input {            
+        input {
             height: 55px;
             width: 100%;
-            border: 1px solid;            
-            margin-top: 3px;            
+            border: 1px solid;
+            margin-top: 3px;
             text-decoration: none;
             color: white;
-            border-color:#111111;
+            border-color: #111111;
         }
 
             input.reserved {
@@ -48,18 +48,29 @@
                 background-color: #646464;
             }
     </style>
+    <link rel="stylesheet" type="text/css" href="TableStyle.css" />
 </head>
 <body>
     <form id="form1" runat="server">
         <ul>
-                <li><a style="margin:0px" class="active" href="master.aspx">Расписание</a></li>
-                <li><a style="margin:0px" href="Pages/Price.html">Прайс</a></li>
-                <li><a style="margin:0px" href="Pages/Contacts.html">Конткты</a></li>
-            </ul>
+            <li><a style="margin: 0px" class="active" href="master.aspx">Расписание</a></li>
+            <li><a style="margin: 0px" href="Pages/Price.html">Прайс</a></li>
+            <li><a style="margin: 0px" href="Pages/Contacts.html">Конткты</a></li>
+        </ul>
+        <asp:GridView Width="100%" GridLines="None" ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="NailDataSource" CssClass="mydatagrid2" HeaderStyle-CssClass="header" RowStyle-CssClass="rows2">
+            <Columns>
+                <asp:TemplateField HeaderText="Внимание объявление" SortExpression="message">
+                    <ItemTemplate>
+                        <asp:Literal ID="Label1" runat="server" Text='<%# Bind("message") %>'></asp:Literal>
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+        <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" SelectCommand="SELECT [message] FROM [News]"></asp:SqlDataSource>
         <asp:ScriptManager ID="ScriptManager2" runat="server" EnablePageMethods="true" />
 
         <div>
-            <asp:GridView Width="100%" GridLines="None" ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="NailDataSource" CssClass="mydatagrid2" HeaderStyle-CssClass="header" RowStyle-CssClass="rows2">
+            <%--<asp:GridView Width="100%" GridLines="None" ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="NailDataSource" CssClass="mydatagrid2" HeaderStyle-CssClass="header" RowStyle-CssClass="rows2">
                 <Columns>
                     <asp:TemplateField HeaderText="Внимание объявление" SortExpression="message">
                         <ItemTemplate>
@@ -71,7 +82,7 @@
                 </Columns>
             </asp:GridView>
             <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" SelectCommand="SELECT [message] FROM [News]"></asp:SqlDataSource>
-            <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+            --%><asp:UpdatePanel ID="UpdatePanel1" runat="server">
                 <ContentTemplate>
                     <controls:NailDateCalendar OnSelectionChanged="scheduler_SelectionChanged" Style="width: 100%; height: 100vw" ID="scheduler" runat="server" Font-Size="16" FirstDayOfWeek="Monday" BackColor="#646464" BorderColor="#333333" ShowGridLines="true" DayNameFormat="Shortest" ForeColor="White" Font-Names="Arial">
                         <NextPrevStyle BackColor="#646464" />

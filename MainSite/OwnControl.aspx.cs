@@ -44,8 +44,9 @@ namespace MainSite
 			scheduler = new NailScheduler(Settings.Instance.AvailableTimes, DateTimeHelper.getStartOfCurrentWeek().Date.AddDays(daysShift), Mode.Owner, DateTime.MinValue);
 			scheduler.NailDateSelected += OnNailDateSeleted;
 			scheduler.ReservDate += OnReservDatePressed;
-			mainPanel.Controls.Add(scheduler);						
-		}		
+			mainPanel.Controls.Add(scheduler);   
+            
+        }		
 
 		protected override void OnPreInit(EventArgs e)
 		{
@@ -58,6 +59,7 @@ namespace MainSite
 		{
 			detailDataTable.Visible = false;			
 			DataBaseHandler.Instance.InsertNailDate(obj, TimeSpan.Zero, "Резерв", "",new List<int>());
+            Logger.Instance.LogInfo("Date reserved for " + obj.ToString("yyyy.MM.dd HH:mm"));
 			Response.Redirect(Request.RawUrl);
 		}
 
@@ -90,7 +92,8 @@ namespace MainSite
 			Session["nailDateIsSelected"] = true;
 			Session["selectedServices"] = selectedServices;
 			Session["selectedNailDate"] = obj;
-			nailDatePanel.SelectedServicesIDs = selectedServices;
+            Session["selectedNailDateID"] = obj.ID;
+            nailDatePanel.SelectedServicesIDs = selectedServices;
 			detailDataTable.Visible = true;
 		}		
 
@@ -121,9 +124,10 @@ namespace MainSite
 		}
 
 		protected void OnUpdateNialDateClick(object sender, EventArgs e)
-		{
-			NailDate date = Session["selectedNailDate"] as NailDate;
-			date.ClientName = nailDatePanel.ClientName;
+		{            
+            NailDate date = Session["selectedNailDate"] as NailDate;
+            Logger.Instance.LogInfo("Update nail date " + date);
+            date.ClientName = nailDatePanel.ClientName;
 			date.ClientPhone = nailDatePanel.Phone;
 			date.StartTime = nailDatePanel.StartTime;
 			short tmpTips = 0;
@@ -133,13 +137,18 @@ namespace MainSite
 				date.Tips = null;
 			var oldServices = (Session["selectedServices"] as List<int>);
 			
-			HandleNailDateInSessionAndRefresh(nd => DataBaseHandler.Instance.UpdateNailDate(nd, nailDatePanel.SelectedServicesIDs, oldServices));
-			Session.Clear();			
+			HandleNailDateInSessionAndRefresh(nd => 
+            {
+                DataBaseHandler.Instance.UpdateNailDate(nd, nailDatePanel.SelectedServicesIDs, oldServices);
+                Logger.Instance.LogInfo("Nail date updated to " + date);
+            });
+            
+            Session.Clear();			
 		}
 
 		protected void OnDeleteNailDateClick(object sender, EventArgs e)
 		{
-			HandleNailDateInSessionAndRefresh(nd => DataBaseHandler.Instance.DropNailDate(nd));			
+            HandleNailDateInSessionAndRefresh(nd => { DataBaseHandler.Instance.DropNailDate(nd); Logger.Instance.LogInfo("Nail date deleted " + nd); });			
 		}
 
 		protected void SaveNote(object sender, EventArgs e)
@@ -181,9 +190,33 @@ namespace MainSite
 			int days = int.Parse(Request.Params["addDays"] ?? "0") - 7;
 			Response.Redirect("OwnControl.aspx?addDays=" + days);
 		}
-	}
 
-	class NailServiceComparer : IEqualityComparer<NailService>
+        protected void usedMaterialsTable_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
+            e.Row.Attributes["onclick"] = "selectMaterialRow(this,event)";            
+        }
+
+        protected void HideDetailPanel(object sender, EventArgs e)
+        {
+            detailDataTable.Visible = false;
+        }
+
+        protected void SaveUsedMaterialsForDate(object sender, EventArgs e)
+        {
+            List<int> usedMatIds = new List<int>();
+            foreach (GridViewRow row in usedMaterialsTable.Rows)
+            {
+                CheckBox check = row.FindControl("CheckBox1") as CheckBox;
+                if (check != null && check.Checked)
+                    usedMatIds.Add(int.Parse(row.Cells[0].Text));
+            }
+            NailDate date = Session["selectedNailDate"] as NailDate;
+            DataBaseHandler.Instance.SaveUsedMaterialsForNailDate(date.ID,usedMatIds);
+        }
+    }
+
+    class NailServiceComparer : IEqualityComparer<NailService>
 	{
 
 		public bool Equals(NailService x, NailService y)
