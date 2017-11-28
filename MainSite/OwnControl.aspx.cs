@@ -59,6 +59,7 @@ namespace MainSite
 		{
 			detailDataTable.Visible = false;			
 			DataBaseHandler.Instance.InsertNailDate(obj, TimeSpan.Zero, "Резерв", "",new List<int>());
+            Logger.Instance.LogInfo("Date reserved for " + obj.ToString("yyyy.MM.dd HH:mm"));
 			Response.Redirect(Request.RawUrl);
 		}
 
@@ -123,9 +124,10 @@ namespace MainSite
 		}
 
 		protected void OnUpdateNialDateClick(object sender, EventArgs e)
-		{
-			NailDate date = Session["selectedNailDate"] as NailDate;
-			date.ClientName = nailDatePanel.ClientName;
+		{            
+            NailDate date = Session["selectedNailDate"] as NailDate;
+            Logger.Instance.LogInfo("Update nail date " + date);
+            date.ClientName = nailDatePanel.ClientName;
 			date.ClientPhone = nailDatePanel.Phone;
 			date.StartTime = nailDatePanel.StartTime;
 			short tmpTips = 0;
@@ -135,13 +137,18 @@ namespace MainSite
 				date.Tips = null;
 			var oldServices = (Session["selectedServices"] as List<int>);
 			
-			HandleNailDateInSessionAndRefresh(nd => DataBaseHandler.Instance.UpdateNailDate(nd, nailDatePanel.SelectedServicesIDs, oldServices));
-			Session.Clear();			
+			HandleNailDateInSessionAndRefresh(nd => 
+            {
+                DataBaseHandler.Instance.UpdateNailDate(nd, nailDatePanel.SelectedServicesIDs, oldServices);
+                Logger.Instance.LogInfo("Nail date updated to " + date);
+            });
+            
+            Session.Clear();			
 		}
 
 		protected void OnDeleteNailDateClick(object sender, EventArgs e)
 		{
-			HandleNailDateInSessionAndRefresh(nd => DataBaseHandler.Instance.DropNailDate(nd));			
+            HandleNailDateInSessionAndRefresh(nd => { DataBaseHandler.Instance.DropNailDate(nd); Logger.Instance.LogInfo("Nail date deleted " + nd); });			
 		}
 
 		protected void SaveNote(object sender, EventArgs e)

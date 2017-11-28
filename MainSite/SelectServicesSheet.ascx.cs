@@ -135,7 +135,7 @@ namespace MainSite
 			Response.Cookies["userData"].Expires = StartTime;
 
             DataBaseHandler.Instance.InsertNailDate(StartTime, TimeSpan.Zero, ClientName, Phone, servicesIDs);
-            executeAsync(() => { SendMailNotification(StartTime, TimeSpan.Zero, ClientName, Phone, servicesNames); });
+            executeAsync(() => { MailSender.SendMailNotification(StartTime, TimeSpan.Zero, ClientName, Phone, servicesNames); });
             executeAsync(() => { SendSMS(ClientName, Phone, StartTime); });
 
             Session.Clear();
@@ -202,7 +202,7 @@ namespace MainSite
 				e.Cancel = true;
 		}
 
-		private void SendMailNotification(DateTime startDate, TimeSpan duration, string userName, string userPhon, List<string> selectedServicesName)
+		/*private void SendMailNotification(DateTime startDate, TimeSpan duration, string userName, string userPhon, List<string> selectedServicesName)
 		{
 			MailMessage mailMsg = new MailMessage();
 			mailMsg.From = new MailAddress("oli_882011@mail.ru");
@@ -220,7 +220,7 @@ namespace MainSite
 			client.EnableSsl = true;
 
             client.Send(mailMsg);
-		}        
+		}      */  
 
         protected override void OnLoad(EventArgs e)
 		{

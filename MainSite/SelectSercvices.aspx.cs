@@ -32,13 +32,14 @@ namespace MainSite
 			NailDate date = Session["nailDateForEdit"] as NailDate;
 			DataBaseHandler.Instance.DropNailDate(date);
 			ShowAlertBox("Вы отменили запись, пожалуйста возвращайтесь к нам:)");
+            MailSender.SendDeletedMailNotification(date);
 			Session.Clear();
 		}
 
 		private void OnUpdateNailDateClick(SelectServicesSheet obj)
 		{
-			NailDate date = Session["nailDateForEdit"] as NailDate;
-			date.ClientName = services.ClientName;
+			NailDate date = Session["nailDateForEdit"] as NailDate;            
+            date.ClientName = services.ClientName;
 			date.ClientPhone = services.Phone;			
 			var oldServices = (Session["oldSelectedServices"] as List<int>);
 			bool result = DataBaseHandler.Instance.UpdateNailDate(date, services.SelectedServicesIDs, oldServices);
@@ -46,8 +47,10 @@ namespace MainSite
 			if (result)
 				ShowAlertBox("Ваша запись успешно обновлена");
 			else
-				ShowAlertBox("Не удалось обновить запись. Пожалйста свяжитесь с нами по тел: +380939372858 или +380953464708");				
-		}
+				ShowAlertBox("Не удалось обновить запись. Пожалйста свяжитесь с нами по тел: +380939372858 или +380953464708");
+            MailSender.SendUpdatedMailNotification(date);
+
+        }
 
 		public void ShowAlertBox(string message)
 		{

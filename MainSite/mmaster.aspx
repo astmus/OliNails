@@ -48,6 +48,7 @@
                 background-color: #646464;
             }
     </style>
+    <link rel="stylesheet" type="text/css" href="TableStyle.css" />
 </head>
 <body>
     <form id="form1" runat="server">
@@ -56,6 +57,16 @@
                 <li><a style="margin:0px" href="Pages/Price.html">Прайс</a></li>
                 <li><a style="margin:0px" href="Pages/Contacts.html">Конткты</a></li>
             </ul>
+        <asp:GridView Width="100%" GridLines="None" ID="GridView1" runat="server" AutoGenerateColumns="False" DataSourceID="NailDataSource" CssClass="mydatagrid2" HeaderStyle-CssClass="header" RowStyle-CssClass="rows2">
+                <Columns>
+                    <asp:TemplateField HeaderText="Внимание объявление" SortExpression="message">
+                        <ItemTemplate>
+                            <asp:Literal ID="Label1" runat="server" Text='<%# Bind("message") %>'></asp:Literal>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
+            <asp:SqlDataSource ID="NailDataSource" runat="server" ConnectionString="<%$ ConnectionStrings:dbConnectionSctring %>" SelectCommand="SELECT [message] FROM [News]"></asp:SqlDataSource>
         <asp:ScriptManager ID="ScriptManager2" runat="server" EnablePageMethods="true" />
 
         <div>

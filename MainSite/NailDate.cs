@@ -17,7 +17,12 @@ namespace MainSite
 
 		}
 
-		public static NailDate Parse(SqlDataReader reader)
+        public override string ToString()
+        {
+            return String.Format("StartTime = {0}; ClientPhone = {1}; ClientName = {2}; ID = {3}",StartTime.ToString("yyyy.MM.dd HH:mm"),ClientPhone,ClientName,ID);
+        }
+
+        public static NailDate Parse(SqlDataReader reader)
 		{
 			var result = new NailDate();
 			result.ID = (int)reader["id"];
