@@ -1,0 +1,8 @@
+28.11 07:43:42 [127.0.0.1] Info -> session start;
+28.11 07:43:42 [127.0.0.1] Info -> count user increased to ->1;
+28.11 07:49:50 [127.0.0.1] Info -> session start;
+28.11 07:49:50 [127.0.0.1] Info -> count user increased to ->2;
+28.11 07:49:55 [127.0.0.1] Info -> page loaded;
+28.11 07:53:53 [127.0.0.1] Info -> session start;
+28.11 07:53:53 [127.0.0.1] Info -> count user increased to ->3;
+28.11 07:54:00 [127.0.0.1] Info -> page loaded;
